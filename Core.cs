@@ -5,8 +5,13 @@ using Microsoft.Xna.Framework.Content;
 
 namespace MyMonoGameLibrary;
 
+// Summary:
+//      Core is an extension of the Game class that simplifies the code needed
+//      in Game1 by handling tasks such as creating GraphicsDeviceManager and
+//      SpriteBatch
 public class Core : Game
 {
+    // variables and properties
     internal static Core s_instance;
     
     public static Core Instance => s_instance;
