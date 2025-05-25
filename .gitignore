@@ -1,3 +1,6 @@
 # ignore everything except for .cs
-*
-!*.cs
+bin/
+obj/
+.editorconfig
+*.csproj
+*.user

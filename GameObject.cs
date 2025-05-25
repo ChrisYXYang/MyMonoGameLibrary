@@ -4,8 +4,7 @@ using System.Collections.Generic;
 namespace MyMonoGameLibrary;
 
 // summary:
-//      The class for the objects in the game. Each object will have multiple
-//      components.
+//      The class for the objects in the game. Each object will have multiple components.
 public class GameObject
 {
     // variables and properties
