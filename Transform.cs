@@ -13,7 +13,7 @@ public class Transform : Component
     public float Rotation { get; set; }
 
     // constructor
-    public Transform(Vector2 position, float scale, float rotation)
+    public Transform(GameObject parent, Vector2 position, float scale, float rotation) : base(parent)
     {
         this.Position = position;
         this.Scale = scale;

@@ -13,7 +13,12 @@ public class GameObject
     // constructor
     public GameObject(Dictionary<string, Component> components)
     {
-        this._components = components;
+        _components = components;
+
+        foreach(KeyValuePair<string, Component> entry in _components)
+        {
+            entry.Value.Initialize();
+        }
     }
 
     // Summary:

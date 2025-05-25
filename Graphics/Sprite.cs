@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace MyMonoGameLibrary.Graphics;
 
+// Preset positions for the origin point of a sprite.
 public enum OriginType
 {
     Center,
@@ -20,36 +21,22 @@ public enum OriginType
 public class Sprite
 {
     // variables and properties
-    public Texture2D SpriteSheet { get; private set; }
-    public Rectangle SourceRectangle { get; private set; }
+    public Texture2D SpriteSheet { get; set; }
+    public Rectangle SourceRectangle { get; set; }
     public OriginType Origin { get; private set; }
     public Vector2 OriginPoint { get; private set; }
-    public int Scale { get; private set; }
+    public int Scale { get; set; }
 
-    // width and height do not take into account transform scale
-    public int Width => SourceRectangle.Width * Scale;
-    public int Height => SourceRectangle.Height * Scale;
+    // Size doesn't take into account transform scale
+    public int Size => SourceRectangle.Width * Scale;
     
-    // constructor for preset origin point
-    public Sprite(Texture2D spriteSheet, OriginType origin, int scale, int x, int y, int width, 
-        int height)
+    // constructor with origin point being one of the preset origin points
+    public Sprite(Texture2D spriteSheet, OriginType origin, int scale, int x, int y, int size)
     {
         SpriteSheet = spriteSheet;
         Scale = scale;
-        SourceRectangle = new Rectangle(x, y, width, height);
-
+        SourceRectangle = new Rectangle(x, y, size, size);
         SetOrigin(origin);
-    }
-
-    // constructor for custom origin point
-    public Sprite(Texture2D spriteSheet, Vector2 originPoint, int scale, int x, int y, int width,
-    int height)
-    {
-        SpriteSheet = spriteSheet;
-        Origin = OriginType.Custom;
-        Scale = scale;
-        SourceRectangle = new Rectangle(x, y, width, height);
-        OriginPoint = originPoint;
     }
 
     // Summary:
@@ -58,29 +45,35 @@ public class Sprite
     {
         Origin = origin;
 
-        if (origin == OriginType.Center)
+        if (Origin == OriginType.Center)
         {
             OriginPoint = new Vector2(SourceRectangle.Width * 0.5f, SourceRectangle.Height * 0.5f);
         }
-        else if (origin == OriginType.TopLeft)
+        else if (Origin == OriginType.TopLeft)
         {
             OriginPoint = Vector2.Zero;
         }
-        else if (origin == OriginType.TopRight)
+        else if (Origin == OriginType.TopRight)
         {
             OriginPoint = new Vector2(SourceRectangle.Width, 0);
         }
-        else if (origin == OriginType.BottomLeft)
+        else if (Origin == OriginType.BottomLeft)
         {
             OriginPoint = new Vector2(0, SourceRectangle.Height);
         }
-        else if (origin == OriginType.BottomRight)
+        else if (Origin == OriginType.BottomRight)
         {
             OriginPoint = new Vector2(SourceRectangle.Width, SourceRectangle.Height);
         }
     }
 
-    //
+    // Summary:
+    //      Set origin point to custom position
+    public void SetOrigin(Vector2 originPoint)
+    {
+        Origin = OriginType.Custom;
+        OriginPoint = originPoint;
+    }
 
     // Summary:
     //      Draw this sprite with custom transform, color, layer depth, and sprite effects

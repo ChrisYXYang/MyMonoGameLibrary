@@ -9,10 +9,23 @@ public abstract class Component
 {
     // variables and properties
     protected GameObject parent;
-
-    public void Initialize(GameObject parent)
+    
+    // constructor
+    public Component(GameObject parent)
     {
         this.parent = parent;
+    }
+
+    // initialization for the component
+    public virtual void Initialize()
+    {
+        
+    }
+
+    // get component
+    public T GetComponent<T>() where T : Component
+    {
+        return parent.GetComponent<T>();
     }
 }
 

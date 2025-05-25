@@ -18,12 +18,20 @@ public class SpriteManager : Component
     private Transform _transform;
 
     // constructor
-    public SpriteManager(Sprite sprite, Color color, bool flipX, bool flipY)
+    public SpriteManager(GameObject parent, Sprite sprite, Color color, 
+        bool flipX, bool flipY) : base(parent)
     {
         Sprite = sprite;
         Color = color;
         FlipX = flipX;
         FlipY = flipY;
+    }
+
+    // initialize
+    public override void Initialize()
+    {
+        base.Initialize();
+        _transform = GetComponent<Transform>();
     }
 
     // Summary:
