@@ -4,8 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace MyMonoGameLibrary.Graphics;
 
-// Summary:
-//      component for managing a sprite for a game object.
+// Component for managing a sprite for a game object.
 public class SpriteManager : Component
 {
     // variables and properties
