@@ -18,8 +18,7 @@ public class SpriteSheet
     // param: spriteSize is the size of each sprite in pixels
     // param: spriteNames is names of all sprites in order
     // param: originType - preset position for origin point for sprites in the sprite sheet
-    public SpriteSheet(Texture2D spriteSheet, int spriteSize, string[] spriteNames, 
-        OriginType originType)
+    public SpriteSheet(Texture2D spriteSheet, int spriteSize, string[] spriteNames, bool centered)
     {
         // check if too many sprites requested
         int numSprites = spriteNames.Length;
@@ -40,7 +39,7 @@ public class SpriteSheet
         for (int i = 0; i < numSprites; i++)
         {
             // create sprite and add to dict
-            Sprite newSprite = new Sprite(Sheet, originType, 16, x, y, spriteSize);
+            Sprite newSprite = new Sprite(Sheet, centered, 16, x, y, spriteSize);
             _sprites.Add(spriteNames[i], newSprite);
             
             // move source rectangle to next sprite
