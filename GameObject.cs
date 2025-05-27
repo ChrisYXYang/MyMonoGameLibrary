@@ -11,11 +11,20 @@ public class GameObject
     private Dictionary<string, Component> _components;
 
     // constructor
-    public GameObject(Dictionary<string, Component> components)
+    public GameObject()
     {
-        _components = components;
+        _components = new Dictionary<string, Component>();
+    }
 
-        foreach(KeyValuePair<string, Component> entry in _components)
+    public void AddComponent<T>(T component) where T: Component
+    {
+       string compName = typeof(T).Name;
+        _components.Add(compName, component);
+    }
+
+    public void InitializeComponents()
+    {
+        foreach (KeyValuePair<string, Component> entry in _components)
         {
             entry.Value.Initialize();
         }

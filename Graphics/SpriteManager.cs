@@ -12,19 +12,28 @@ public class SpriteManager : Component
     public Color Color { get; set; }
     public bool FlipX { get; set; }
     public bool FlipY { get; set; }
-    public float LayerDepth {  get; set; }  
+    public float LayerDepth { get; set; }  
 
     private Transform _transform;
 
     // constructor
-    public SpriteManager(GameObject parent, Sprite sprite, Color color, 
-        bool flipX, bool flipY) : base(parent)
+    //
+    // param: parent - parent game object
+    // param: sprite - Sprite to use
+    // param: color - color of sprite
+    // param: flipX - flip horizontal or not
+    // param: flipY - flip vertical or not
+    // param: layerDepth - layer depth
+    public SpriteManager(GameObject parent, Sprite sprite, Color color,
+        bool flipX, bool flipY, float layerDepth) : base(parent)
     {
         Sprite = sprite;
         Color = color;
         FlipX = flipX;
         FlipY = flipY;
+        LayerDepth = layerDepth;
     }
+
 
     // initialize
     public override void Initialize()
@@ -33,8 +42,9 @@ public class SpriteManager : Component
         _transform = GetComponent<Transform>();
     }
 
-    // Summary:
-    //      Draw the sprite
+    // draw the sprite
+    //
+    // param: spriteBatch - SpriteBatch to use to draw
     public void Draw(SpriteBatch spriteBatch)
     {
         int spriteEffect = 0;

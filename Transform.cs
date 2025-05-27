@@ -3,21 +3,25 @@ using Microsoft.Xna.Framework;
 
 namespace MyMonoGameLibrary;
 
-// Summary:
-//      component for the Transform of gameobject
+// component for the transform of gameobject, which is position, scale, rotation
 public class Transform : Component
 {
     // variables and properties
     public Vector2 Position { get; set; }
-    public float Scale { get; set; }
+    public Vector2 Scale { get; set; }
     public float Rotation { get; set; }
 
     // constructor
-    public Transform(GameObject parent, Vector2 position, float scale, float rotation) : base(parent)
+    //
+    // param: parent - parent game object
+    // param: position - position of game object
+    // param: rotation - rotation of game object
+    // param: scale - scale of game object
+    public Transform(GameObject parent, Vector2 position, float rotation, Vector2 scale) : base(parent)
     {
-        this.Position = position;
-        this.Scale = scale;
-        this.Rotation = rotation;
+        Position = position;
+        Scale = scale;
+        Rotation = rotation;
     }
 
 }

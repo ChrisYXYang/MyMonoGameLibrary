@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using System.Security.Cryptography;
 
 namespace MyMonoGameLibrary.Graphics;
 
@@ -48,7 +47,7 @@ public class Sprite
     // param: color - color of sprite
     // param: spriteEffects - sprite effects
     // param: layerDepth - layer depth of sprite
-    public void Draw(SpriteBatch spriteBatch, Vector2 position, float rotation, float scale,
+    public void Draw(SpriteBatch spriteBatch, Vector2 position, float rotation, Vector2 scale,
         Color color, SpriteEffects spriteEffects, float layerDepth)
     {
         spriteBatch.Draw(
