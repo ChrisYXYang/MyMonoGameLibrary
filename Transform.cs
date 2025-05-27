@@ -17,7 +17,7 @@ public class Transform : Component
     // param: position - position of game object
     // param: rotation - rotation of game object
     // param: scale - scale of game object
-    public Transform(GameObject parent, Vector2 position, float rotation, Vector2 scale) : base(parent)
+    public Transform(Vector2 position, float rotation, Vector2 scale)
     {
         Position = position;
         Scale = scale;

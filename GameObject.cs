@@ -1,37 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MyMonoGameLibrary;
 
-// summary:
-//      The class for the objects in the game. Each object will have multiple components.
+// This class represents the objects in the game. Each object will have multiple components.
 public class GameObject
 {
     // variables and properties
-    private Dictionary<string, Component> _components;
+    private Dictionary<string, Component> _components = new Dictionary<string, Component>();
 
-    // constructor
-    public GameObject()
-    {
-        _components = new Dictionary<string, Component>();
-    }
-
+    // add a component to the game object
+    //
+    // param: component - component to be added
     public void AddComponent<T>(T component) where T: Component
     {
        string compName = typeof(T).Name;
         _components.Add(compName, component);
     }
 
-    public void InitializeComponents()
+    // initialize the game object
+    public void Initialize()
     {
         foreach (KeyValuePair<string, Component> entry in _components)
         {
-            entry.Value.Initialize();
+            entry.Value.Initialize(this);
         }
     }
 
-    // Summary:
-    //      get chosen attribute from game object.
+    // get chosen component from game object.
+    //
+    // return: chosen component, null if no component
     public T GetComponent<T>() where T : Component
     {
         string chosenComponent = typeof(T).Name;
@@ -42,6 +41,16 @@ public class GameObject
         }
 
         return null;
+    }
+
+
+    // 4 testing
+    public void PrintComponents()
+    {
+        foreach (KeyValuePair<string, Component> entry in _components)
+        {
+            Debug.WriteLine(entry.Key + "\n");
+        }
     }
 }
 

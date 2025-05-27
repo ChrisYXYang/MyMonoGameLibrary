@@ -24,8 +24,8 @@ public class SpriteManager : Component
     // param: flipX - flip horizontal or not
     // param: flipY - flip vertical or not
     // param: layerDepth - layer depth
-    public SpriteManager(GameObject parent, Sprite sprite, Color color,
-        bool flipX, bool flipY, float layerDepth) : base(parent)
+    public SpriteManager(Sprite sprite, Color color,
+        bool flipX, bool flipY, float layerDepth)
     {
         Sprite = sprite;
         Color = color;
@@ -36,10 +36,12 @@ public class SpriteManager : Component
 
 
     // initialize
-    public override void Initialize()
+    //
+    // param: parent - parent game object
+    public override void Initialize(GameObject parent)
     {
-        base.Initialize();
-        _transform = GetComponent<Transform>();
+        base.Initialize(parent);
+        _transform = parent.GetComponent<Transform>();
     }
 
     // draw the sprite

@@ -9,18 +9,12 @@ public abstract class Component
     // variables and properties
     protected GameObject parent;
     
-    // constructor
+    // initialization for the component
     //
     // param: parent - parent game object
-    public Component(GameObject parent)
+    public virtual void Initialize(GameObject parent)
     {
         this.parent = parent;
-    }
-
-    // initialization for the component
-    public virtual void Initialize()
-    {
-        
     }
 
     // get component of parent game object
