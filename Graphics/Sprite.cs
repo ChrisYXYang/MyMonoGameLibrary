@@ -12,7 +12,7 @@ public class Sprite
     // variables and properties
     public Texture2D SpriteSheet { get; private set; }
     public Rectangle SourceRectangle { get; private set; }
-    public Vector2 OriginPoint { get; set; };
+    public Vector2 OriginPoint { get; set; }
     public int Scale { get; private set; }
 
     // Size doesn't take into account transform scale
