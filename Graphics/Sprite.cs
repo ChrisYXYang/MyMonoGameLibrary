@@ -12,7 +12,7 @@ public class Sprite
     // variables and properties
     public Texture2D SpriteSheet { get; private set; }
     public Rectangle SourceRectangle { get; private set; }
-    public Vector2 OriginPoint { get; set; } = Vector2.Zero;
+    public Vector2 OriginPoint { get; set; };
     public int Scale { get; private set; }
 
     // Size doesn't take into account transform scale
@@ -21,21 +21,17 @@ public class Sprite
     // constructor for Sprite
     //
     // param: spriteSheet - sprite's spritesheet
-    // param: centered - whether or not sprite's origin point is centered
+    // param: originPoint - origin point
     // param: scale - scale of sprite
     // param: x - x position of source rectangle
     // param: y - y position of source rectangle
     // param: size - size of source rectangle
-    public Sprite(Texture2D spriteSheet, bool centered, int scale, int x, int y, int size)
+    public Sprite(Texture2D spriteSheet, Vector2 originPoint, int scale, int x, int y, int size)
     {
         SpriteSheet = spriteSheet;
         Scale = scale;
         SourceRectangle = new Rectangle(x, y, size, size);
-
-        if (centered)
-        {
-            OriginPoint = new Vector2(size, size) * 0.5f;
-        }
+        OriginPoint = originPoint;
     }
 
     // Draw this sprite
