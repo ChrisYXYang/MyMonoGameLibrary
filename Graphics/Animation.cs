@@ -6,18 +6,10 @@ namespace MyMonoGameLibrary.Graphics;
 public class Animation
 {
     // variables and properties
-    public List<Sprite> Frames { get; private set; }
-    public TimeSpan Delay { get; set; } = TimeSpan.FromMilliseconds(100);
+    public List<Sprite> Frames { get; set; }
+    public TimeSpan Delay { get; set; }
 
-    // constructor with specified frames
-    //
-    // param: frames - frames of animation
-    public Animation(List<Sprite> frames)
-    {
-        Frames = frames;
-    }
-
-    // constructor with specified frames and delay
+    // constructor
     //
     // param: frames - frames of animation
     // param: delay - delay between frames
@@ -26,6 +18,4 @@ public class Animation
         Frames = frames;
         Delay = delay;
     }
-
-
 }

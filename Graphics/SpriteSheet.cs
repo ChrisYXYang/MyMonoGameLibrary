@@ -16,22 +16,20 @@ public class SpriteSheet
 {
     // variables and properties
     private Dictionary<string, Sprite> _sprites = new Dictionary<string, Sprite>();
+    private Dictionary<string, Animation> _animations = new Dictionary<string, Animation>();
     public Texture2D Sheet { get; private set; }
 
     // constructor for SpriteSheet. Will create a dictionary containing user-defined
-    // Sprites in the spritesheet.
+    // Sprites in the spritesheet. Will also create a dictionary containing user-defined Animations
+    // in the spritesheet.
     //
     // param: spriteSheet - the sprite sheet
-    // param: fileName - xml file for sprite information
-    // param: spriteSize - the size of each sprite in pixels
-    // param: spriteScale - the scale of each sprite
-    // param: centered - whether or not sprites in the spritesheet have origin point in the center
-    public SpriteSheet(Texture2D spriteSheet, string fileName, int spriteScale, int spriteSize, 
-        bool centered)
+    // param: fileName - xml file for sprite sheet information
+    public SpriteSheet(Texture2D spriteSheet, string fileName)
     {
         Sheet = spriteSheet;
 
-        // create Sprites from xml file data about sprites in sprite sheet
+        // read and use information from the xml file
         string filePath = Path.Combine("Content", fileName);
 
         using (Stream stream = TitleContainer.OpenStream(filePath))
@@ -41,9 +39,14 @@ public class SpriteSheet
                 XDocument doc = XDocument.Load(reader);
                 XElement root = doc.Root;
 
+                // get general sprite information
+                var settings = root.Element("Settings");
+                int size = int.Parse(settings.Attribute("size").Value);
+                int scale = int.Parse(settings.Attribute("scale").Value);
+                bool centered = bool.Parse(settings.Attribute("centered").Value);
+
                 // retrieve all <Sprite> elements and create new Sprite for each element
-                // based on its information
-                var sprites = root.Element("Sprites")?.Elements("Sprite");
+                var sprites = root.Element("Sprites").Elements("Sprite");
 
                 int x = 0;
                 int y = 0;
@@ -51,8 +54,8 @@ public class SpriteSheet
                 {
                     foreach (var sprite in sprites)
                     {
-                        // get name and origin point (if exists)
-                        string name = sprite.Attribute("name")?.Value;
+                        // get name and origin point
+                        string name = sprite.Attribute("name").Value;
                         float originX = float.Parse(sprite.Attribute("originX")?.Value ?? "0");
                         float originY = float.Parse(sprite.Attribute("originY")?.Value ?? "0");
 
@@ -64,23 +67,53 @@ public class SpriteSheet
                         }
                         else if (centered)
                         {
-                            originPoint = new Vector2(spriteSize, spriteSize) * 0.5f;
+                            originPoint = new Vector2(size, size) * 0.5f;
                         }
 
-
                         // create new sprite
-                        Sprite newSprite = new Sprite(Sheet, originPoint, spriteScale, x, y, spriteSize);
+                        Sprite newSprite = new Sprite(Sheet, originPoint, scale, x, y, size);
                         _sprites.Add(name, newSprite);
 
 
                         // move source rectangle to next sprite
-                        x += spriteSize;
+                        x += size;
 
                         if (x == Sheet.Width)
                         {
                             x = 0;
-                            y += spriteSize;
+                            y += size;
                         }
+                    }
+                }
+
+                // retrive all <Animation> elements and create new Animation for each element
+                var animations = root.Element("Animations").Elements("Animation");
+
+                if (animations != null)
+                {
+                    foreach (var animation in animations)
+                    {
+                        // get name and delay
+                        string name = animation.Attribute("name").Value;
+                        double delayTime = double.Parse(animation.Attribute("delay")?.Value ?? "100");
+                        TimeSpan delay = TimeSpan.FromMilliseconds(delayTime);
+
+                        // get all frames from <Frame> elements
+                        List<Sprite> frames = new List<Sprite>();
+                        var frameElements = animation.Elements("Frame");
+
+                        if (frameElements != null)
+                        {
+                            foreach(var frame in frameElements)
+                            {
+                                string frameName = frame.Attribute("name").Value;
+                                frames.Add(GetSprite(frameName));
+                            }
+                        }
+
+                        // create new animation
+                        Animation newAnimation = new Animation(frames, delay);
+                        _animations.Add(name, newAnimation);
                     }
                 }
             }
@@ -94,5 +127,14 @@ public class SpriteSheet
     public Sprite GetSprite(string spriteName)
     {
         return _sprites[spriteName];
+    }
+
+    // get an animation
+    //
+    // param: animationName - name of animation
+    // return: chosen Animation
+    public Animation GetAnimation(string animationName)
+    {
+        return _animations[animationName];
     }
 }

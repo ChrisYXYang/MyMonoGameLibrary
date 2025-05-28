@@ -13,7 +13,7 @@ public class Sprite
     public Texture2D SpriteSheet { get; private set; }
     public Rectangle SourceRectangle { get; private set; }
     public Vector2 OriginPoint { get; set; }
-    public int Scale { get; private set; }
+    public int Scale { get; set; }
 
     // Size doesn't take into account transform scale
     public int Size => SourceRectangle.Width * Scale;

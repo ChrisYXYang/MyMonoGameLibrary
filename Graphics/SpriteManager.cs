@@ -41,7 +41,7 @@ public class SpriteManager : Component
     public override void Initialize(GameObject parent)
     {
         base.Initialize(parent);
-        _transform = parent.GetComponent<Transform>();
+        _transform = GetComponent<Transform>();
     }
 
     // draw the sprite
