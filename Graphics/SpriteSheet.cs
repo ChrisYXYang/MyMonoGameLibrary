@@ -99,20 +99,20 @@ public class SpriteSheet
                         TimeSpan delay = TimeSpan.FromMilliseconds(delayTime);
 
                         // get all frames from <Frame> elements
-                        List<Sprite> frames = new List<Sprite>();
-                        var frameElements = animation.Elements("Frame");
+                        List<Sprite> allFrames = new List<Sprite>();
+                        var frames = animation.Elements("Frame");
 
-                        if (frameElements != null)
+                        if (frames != null)
                         {
-                            foreach(var frame in frameElements)
+                            foreach(var frame in frames)
                             {
                                 string frameName = frame.Attribute("name").Value;
-                                frames.Add(GetSprite(frameName));
+                                allFrames.Add(GetSprite(frameName));
                             }
                         }
 
                         // create new animation
-                        Animation newAnimation = new Animation(frames, delay);
+                        Animation newAnimation = new Animation(allFrames, delay);
                         _animations.Add(name, newAnimation);
                     }
                 }
