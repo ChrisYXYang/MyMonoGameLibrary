@@ -1,0 +1,67 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+
+namespace MyMonoGameLibrary.Graphics;
+
+public class Animator : Component
+{
+    // variables and properties
+    private SpriteManager _spriteManager;
+    private int _currentFrame = 0;
+    private TimeSpan _elapsed;
+    private Animation _animation;
+    public Animation Animation
+    {
+        get => _animation;
+        set
+        {
+            _animation = value;
+            _spriteManager.Sprite = _animation.Frames[0];
+            _currentFrame = 0;
+        }
+    }
+
+    // constructor
+    //
+    // param: attributes - attributes
+    public Animator(Dictionary<string, string> attributes)
+    {
+        _animation = SpriteLibrary.GetAnimation(attributes["spriteSheet"], attributes["animation"]);
+    }
+
+    // updates the animation
+    //
+    // param: gameTime - game timing values
+    public void Update(GameTime gameTime)
+    {
+        _elapsed += gameTime.ElapsedGameTime;
+
+        // change to next frame until frame is up to date
+        while (_elapsed >= _animation.Delay)
+        {
+            _elapsed -= _animation.Delay;
+            _currentFrame++;
+
+            if (_currentFrame >= _animation.Frames.Count)
+            {
+                _currentFrame = 0;
+            }
+
+            _spriteManager.Sprite = _animation.Frames[_currentFrame];
+        }
+    }
+
+    // initialize
+    //
+    // param: parent - parent game object
+    public override void Initialize(GameObject parent)
+    {
+        base.Initialize(parent);
+        _spriteManager = GetComponent<SpriteManager>();
+        _spriteManager.Sprite = _animation.Frames[0];
+    }
+}

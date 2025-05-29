@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using MyMonoGameLibrary.Tools;
 
 namespace MyMonoGameLibrary;
 
@@ -7,21 +9,29 @@ namespace MyMonoGameLibrary;
 public class Transform : Component
 {
     // variables and properties
-    public Vector2 Position { get; set; }
-    public Vector2 Scale { get; set; }
-    public float Rotation { get; set; }
+    public Vector2 Position { get; set; } = Vector2.Zero;
+    public Vector2 Scale { get; set; } = Vector2.One;
+    public float Rotation { get; set; } = 0;
 
     // constructor
     //
-    // param: parent - parent game object
-    // param: position - position of game object
-    // param: rotation - rotation of game object
-    // param: scale - scale of game object
-    public Transform(Vector2 position, float rotation, Vector2 scale)
+    // param: attributes - attributes
+    public Transform(Dictionary<string, string> attributes)
     {
-        Position = position;
-        Scale = scale;
-        Rotation = rotation;
+        if (attributes.ContainsKey("position"))
+        {
+            Position = Converter.ParseVector2(attributes["position"]);
+        }
+
+        if (attributes.ContainsKey("scale"))
+        {
+            Scale = Converter.ParseVector2(attributes["scale"]);
+        }
+
+        if (attributes.ContainsKey("rotation"))
+        {
+            Rotation = MathHelper.ToRadians(float.Parse(attributes["rotation"]));
+        }
     }
 
 }

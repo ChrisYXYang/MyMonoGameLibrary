@@ -1,4 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml.Linq;
+using System.Xml;
+using Microsoft.Xna.Framework;
+using MyMonoGameLibrary.Graphics;
 
 namespace MyMonoGameLibrary;
 
@@ -8,7 +14,7 @@ public abstract class Component
 {
     // variables and properties
     protected GameObject parent;
-    
+
     // initialization for the component
     //
     // param: parent - parent game object

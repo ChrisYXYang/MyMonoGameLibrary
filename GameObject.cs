@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
+using MyMonoGameLibrary.Graphics;
+using System.IO;
+using System.Xml.Linq;
+using System.Xml;
+using System.Linq;
 
 namespace MyMonoGameLibrary;
 
@@ -10,18 +16,44 @@ public class GameObject
     // variables and properties
     private Dictionary<string, Component> _components = new Dictionary<string, Component>();
 
-    // add a component to the game object
+    // constructs the game object using information from xml file
     //
-    // param: component - component to be added
-    public void AddComponent<T>(T component) where T: Component
+    // param: fileName - xml file that stores game object information
+    public GameObject(string fileName)
     {
-       string compName = typeof(T).Name;
-        _components.Add(compName, component);
-    }
+        // read and use information from the xml file
+        string filePath = Path.Combine("Content", fileName);
 
-    // initialize the game object
-    public void Initialize()
-    {
+        using (Stream stream = TitleContainer.OpenStream(filePath))
+        {
+            using (XmlReader reader = XmlReader.Create(stream))
+            {
+                XDocument doc = XDocument.Load(reader);
+                XElement root = doc.Root;
+
+                // create component for each element in <Components>
+                var components = root.Element("Components").Elements();
+
+                foreach (var component in components)
+                {
+                    // store all attributes in component
+                    Dictionary<string, string> attributes = new Dictionary<string, string>();
+
+                    foreach (var attribute in component.Attributes())
+                    {
+                        attributes.Add(attribute.Name.ToString(), attribute.Value);
+                    }
+
+                    // create the new component
+                    string componentName = component.Name.ToString();
+                    Component newComponent =
+                        (Component)Activator.CreateInstance(Type.GetType(componentName), [attributes]);
+                    _components.Add(componentName.Split(".").Last(), newComponent);
+                }
+            }
+        }
+
+        // initialize all components
         foreach (KeyValuePair<string, Component> entry in _components)
         {
             entry.Value.Initialize(this);

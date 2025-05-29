@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace MyMonoGameLibrary.Graphics;
 
@@ -9,29 +10,40 @@ public class SpriteManager : Component
 {
     // variables and properties
     public Sprite Sprite { get; set; }
-    public Color Color { get; set; }
-    public bool FlipX { get; set; }
-    public bool FlipY { get; set; }
-    public float LayerDepth { get; set; }  
+    public Color Color { get; set; } = Color.White;
+    public bool FlipX { get; set; } = false;
+    public bool FlipY { get; set; } = false;
+    public float LayerDepth { get; set; } = 0;
 
     private Transform _transform;
 
     // constructor
     //
-    // param: parent - parent game object
-    // param: sprite - Sprite to use
-    // param: color - color of sprite
-    // param: flipX - flip horizontal or not
-    // param: flipY - flip vertical or not
-    // param: layerDepth - layer depth
-    public SpriteManager(Sprite sprite, Color color,
-        bool flipX, bool flipY, float layerDepth)
+    // attributes - attributes
+    public SpriteManager(Dictionary<string, string> attributes)
     {
-        Sprite = sprite;
-        Color = color;
-        FlipX = flipX;
-        FlipY = flipY;
-        LayerDepth = layerDepth;
+        Sprite = SpriteLibrary.GetSprite(attributes["spriteSheet"], attributes["sprite"]);
+
+        if (attributes.ContainsKey("color"))
+        {
+            var prop = typeof(Color).GetProperty(attributes["color"]);
+            Color = (Color)prop.GetValue(null, null);
+        }
+
+        if (attributes.ContainsKey("flipX"))
+        {
+            FlipX = bool.Parse(attributes["flipX"]);
+        }
+
+        if (attributes.ContainsKey("flipY"))
+        {
+            FlipY = bool.Parse(attributes["flipY"]);
+        }
+
+        if (attributes.ContainsKey("layerDepth"))
+        {
+            LayerDepth = float.Parse(attributes["layerDepth"]);
+        }
     }
 
 
