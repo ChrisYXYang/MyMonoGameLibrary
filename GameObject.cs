@@ -54,7 +54,7 @@ public class GameObject
         }
 
         // initialize all components
-        foreach (KeyValuePair<string, Component> entry in _components)
+        foreach (var entry in _components)
         {
             entry.Value.Initialize(this);
         }
@@ -79,7 +79,7 @@ public class GameObject
     // 4 testing
     public void PrintComponents()
     {
-        foreach (KeyValuePair<string, Component> entry in _components)
+        foreach (var entry in _components)
         {
             Debug.WriteLine(entry.Key + "\n");
         }

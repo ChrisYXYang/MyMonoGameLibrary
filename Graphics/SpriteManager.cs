@@ -68,7 +68,7 @@ public class SpriteManager : Component
 
         Sprite.Draw(
             spriteBatch, 
-            _transform.Position, 
+            _transform.position, 
             _transform.Rotation, 
             _transform.Scale, 
             Color, 

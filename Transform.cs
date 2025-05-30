@@ -9,7 +9,7 @@ namespace MyMonoGameLibrary;
 public class Transform : Component
 {
     // variables and properties
-    public Vector2 Position { get; set; } = Vector2.Zero;
+    public Vector2 position = Vector2.Zero;
     public Vector2 Scale { get; set; } = Vector2.One;
     public float Rotation { get; set; } = 0;
 
@@ -20,7 +20,7 @@ public class Transform : Component
     {
         if (attributes.ContainsKey("position"))
         {
-            Position = Converter.ParseVector2(attributes["position"]);
+            position = Converter.ParseVector2(attributes["position"]);
         }
 
         if (attributes.ContainsKey("scale"))
