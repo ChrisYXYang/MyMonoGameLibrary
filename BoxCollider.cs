@@ -10,34 +10,93 @@ namespace MyMonoGameLibrary;
 public class BoxCollider : Component
 {
     // variables and properties
-    public int XOffset { get; set; } = 0;
-    public int YOffset { get; set; } = 0;
-    public int Width { get; set; }
-    public int Height { get; set; }
+    private bool _centered = true;
+    private Transform _transform;
+
+    public int XOffset { get; private set; } = 0;
+    private float _realXOffset;
+    public int YOffset { get; private set; } = 0;
+    private float _realYOffset;
+    public int Width { get; private set; }
+    private float _realWidth;
+    public int Height { get; private set; }
+    private float _realHeight;
+    public float Left => _transform.position.X + _realXOffset;
+    public float Right => Left + _realWidth;
+    public float Top => _transform.position.Y + _realYOffset;
+    public float Bottom => Top + _realHeight;
+
 
     // constructor
     //
     // param: attributes - attributes
     public BoxCollider(Dictionary<string, string> attributes)
     {
-        if (attributes.ContainsKey("xOffset"))
+        // set the properties
+        Width = int.Parse(attributes["width"]);
+        Height = int.Parse(attributes["height"]);
+
+        if (attributes.ContainsKey("centered"))
         {
-            XOffset = int.Parse(attributes["xOffset"]);
+            _centered = bool.Parse(attributes["centered"]);
         }
 
-        if (attributes.ContainsKey("yOffset"))
+        if (_centered)
         {
-            YOffset = int.Parse(attributes["yOffset"]);
+            XOffset = -(Width /2);
+            YOffset = -Height;
+        }
+        else
+        {
+            if (attributes.ContainsKey("xOffset"))
+            {
+                XOffset = int.Parse(attributes["xOffset"]);
+            }
+
+            if (attributes.ContainsKey("yOffset"))
+            {
+                YOffset = int.Parse(attributes["yOffset"]);
+            }
         }
 
-        if (attributes.ContainsKey("width"))
-        {
-            Width = int.Parse(attributes["width"]);
-        }
-
-        if (attributes.ContainsKey("height"))
-        {
-            Height = int.Parse(attributes["height"]);
-        }
+        // set the private variables
+        _realXOffset = XOffset / Camera.SpritePixelsPerUnit;
+        _realYOffset = YOffset / Camera.SpritePixelsPerUnit;
+        _realWidth = Width / Camera.SpritePixelsPerUnit;
+        _realHeight = Height / Camera.SpritePixelsPerUnit;
     }
+
+    // initialize
+    //
+    // param: parent - parent game object
+    public override void Initialize(GameObject parent)
+    {
+        base.Initialize(parent);
+        _transform = GetComponent<Transform>();
+    }
+
+    // see if intersection between two game objects (override of other)
+    //
+    // param: a - first game object
+    // param: b - second game object
+    // return: intersect or not
+    public static bool Intersect(GameObject a, GameObject b)
+    {
+        return Intersect(a.GetComponent<BoxCollider>(), b.GetComponent<BoxCollider>());
+    }
+
+    // see if intersection between two box colliders
+    //
+    // param: a - first box collider
+    // param: b - second box collider
+    // return: intersect or not
+    public static bool Intersect(BoxCollider a, BoxCollider b)
+    {
+        return (a.Left < b.Right &&
+                b.Left < a.Right &&
+                a.Top < b.Bottom &&
+                b.Top < a.Bottom);
+    }
+
+
 }
