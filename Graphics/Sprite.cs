@@ -28,29 +28,4 @@ public class Sprite
         SourceRectangle = new Rectangle(x, y, size, size);
         OriginPoint = originPoint;
     }
-
-    // Draw this sprite
-    //
-    // param: spriteBatch - SpriteBatch that will draw the sprite
-    // param: position - position to draw sprite
-    // param: rotation - sprite rotation
-    // param: scale - sprite scale (not including Sprite.Scale)
-    // param: color - color of sprite
-    // param: spriteEffects - sprite effects
-    // param: layerDepth - layer depth of sprite
-    public void Draw(SpriteBatch spriteBatch, Vector2 position, float rotation, Vector2 scale,
-        Color color, SpriteEffects spriteEffects, float layerDepth)
-    {
-        spriteBatch.Draw(
-            SpriteSheet,
-            Camera.UnitToPixel(position),
-            SourceRectangle,
-            color,
-            rotation,
-            OriginPoint,
-            scale * Camera.PixelScale,
-            spriteEffects,
-            layerDepth     
-        );
-    }
 }

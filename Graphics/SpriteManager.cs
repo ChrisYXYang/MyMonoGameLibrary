@@ -15,8 +15,6 @@ public class SpriteManager : Component
     public bool FlipY { get; set; } = false;
     public float LayerDepth { get; set; } = 0;
 
-    private Transform _transform;
-
     // constructor
     //
     // attributes - attributes
@@ -53,27 +51,6 @@ public class SpriteManager : Component
     public override void Initialize(GameObject parent)
     {
         base.Initialize(parent);
-        _transform = GetComponent<Transform>();
-    }
-
-    // draw the sprite
-    //
-    // param: spriteBatch - SpriteBatch to use to draw
-    public void Draw(SpriteBatch spriteBatch)
-    {
-        int spriteEffect = 0;
-        
-        if (FlipX) { spriteEffect += 1; }
-        if (FlipY) { spriteEffect += 2; }
-
-        Sprite.Draw(
-            spriteBatch, 
-            _transform.position, 
-            _transform.Rotation, 
-            _transform.Scale, 
-            Color, 
-            (SpriteEffects)spriteEffect, 
-            LayerDepth);
     }
 }
 
