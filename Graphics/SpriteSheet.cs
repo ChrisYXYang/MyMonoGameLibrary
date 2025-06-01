@@ -42,7 +42,6 @@ public class SpriteSheet
                 // get general sprite information
                 var settings = root.Element("Settings");
                 int size = int.Parse(settings.Attribute("size").Value);
-                int scale = int.Parse(settings.Attribute("scale").Value);
                 bool centered = bool.Parse(settings.Attribute("centered").Value);
 
                 // retrieve all <Sprite> elements and create new Sprite for each element
@@ -71,7 +70,7 @@ public class SpriteSheet
                         }
 
                         // create new sprite
-                        Sprite newSprite = new Sprite(Sheet, originPoint, scale, x, y, size);
+                        Sprite newSprite = new Sprite(Sheet, originPoint, x, y, size);
                         _sprites.Add(name, newSprite);
 
 
