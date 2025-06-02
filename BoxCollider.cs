@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MyMonoGameLibrary.Tools;
 using static System.Formats.Asn1.AsnWriter;
 
@@ -10,7 +12,6 @@ namespace MyMonoGameLibrary;
 public class BoxCollider : Component
 {
     // variables and properties
-    private bool _centered = true;
     private Transform _transform;
 
     public int XOffset { get; private set; } = 0;
@@ -36,27 +37,26 @@ public class BoxCollider : Component
         Width = int.Parse(attributes["width"]);
         Height = int.Parse(attributes["height"]);
 
+        bool centered = true;
         if (attributes.ContainsKey("centered"))
         {
-            _centered = bool.Parse(attributes["centered"]);
+            centered = bool.Parse(attributes["centered"]);
         }
 
-        if (_centered)
+        if (centered)
         {
             XOffset = -(Width /2);
             YOffset = -Height;
         }
-        else
+        
+        if (attributes.ContainsKey("xOffset"))
         {
-            if (attributes.ContainsKey("xOffset"))
-            {
-                XOffset = int.Parse(attributes["xOffset"]);
-            }
+            XOffset = int.Parse(attributes["xOffset"]);
+        }
 
-            if (attributes.ContainsKey("yOffset"))
-            {
-                YOffset = int.Parse(attributes["yOffset"]);
-            }
+        if (attributes.ContainsKey("yOffset"))
+        {
+            YOffset = int.Parse(attributes["yOffset"]);
         }
 
         // set the private variables

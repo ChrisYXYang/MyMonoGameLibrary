@@ -42,7 +42,7 @@ public class SpriteSheet
                 // get general sprite information
                 var settings = root.Element("Settings");
                 int size = int.Parse(settings.Attribute("size").Value);
-                bool centered = bool.Parse(settings.Attribute("centered").Value);
+                bool centered = bool.Parse(settings.Attribute("centered")?.Value ?? "true");
 
                 // retrieve all <Sprite> elements and create new Sprite for each element
                 var sprites = root.Element("Sprites").Elements("Sprite");
@@ -55,22 +55,19 @@ public class SpriteSheet
                     {
                         // get name and origin point
                         string name = sprite.Attribute("name").Value;
-                        float originX = float.Parse(sprite.Attribute("originX")?.Value ?? "0");
-                        float originY = float.Parse(sprite.Attribute("originY")?.Value ?? "0");
+                        float originX = centered ? size * 0.5f : 0;
+                        float originY = centered ? size * 0.5f: 0;
 
-                        Vector2 originPoint = Vector2.Zero;
-                        if (originX != 0 || originY != 0)
-                        {
-                            originPoint = new Vector2(originX, originY);
+                        string tempX = sprite.Attribute("originX")?.Value;
+                        if (tempX != null)
+                            originX = float.Parse(tempX);
 
-                        }
-                        else if (centered)
-                        {
-                            originPoint = new Vector2(size, size) * 0.5f;
-                        }
+                        string tempY = sprite.Attribute("originY")?.Value;
+                        if (tempY != null)
+                            originY = float.Parse(tempY);
 
                         // create new sprite
-                        Sprite newSprite = new Sprite(Sheet, originPoint, x, y, size);
+                        Sprite newSprite = new Sprite(Sheet, new Vector2(originX, originY), x, y, size);
                         _sprites.Add(name, newSprite);
 
 
