@@ -56,7 +56,7 @@ public class SpriteSheet
                         // get name and origin point
                         string name = sprite.Attribute("name").Value;
                         float originX = centered ? size * 0.5f : 0;
-                        float originY = centered ? size * 0.5f: 0;
+                        float originY = centered ? size * 0.5f : 0;
 
                         string tempX = sprite.Attribute("originX")?.Value;
                         if (tempX != null)

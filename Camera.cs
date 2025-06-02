@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MyMonoGameLibrary.Graphics;
+using MyMonoGameLibrary.Tools;
 
 namespace MyMonoGameLibrary;
 
@@ -28,7 +30,7 @@ public class Camera
     public static Vector2 PixelToUnit(Vector2 coordinate)
     {
         return ((coordinate - 
-            (new Vector2(Core.GraphicsDevice.PresentationParameters.BackBufferWidth, 
+            (new Vector2(DebugMode.GraphicsDevice.PresentationParameters.BackBufferWidth, 
             Core.GraphicsDevice.PresentationParameters.BackBufferHeight) * 0.5f)) / UnitPixels)
             + position;
     }
