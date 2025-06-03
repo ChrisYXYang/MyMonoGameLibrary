@@ -12,7 +12,7 @@ public class BoxCollider : Component
 {
     // variables and properties
     private Transform _transform;
-
+    
     public int XOffset { get; private set; } = 0;
     private float _realXOffset;
     public int YOffset { get; private set; } = 0;

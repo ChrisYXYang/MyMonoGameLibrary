@@ -16,7 +16,7 @@ public class GameObject
     // variables and properties
     private Dictionary<string, Component> _components = new Dictionary<string, Component>();
     private SpriteManager _spriteManager;
-
+    
     // constructs the game object using information from xml file
     //
     // param: fileName - xml file that stores game object information
