@@ -25,10 +25,8 @@ public class SpriteSheet
     //
     // param: spriteSheet - the sprite sheet
     // param: fileName - xml file for sprite sheet information
-    public SpriteSheet(Texture2D spriteSheet, string fileName)
+    public SpriteSheet(string fileName)
     {
-        Sheet = spriteSheet;
-
         // read and use information from the xml file
         string filePath = Path.Combine("Content", fileName);
 
@@ -39,8 +37,12 @@ public class SpriteSheet
                 XDocument doc = XDocument.Load(reader);
                 XElement root = doc.Root;
 
-                // get general sprite information
+                // load sprite sheet texture
                 var settings = root.Element("Settings");
+                string texture = settings.Attribute("texture").Value;
+                Sheet = Core.Content.Load<Texture2D>(texture);
+
+                // get general sprite information
                 int size = int.Parse(settings.Attribute("size").Value);
                 bool centered = bool.Parse(settings.Attribute("centered")?.Value ?? "true");
 
@@ -83,7 +85,7 @@ public class SpriteSheet
                 }
 
                 // retrive all <Animation> elements and create new Animation for each element
-                var animations = root.Element("Animations").Elements("Animation");
+                var animations = root.Element("Animations")?.Elements("Animation");
 
                 if (animations != null)
                 {

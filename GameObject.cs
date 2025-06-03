@@ -15,6 +15,7 @@ public class GameObject
 {
     // variables and properties
     private Dictionary<string, Component> _components = new Dictionary<string, Component>();
+    private SpriteManager _spriteManager;
 
     // constructs the game object using information from xml file
     //
@@ -53,6 +54,9 @@ public class GameObject
             }
         }
 
+        // set sprite manager
+        _spriteManager = GetComponent<SpriteManager>();
+
         // initialize all components
         foreach (var entry in _components)
         {
@@ -75,6 +79,11 @@ public class GameObject
         return null;
     }
 
+    // draw this game object
+    public void Draw()
+    {
+        _spriteManager.Draw();
+    }
 
     // 4 testing
     public void PrintComponents()

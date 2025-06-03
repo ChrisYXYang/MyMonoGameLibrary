@@ -4,7 +4,6 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MyMonoGameLibrary.Tools;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace MyMonoGameLibrary;
 
@@ -60,10 +59,10 @@ public class BoxCollider : Component
         }
 
         // set the private variables
-        _realXOffset = XOffset / Camera.SpritePixelsPerUnit;
-        _realYOffset = YOffset / Camera.SpritePixelsPerUnit;
-        _realWidth = Width / Camera.SpritePixelsPerUnit;
-        _realHeight = Height / Camera.SpritePixelsPerUnit;
+        _realXOffset = (float)XOffset / Camera.SpritePixelsPerUnit;
+        _realYOffset = (float)YOffset / Camera.SpritePixelsPerUnit;
+        _realWidth = (float)Width / Camera.SpritePixelsPerUnit;
+        _realHeight = (float)Height / Camera.SpritePixelsPerUnit;
     }
 
     // initialize

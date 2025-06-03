@@ -22,6 +22,11 @@ public class Core : Game
     public static InputManager Input { get; private set; }
 
     // constructor
+    //
+    // param: title - title of window
+    // param: width - width of screen
+    // param: height - height of screen
+    // param: fullScreen - full screen or not
     public Core(string title, int width, int height, bool fullScreen)
     {
         // ensure only one core

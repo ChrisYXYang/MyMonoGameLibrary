@@ -28,4 +28,54 @@ public class Sprite
         SourceRectangle = new Rectangle(x, y, size, size);
         OriginPoint = originPoint;
     }
+
+    // in-general draw
+    //
+    // param: position - position
+    // param: color - color
+    // parm: rotation - rotation
+    // param: scale - scale
+    // param: spriteEffects - sprite effects
+    // param: layerDepth - layerDepth
+    public void Draw(Vector2 position, Color color, float rotation, Vector2 scale,
+        SpriteEffects spriteEffects, float layerDepth)
+    {
+        Core.SpriteBatch.Draw
+            (
+                SpriteSheet,
+                position,
+                SourceRectangle,
+                color,
+                rotation,
+                OriginPoint,
+                scale,
+                spriteEffects,
+                layerDepth
+            );
+    }
+
+    // draw in game world
+    //
+    // param: position - position
+    // param: color - color
+    // parm: rotation - rotation
+    // param: scale - scale
+    // param: spriteEffects - sprite effects
+    // param: layerDepth - layerDepth
+    public void GameDraw(Vector2 position, Color color, float rotation, Vector2 scale,
+        SpriteEffects spriteEffects, float layerDepth)
+    {
+        Core.SpriteBatch.Draw
+            (
+                SpriteSheet,
+                Camera.UnitToPixel(position),
+                SourceRectangle,
+                color,
+                rotation,
+                OriginPoint,
+                Camera.PixelScale * scale,
+                spriteEffects,
+                layerDepth
+            );
+    }
 }

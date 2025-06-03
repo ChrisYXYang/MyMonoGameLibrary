@@ -45,34 +45,4 @@ public class Camera
             (new Vector2(Core.GraphicsDevice.PresentationParameters.BackBufferWidth, 
             Core.GraphicsDevice.PresentationParameters.BackBufferHeight) * 0.5f);
     }
-
-    // draw a game object
-    //
-    // param: gameObject - game object to draw
-    public static void Draw(GameObject gameObject)
-    {
-        // get relevant components
-        Transform transform = gameObject.GetComponent<Transform>();
-        SpriteManager spriteManager = gameObject.GetComponent<SpriteManager>();
-        Sprite sprite = spriteManager.Sprite;
-
-        // set sprite effects
-        int spriteEffect = 0;
-        if (spriteManager.FlipX) { spriteEffect += 1; }
-        if (spriteManager.FlipY) { spriteEffect += 2; }
-
-        // draw
-        Core.SpriteBatch.Draw
-            (
-                sprite.SpriteSheet,
-                Camera.UnitToPixel(transform.position),
-                sprite.SourceRectangle,
-                spriteManager.Color,
-                transform.Rotation,
-                sprite.OriginPoint,
-                Camera.PixelScale * transform.Scale,
-                (SpriteEffects)spriteEffect,
-                spriteManager.LayerDepth
-            );
-    }
 }
