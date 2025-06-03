@@ -1,2 +1,5 @@
 # MyMonoGameLibrary
-My Class Library for MonoGame projects
+
+Created by Chris Yang
+
+This contains my class library for my Monogame projects.
