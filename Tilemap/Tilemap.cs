@@ -7,6 +7,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.Xml;
 using System.Diagnostics;
+using System.Linq;
 
 
 namespace MyMonoGameLibrary.Tilemap;
@@ -14,26 +15,21 @@ namespace MyMonoGameLibrary.Tilemap;
 // this class represents a tilemap
 public class TileMap
 {
-    private Dictionary<string, Tile[,]> _tileGrid;
-    
-    //public TileMap(Tileset tileSet, int[,] grid, int size, int layer)
-    //{
-    //    int rows = grid.GetLength(0);
-    //    int cols = grid.GetLength(1);
-    //    _tileGrid = new Tile[rows, cols];
+    // variables and properties
+    public int Rows { get; private set; }
+    public int Columns { get; private set; }
+    public List<string> Layers => _tilemap.Keys.ToList<string>();
 
-    //    for (int i = 0; i < rows; i++)
-    //    {
-    //        for (int j = 0; j < cols; j++)
-    //        {
-    //            _tileGrid[i, j] = new Tile(new Vector2(i - (cols / 2), j - (rows / 2)), size, 0 + (layer * 0.1f), false);
-    //        }
-    //    }
-    //}
-    
+    private Dictionary<string, Tile[,]> _tilemap = new Dictionary<string, Tile[,]>();
+
 
     public TileMap(string fileName)
     {
+        foreach(var entry in _tilemap)
+        {
+            Debug.WriteLine(entry.Key);
+        }
+        
         // read and use information from the xml file
         string filePath = Path.Combine("Content", fileName);
 
@@ -46,43 +42,79 @@ public class TileMap
 
                 // get general tilemap information
                 var settings = root.Element("Settings");
-                int rows = int.Parse(settings.Attribute("height").Value);
-                int cols = int.Parse(settings.Attribute("width").Value);
+                Rows = int.Parse(settings.Attribute("height").Value);
+                Columns = int.Parse(settings.Attribute("width").Value);
                 int tileSize = int.Parse(settings.Attribute("tileSize").Value);
-
+                Tileset tileSet = SpriteLibrary.GetTileset(settings.Attribute("tileset").Value);
                 // construct layers
                 var layers = root.Elements("layer");
 
                 if (layers != null)
                 {
+                    int layerDepth = 0;
                     foreach (var layer in layers)
                     {
                         // get layer name
                         string layerName = layer.Attribute("name").Value;
+                        bool collide = bool.Parse(layer.Attribute("collide").Value);
 
                         // create the tile grid from data csv
                         var data = layer.Element("data");
-                        Debug.WriteLine(data.Value);
-
-                        string[] grid_lines = data.Value.Split("\n");
-                        int[,] tileGrid  = new int[rows, cols];
+                        string[] grid_lines = data.Value.Trim().Split("\n");
+                        Tile[,] tileGrid  = new Tile[Rows, Columns];
                         
                         for (int i = 0; i < grid_lines.Length; i++)
                         {
-                            Debug.WriteLine(grid_lines[i]);
-                            string[] line_tiles = grid_lines[i].Trim().Split(",");
+                            grid_lines[i] = grid_lines[i].Trim();
+                            
+                            if (i < grid_lines.Length - 1)
+                                grid_lines[i] = grid_lines[i].Substring(0, grid_lines[i].Length - 1);
+
+                            string[] line_tiles = grid_lines[i].Split(",");
 
                             for (int j = 0; j < line_tiles.Length; j++)
                             {
-                                tileGrid[i, j] = int.Parse(line_tiles[j]);
+                                int tileNum = int.Parse(line_tiles[j]);
+                                if (tileNum != 0)
+                                {
+                                    tileGrid[i, j] = new Tile
+                                                        (
+                                                            tileSet.GetTile(int.Parse(line_tiles[j])),
+                                                            new Vector2(j - (float)Columns / 2, i - (float)Rows / 2 + 1),
+                                                            tileSize,
+                                                            0 + layerDepth * 0.1f,
+                                                            collide
+                                                         );
+                                }
                             }
                         }
 
-                        Debug.WriteLine(layerName);
-                        Debug.WriteLine(tileGrid.ToString());
+                        // add the new layer to tile map dictionary
+                        _tilemap.Add(layerName, tileGrid);
+                        layerDepth++;
                     }
                 }
             }
         }
+    }
+
+    public void Draw()
+    {
+        foreach (Tile[,] layer in _tilemap.Values)
+        {
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    if (layer[i, j] != null)
+                        layer[i,j].Draw();
+                }
+            }
+        }
+    }
+
+    public Tile GetTile(string layerName, int row, int col)
+    {
+        return _tilemap[layerName][row, col];
     }
 }

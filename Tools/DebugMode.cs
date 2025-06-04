@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 using MyMonoGameLibrary;
 using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.Tools;
+using MyMonoGameLibrary.Tilemap;
+using System.Collections.Generic;
 
 namespace MyMonoGameLibrary.Tools;
 
@@ -71,5 +73,40 @@ public class DebugMode : Core
                  SpriteEffects.None,
                  0.9f
             );
+    }
+
+    // draw tile colliders for a tilemap
+    //
+    // param: tilemap - tile map to draw collider
+    protected static void DrawTilemapCollider(TileMap tilemap)
+    {
+        List<string> layerNames = tilemap.Layers;
+
+        foreach (string layerName in layerNames)
+        {
+            for (int i = 0; i < tilemap.Rows; i++)
+            {
+                for (int j = 0; j < tilemap.Columns; j++)
+                {
+                    Tile tile = tilemap.GetTile(layerName, i, j);
+
+                    if (tile == null)
+                        continue;
+
+                    if (tile.Collider == null)
+                        continue;
+
+                    _boxCollider.GameDraw
+                        (
+                             new Vector2(tile.Collider.Left, tile.Collider.Top),
+                             Color.White,
+                             0f,
+                             Vector2.One,
+                             SpriteEffects.None,
+                             0.9f
+                        );
+                }
+            }
+        }
     }
 }

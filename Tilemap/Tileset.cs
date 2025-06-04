@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using System.Xml.Linq;
 using System.Xml;
 using MyMonoGameLibrary.Graphics;
+using System.Diagnostics;
 
 namespace MyMonoGameLibrary.Tilemap;
 
@@ -45,15 +46,15 @@ public class Tileset
                 int size = int.Parse(settings.Attribute("size").Value);
 
                 // load every tile into tiles 2d array
-                _rows = Set.Width / size;
-                _columns = Set.Height / size;
+                _rows = Set.Height / size;
+                _columns = Set.Width / size;
                 _tiles = new Sprite[_rows, _columns];
                 for (int i = 0; i < _rows; i++)
                 {
                     for (int j = 0; j < _columns; j++)
                     {
                         // create new tile sprite
-                        Sprite newTile = new Sprite(Set, new Vector2(0, size), i * size, j * size, size);
+                        Sprite newTile = new Sprite(Set, new Vector2(0, size), j * size, i * size, size);
                         _tiles[i, j] = newTile;
                     }
                 }
@@ -67,6 +68,6 @@ public class Tileset
     // return: chosen tile
     public Sprite GetTile(int tileNumber)
     {
-        return _tiles[tileNumber / _columns, tileNumber % _columns];
+        return _tiles[(tileNumber-1) / _columns, (tileNumber-1) % _columns];
     }
 }
