@@ -3,14 +3,14 @@
 namespace MyMonoGameLibrary.Input;
 
 // manages keyboard and mouse input.
-public class InputManager
+public static class InputManager
 {
     // variables and properties
-    public KeyboardInfo Keyboard { get; private set; } = new KeyboardInfo();
-    public MouseInfo Mouse { get; private set; } = new MouseInfo();
+    public static KeyboardInfo Keyboard { get; private set; } = new KeyboardInfo();
+    public static MouseInfo Mouse { get; private set; } = new MouseInfo();
 
     // updates input states
-    public void Update()
+    public static void Update()
     {
         Keyboard.Update();
         Mouse.Update();

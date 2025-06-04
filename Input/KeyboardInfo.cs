@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework.Input;
 
 namespace MyMonoGameLibrary.Input;

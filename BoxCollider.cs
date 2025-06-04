@@ -8,7 +8,7 @@ using MyMonoGameLibrary.Tools;
 namespace MyMonoGameLibrary;
 
 // component for rectangle collider for gameobject
-public class BoxCollider : Component
+public class BoxCollider : Component, RectCollider
 {
     // variables and properties
     private Transform _transform;
@@ -74,28 +74,31 @@ public class BoxCollider : Component
         _transform = GetComponent<Transform>();
     }
 
-    // see if intersection between two game objects (override of other)
+    // see if intersects between another rect collider
     //
-    // param: a - first game object
-    // param: b - second game object
+    // param: other - other collider
     // return: intersect or not
-    public static bool Intersect(GameObject a, GameObject b)
+    public bool Intersects(RectCollider other)
     {
-        return Intersect(a.GetComponent<BoxCollider>(), b.GetComponent<BoxCollider>());
+        return (this.Left < other.Right &&
+                other.Left < this.Right &&
+                this.Top < other.Bottom &&
+                other.Top < this.Bottom);
     }
 
-    // see if intersection between two box colliders
+    // see if intersection between two game objects
     //
     // param: a - first box collider
     // param: b - second box collider
     // return: intersect or not
-    public static bool Intersect(BoxCollider a, BoxCollider b)
+    public static bool Intersect(GameObject a, GameObject b)
     {
-        return (a.Left < b.Right &&
-                b.Left < a.Right &&
-                a.Top < b.Bottom &&
-                b.Top < a.Bottom);
+        BoxCollider aC = a.GetComponent<BoxCollider>();
+        BoxCollider bC = b.GetComponent<BoxCollider>();
+        
+        return (aC.Left < bC.Right &&
+                bC.Left < aC.Right &&
+                aC.Top < bC.Bottom &&
+                bC.Top < aC.Bottom);
     }
-
-
 }

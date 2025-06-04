@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using MyMonoGameLibrary.Input;
 
 namespace MyMonoGameLibrary;
 
@@ -13,7 +11,7 @@ namespace MyMonoGameLibrary;
 public class PlayerController : Component
 {
     // variables and properties
-    private float _moveSpeed;
+    public float MoveSpeed { get; set; }
 
     private Transform _transform;
     private Vector2 _direction = new Vector2();
@@ -23,8 +21,7 @@ public class PlayerController : Component
     // param: attributes - attributes of component
     public PlayerController(Dictionary<string, string> attributes)
     {
-        _moveSpeed = float.Parse(attributes["moveSpeed"]);
-        Debug.WriteLine("hi");
+        MoveSpeed = float.Parse(attributes["moveSpeed"]);
     }
 
     // initialize
@@ -36,23 +33,23 @@ public class PlayerController : Component
         _transform = GetComponent<Transform>();
     }
 
-    // cmove the player
+    // move the player
     //
     // param: gameTime - get the game time
     public void Move(GameTime gameTime)
     {
-        float speed = _moveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        float speed = MoveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         // get movement direction
-        if (Core.Input.Keyboard.IsKeyDown(Keys.W) && Core.Input.Keyboard.IsKeyDown(Keys.S))
+        if (InputManager.Keyboard.IsKeyDown(Keys.W) && InputManager.Keyboard.IsKeyDown(Keys.S))
         {
             _direction.Y = 0;
         }
-        else if (Core.Input.Keyboard.IsKeyDown(Keys.W))
+        else if (InputManager.Keyboard.IsKeyDown(Keys.W))
         {
             _direction.Y = -1;
         }
-        else if (Core.Input.Keyboard.IsKeyDown(Keys.S))
+        else if (InputManager.Keyboard.IsKeyDown(Keys.S))
         {
             _direction.Y = 1;
         }
@@ -61,15 +58,15 @@ public class PlayerController : Component
             _direction.Y = 0;
         }
 
-        if (Core.Input.Keyboard.IsKeyDown(Keys.A) && Core.Input.Keyboard.IsKeyDown(Keys.D))
+        if (InputManager.Keyboard.IsKeyDown(Keys.A) && InputManager.Keyboard.IsKeyDown(Keys.D))
         {
             _direction.X = 0;
         }
-        else if (Core.Input.Keyboard.IsKeyDown(Keys.A))
+        else if (InputManager.Keyboard.IsKeyDown(Keys.A))
         {
             _direction.X = -1;
         }
-        else if (Core.Input.Keyboard.IsKeyDown(Keys.D))
+        else if (InputManager.Keyboard.IsKeyDown(Keys.D))
         {
             _direction.X = 1;
         }

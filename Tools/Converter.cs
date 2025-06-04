@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 namespace MyMonoGameLibrary.Tools;
 
 // converts variables to other variables
-public class Converter
+public static class Converter
 {
     // converts string to vector2
     //

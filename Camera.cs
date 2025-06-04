@@ -9,7 +9,7 @@ namespace MyMonoGameLibrary;
 
 // Responsible for the "view" of the game. This includes where in the game world to render and
 // sprite size settings.
-public class Camera
+public static class Camera
 {
     // position of the camera in the game world
     public static Vector2 position = Vector2.Zero;    

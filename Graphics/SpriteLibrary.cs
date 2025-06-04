@@ -4,16 +4,17 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using MyMonoGameLibrary.Tilemap;
 
 namespace MyMonoGameLibrary.Graphics;
 
-// This class stores the sprite sheets of the game and and so allows any class to access sprite
-// sheets and their corresponding sprites/animations.
-public class SpriteLibrary
+// This class stores the spritesheets and tilesetsof the game and allows access to them.
+public static class SpriteLibrary
 {
     // variables and properties
     private static Dictionary<string, SpriteSheet> _spriteSheets = new Dictionary<string, SpriteSheet>();
-    
+    private static Dictionary<string, Tileset> _tileSets = new Dictionary<string, Tileset>();
+
     // add sprite sheet to library
     //
     // param: spriteSheetName - name of sprite sheet
@@ -23,6 +24,15 @@ public class SpriteLibrary
         _spriteSheets.Add(spriteSheetName, spriteSheet);
     }
     
+    // get sprite sheet
+    //
+    // param: spriteSheetName - name of sprite sheet
+    // return: sprite sheet requested
+    public static SpriteSheet GetSpriteSheet(string spriteSheetName)
+    {
+        return _spriteSheets[spriteSheetName];
+    }
+
     // get sprite
     //
     // param: spriteSheet - sprite sheet to get from
@@ -41,5 +51,23 @@ public class SpriteLibrary
     public static Animation GetAnimation(string spriteSheet, string animation)
     {
         return _spriteSheets[spriteSheet].GetAnimation(animation);
+    }
+
+    // add tile set to library
+    //
+    // param: tileSetName - name of tile set
+    // param: tileSet - tile set to add
+    public static void AddTileset(string tileSetName, Tileset tileSet)
+    {
+        _tileSets.Add(tileSetName, tileSet);
+    }
+
+    // get tile set
+    //
+    // param: tileSetName - name of tile set
+    // param: tile set requested
+    public static Tileset GetTileset(string tileSetName)
+    {
+        return _tileSets[tileSetName];
     }
 }
