@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Tools;
 
-namespace MyMonoGameLibrary;
+namespace MyMonoGameLibrary.Scene;
 
 // component for the transform of gameobject, which is position, scale, rotation
 public class Transform : Component

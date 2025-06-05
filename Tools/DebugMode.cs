@@ -2,11 +2,11 @@
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MyMonoGameLibrary;
 using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.Tools;
 using MyMonoGameLibrary.Tilemap;
 using System.Collections.Generic;
+using MyMonoGameLibrary.Scene;
 
 namespace MyMonoGameLibrary.Tools;
 
@@ -32,7 +32,7 @@ public class DebugMode : Core
     // load content
     protected override void LoadContent()
     {
-        _sprites = new SpriteSheet("images/debug.xml");
+        _sprites = new SpriteSheet("debug");
         _originPoint = _sprites.GetSprite("origin_point");
         _boxCollider = _sprites.GetSprite("box_collider");
     }

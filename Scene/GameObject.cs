@@ -8,10 +8,10 @@ using System.Xml.Linq;
 using System.Xml;
 using System.Linq;
 
-namespace MyMonoGameLibrary;
+namespace MyMonoGameLibrary.Scene;
 
 // This class represents the objects in the game. Each object will have multiple components.
-public class GameObject
+public class GameObject : ICollidable
 {
     // variables and properties
     private Dictionary<string, Component> _components = new Dictionary<string, Component>();
@@ -23,7 +23,7 @@ public class GameObject
     public GameObject(string fileName)
     {
         // read and use information from the xml file
-        string filePath = Path.Combine("Content", fileName);
+        string filePath = Path.Combine("Content", fileName) + ".xml";
 
         using (Stream stream = TitleContainer.OpenStream(filePath))
         {
@@ -77,6 +77,14 @@ public class GameObject
         }
 
         return null;
+    }
+
+    // return the collider
+    //
+    // return: the collider
+    public IRectCollider GetCollider()
+    {
+        return GetComponent<BoxCollider>();
     }
 
     // draw this game object

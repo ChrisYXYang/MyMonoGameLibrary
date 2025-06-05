@@ -6,7 +6,7 @@ using System.Xml;
 using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Graphics;
 
-namespace MyMonoGameLibrary;
+namespace MyMonoGameLibrary.Scene;
 
 // This class is the base class for components for a game object. Components include Transfrom,
 // SpriteManager, BoxCollider, etc.

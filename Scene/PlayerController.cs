@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using System.Diagnostics;
 using MyMonoGameLibrary.Input;
 
-namespace MyMonoGameLibrary;
+namespace MyMonoGameLibrary.Scene;
 
 // controller for the player
 public class PlayerController : Component

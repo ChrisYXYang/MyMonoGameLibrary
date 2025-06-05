@@ -28,7 +28,7 @@ public class SpriteSheet
     public SpriteSheet(string fileName)
     {
         // read and use information from the xml file
-        string filePath = Path.Combine("Content", fileName);
+        string filePath = "Content/images/" + fileName + ".xml";
 
         using (Stream stream = TitleContainer.OpenStream(filePath))
         {

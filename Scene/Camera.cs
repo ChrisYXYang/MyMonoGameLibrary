@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.Tools;
 
-namespace MyMonoGameLibrary;
+namespace MyMonoGameLibrary.Scene;
 
 // Responsible for the "view" of the game. This includes where in the game world to render and
 // sprite size settings.
@@ -29,9 +29,9 @@ public static class Camera
     // return: game unit coordinate
     public static Vector2 PixelToUnit(Vector2 coordinate)
     {
-        return ((coordinate - 
-            (new Vector2(DebugMode.GraphicsDevice.PresentationParameters.BackBufferWidth, 
-            Core.GraphicsDevice.PresentationParameters.BackBufferHeight) * 0.5f)) / UnitPixels)
+        return (coordinate - 
+            new Vector2(Core.GraphicsDevice.PresentationParameters.BackBufferWidth, 
+            Core.GraphicsDevice.PresentationParameters.BackBufferHeight) * 0.5f) / UnitPixels
             + position;
     }
 
@@ -41,8 +41,8 @@ public static class Camera
     // return: pixel coordinate
     public static Vector2 UnitToPixel(Vector2 coordinate)
     {
-        return ((coordinate - position) * UnitPixels) + 
-            (new Vector2(Core.GraphicsDevice.PresentationParameters.BackBufferWidth, 
-            Core.GraphicsDevice.PresentationParameters.BackBufferHeight) * 0.5f);
+        return (coordinate - position) * UnitPixels + 
+            new Vector2(Core.GraphicsDevice.PresentationParameters.BackBufferWidth, 
+            Core.GraphicsDevice.PresentationParameters.BackBufferHeight) * 0.5f;
     }
 }

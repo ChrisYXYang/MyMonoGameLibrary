@@ -2,11 +2,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MyMonoGameLibrary.Graphics;
+using MyMonoGameLibrary.Scene;
 
 namespace MyMonoGameLibrary.Tilemap;
 
 // this class represents a tile
-public class Tile
+public class Tile : ICollidable
 {
     // variables and properties
     public Sprite Sprite { get; private set; }
@@ -45,5 +46,13 @@ public class Tile
                 SpriteEffects.None,
                 LayerDepth
             );
+    }
+
+    // return collider
+    //
+    // return: the collider
+    public IRectCollider GetCollider()
+    {
+        return Collider;
     }
 }

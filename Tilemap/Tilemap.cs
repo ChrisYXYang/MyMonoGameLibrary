@@ -31,9 +31,9 @@ public class TileMap
         {
             Debug.WriteLine(entry.Key);
         }
-        
+
         // read and use information from the xml file
-        string filePath = Path.Combine("Content", fileName);
+        string filePath = "Content/Tilemaps/" + fileName + ".xml"; 
 
         using (Stream stream = TitleContainer.OpenStream(filePath))
         {
@@ -43,11 +43,10 @@ public class TileMap
                 XElement root = doc.Root;
 
                 // get general tilemap information
-                var settings = root.Element("Settings");
-                Rows = int.Parse(settings.Attribute("height").Value);
-                Columns = int.Parse(settings.Attribute("width").Value);
-                int tileSize = int.Parse(settings.Attribute("tileSize").Value);
-                Tileset tileSet = SpriteLibrary.GetTileset(settings.Attribute("tileset").Value);
+                Rows = int.Parse(root.Attribute("height").Value);
+                Columns = int.Parse(root.Attribute("width").Value);
+                int tileSize = int.Parse(root.Attribute("tilewidth").Value);
+                Tileset tileSet = SpriteLibrary.GetTileset(fileName);
                 // construct layers
                 var layers = root.Elements("layer");
 
@@ -58,7 +57,7 @@ public class TileMap
                     {
                         // get layer name
                         string layerName = layer.Attribute("name").Value;
-                        bool collide = bool.Parse(layer.Attribute("collide").Value);
+                        bool collide = layerName.Contains("collide");
 
                         // create the tile grid from data csv
                         var data = layer.Element("data");
@@ -82,9 +81,9 @@ public class TileMap
                                     tileGrid[i, j] = new Tile
                                                         (
                                                             tileSet.GetTile(int.Parse(line_tiles[j])),
-                                                            new Vector2(j - (float)Columns / 2, i - (float)Rows / 2 + 1),
+                                                            new Vector2(j + 0.5f - (float)Columns / 2, i - (float)Rows / 2 + 1),
                                                             tileSize,
-                                                            0 + layerDepth * 0.1f,
+                                                            0 + layerDepth * 0.01f,
                                                             collide
                                                          );
                                 }

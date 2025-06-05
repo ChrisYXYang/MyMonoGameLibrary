@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using MyMonoGameLibrary.Scene;
 
 namespace MyMonoGameLibrary.Graphics;
 

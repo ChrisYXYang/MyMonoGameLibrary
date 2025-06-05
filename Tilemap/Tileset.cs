@@ -28,7 +28,7 @@ public class Tileset
     public Tileset(string fileName)
     {
         // read and use information from the xml file
-        string filePath = Path.Combine("Content", fileName);
+        string filePath = "Content/images/" + fileName + ".xml";
 
         using (Stream stream = TitleContainer.OpenStream(filePath))
         {
@@ -54,7 +54,7 @@ public class Tileset
                     for (int j = 0; j < _columns; j++)
                     {
                         // create new tile sprite
-                        Sprite newTile = new Sprite(Set, new Vector2(0, size), j * size, i * size, size);
+                        Sprite newTile = new Sprite(Set, new Vector2(size * 0.5f, size), j * size, i * size, size);
                         _tiles[i, j] = newTile;
                     }
                 }

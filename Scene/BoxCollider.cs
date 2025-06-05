@@ -5,10 +5,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MyMonoGameLibrary.Tools;
 
-namespace MyMonoGameLibrary;
+namespace MyMonoGameLibrary.Scene;
 
 // component for rectangle collider for gameobject
-public class BoxCollider : Component, RectCollider
+public class BoxCollider : Component, IRectCollider
 {
     // variables and properties
     private Transform _transform;
@@ -72,33 +72,5 @@ public class BoxCollider : Component, RectCollider
     {
         base.Initialize(parent);
         _transform = GetComponent<Transform>();
-    }
-
-    // see if intersects between another rect collider
-    //
-    // param: other - other collider
-    // return: intersect or not
-    public bool Intersects(RectCollider other)
-    {
-        return (this.Left < other.Right &&
-                other.Left < this.Right &&
-                this.Top < other.Bottom &&
-                other.Top < this.Bottom);
-    }
-
-    // see if intersection between two game objects
-    //
-    // param: a - first box collider
-    // param: b - second box collider
-    // return: intersect or not
-    public static bool Intersect(GameObject a, GameObject b)
-    {
-        BoxCollider aC = a.GetComponent<BoxCollider>();
-        BoxCollider bC = b.GetComponent<BoxCollider>();
-        
-        return (aC.Left < bC.Right &&
-                bC.Left < aC.Right &&
-                aC.Top < bC.Bottom &&
-                bC.Top < aC.Bottom);
     }
 }
