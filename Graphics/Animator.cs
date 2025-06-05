@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace MyMonoGameLibrary.Graphics;
 
+// responsible for animating game object
 public class Animator : Component
 {
     // variables and properties

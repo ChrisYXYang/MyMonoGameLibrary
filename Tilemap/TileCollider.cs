@@ -8,6 +8,7 @@ using MyMonoGameLibrary;
 
 namespace MyMonoGameLibrary.Tilemap;
 
+// square collider for a tile
 public class TileCollider : RectCollider
 {
     // variables and properties
@@ -21,6 +22,9 @@ public class TileCollider : RectCollider
     private float _width;
     private float _height;
 
+    // constructor 
+    // 
+    // param: tile - the tile that holds the collider
     public TileCollider(Tile tile)
     {
         Tile = tile;

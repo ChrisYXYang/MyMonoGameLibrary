@@ -15,6 +15,13 @@ public class Tile
     public float LayerDepth { get; private set; }
     public TileCollider Collider { get; private set; }
 
+    // constructor
+    //
+    // param: sprite - sprite of tile
+    // param: position - position of tile
+    // param: size - num pixels in tile
+    // param: layerDepth - layer
+    // param: collider - whether or not collider
     public Tile(Sprite sprite, Vector2 position, int size, float layerDepth, bool collider)
     {
         Sprite = sprite;
@@ -26,6 +33,7 @@ public class Tile
             Collider = new TileCollider(this);
     }
    
+    // draw the tile
     public void Draw()
     {
         Sprite.GameDraw

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace MyMonoGameLibrary.Graphics;
 
+// represents an animation
 public class Animation
 {
     // variables and properties

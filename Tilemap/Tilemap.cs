@@ -22,7 +22,9 @@ public class TileMap
 
     private Dictionary<string, Tile[,]> _tilemap = new Dictionary<string, Tile[,]>();
 
-
+    // constructor. Creates a tile map from xml file
+    //
+    // param: fileName - name of xml file
     public TileMap(string fileName)
     {
         foreach(var entry in _tilemap)
@@ -98,6 +100,7 @@ public class TileMap
         }
     }
 
+    // draw the tilemap
     public void Draw()
     {
         foreach (Tile[,] layer in _tilemap.Values)
@@ -113,6 +116,12 @@ public class TileMap
         }
     }
 
+    // get a tile
+    //
+    // param: layerName - layer to get tile from
+    // param: row - which row tile is in
+    // param: col - which column
+    // return: Tile requested, or null if no tile there
     public Tile GetTile(string layerName, int row, int col)
     {
         return _tilemap[layerName][row, col];
