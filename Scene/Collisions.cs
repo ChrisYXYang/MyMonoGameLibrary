@@ -21,17 +21,4 @@ public static class Collisions
         a.Top < b.Bottom &&
         b.Top < a.Bottom;
     }
-
-    // check if two objects in the game intersect
-    //
-    // param: a - first object
-    // param: b - second object
-    // return: whether they intersect
-    public static bool Intersect(ICollidable a, ICollidable b)
-    {
-        if (a == null || b == null)
-            return false;
-        
-        return AABBIntersect(a.GetCollider(), b.GetCollider());
-    }
 }

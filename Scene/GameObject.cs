@@ -6,6 +6,8 @@ using System.IO;
 using System.Xml.Linq;
 using System.Xml;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Net.Mime;
 
 namespace MyMonoGameLibrary.Scene;
 
@@ -14,6 +16,7 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
 {
     // variables and properties
     private Dictionary<string, Component> _components = new Dictionary<string, Component>();
+    private Dictionary<string, IBehavior> _behaviors = new Dictionary<string, IBehavior>();
     
     // constructs the game object using information from xml file
     //
@@ -45,13 +48,25 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
 
                     // create the new component
                     string componentName = component.Name.ToString();
+                    string typeName = "MyMonoGameLibrary.Scene." + componentName;
+
+                    bool behavior = false;
+                    if (componentName.Contains("Behavior"))
+                    {
+                        behavior = true;
+                        typeName = componentName;
+                    }
+
                     Component newComponent =
-                        (Component)Activator.CreateInstance
-                                        (
-                                            Type.GetType("MyMonoGameLibrary.Scene." + componentName), 
-                                            [attributes]
-                                        );
+                                (Component)Activator.CreateInstance
+                                                (
+                                                    Type.GetType(typeName),
+                                                    [attributes]
+                                                );
                     _components.Add(componentName, newComponent);
+
+                    if (behavior)
+                        _behaviors.Add(componentName, (IBehavior)newComponent);
                 }
             }
         }
@@ -76,6 +91,14 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
         }
 
         return null;
+    }
+
+    // on collision with other collider
+    //
+    // param: other - other collider
+    public void OnCollision(IRectCollider other)
+    {
+
     }
 
     // get the collider

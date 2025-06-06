@@ -6,15 +6,9 @@ using System.Threading.Tasks;
 
 namespace MyMonoGameLibrary.Scene;
 
-// interface for rectangle collider
-public interface IRectCollider
+// this interface represents scripts for object behavior
+internal interface IBehavior
 {
-    // properties
-    public float Left { get; }
-    public float Top { get; }
-    public float Right { get; }
-    public float Bottom { get; }
-
     // what to do when collision happens
     //
     // param: other - other collider

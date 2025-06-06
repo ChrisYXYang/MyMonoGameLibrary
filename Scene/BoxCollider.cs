@@ -74,11 +74,11 @@ public class BoxCollider : Component, IRectCollider
         _transform = GetComponent<Transform>();
     }
 
-    // get parent of collider
+    // what to do when collision happens
     //
-    // return: parent object
-    public ICollidable GetParent()
+    // param: other - other collider
+    public void OnCollision(IRectCollider other)
     {
-        return parent;
+
     }
 }
