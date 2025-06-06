@@ -34,11 +34,18 @@ public class TileCollider : IRectCollider
         _height = (float)Parent.Size / Camera.SpritePixelsPerUnit;
     }
 
-    // what to do when collision happens
-    //
-    // param: other - other collider
-    public void OnCollision(IRectCollider other)
+    public void Colliding(IRectCollider other)
     {
+        
+    }
 
+    public void NotColliding(IRectCollider other)
+    {
+        
+    }
+
+    public string GetName()
+    {
+        return Parent.Name;
     }
 }

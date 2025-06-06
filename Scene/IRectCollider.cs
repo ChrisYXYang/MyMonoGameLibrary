@@ -15,8 +15,17 @@ public interface IRectCollider
     public float Right { get; }
     public float Bottom { get; }
 
-    // what to do when collision happens
+    // get name of parent
+    //
+    // return: name of parentt
+    public string GetName();
+
+    // what to do when colliding
     //
     // param: other - other collider
-    public void OnCollision(IRectCollider other);
+    public void Colliding(IRectCollider other);
+
+    // what to do when not colliding
+    public void NotColliding(IRectCollider other);
+
 }

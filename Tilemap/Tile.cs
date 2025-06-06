@@ -15,6 +15,7 @@ public class Tile : ICollidable
     public int Size { get; private set; }
     public float LayerDepth { get; private set; }
     public TileCollider Collider { get; private set; }
+    public string Name { get; private set; }
 
     // constructor
     //
@@ -23,8 +24,9 @@ public class Tile : ICollidable
     // param: size - num pixels in tile
     // param: layerDepth - layer
     // param: collider - whether or not collider
-    public Tile(Sprite sprite, Vector2 position, int size, float layerDepth, bool collider)
+    public Tile(string name, Sprite sprite, Vector2 position, int size, float layerDepth, bool collider)
     {
+        Name = name;
         Sprite = sprite;
         Position = position;
         Size = size;

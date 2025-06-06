@@ -12,6 +12,7 @@ public class BoxCollider : Component, IRectCollider
 {
     // variables and properties
     private Transform _transform;
+    private Dictionary<string, IRectCollider> _collisions = new Dictionary<string, IRectCollider>();
     
     public int XOffset { get; private set; } = 0;
     private float _realXOffset;
@@ -25,7 +26,6 @@ public class BoxCollider : Component, IRectCollider
     public float Right => Left + _realWidth;
     public float Top => _transform.position.Y + _realYOffset;
     public float Bottom => Top + _realHeight;
-
 
     // constructor
     //
@@ -74,11 +74,33 @@ public class BoxCollider : Component, IRectCollider
         _transform = GetComponent<Transform>();
     }
 
+    public string GetName()
+    {
+        return parent.Name;
+    }
+
     // what to do when collision happens
     //
     // param: other - other collider
-    public void OnCollision(IRectCollider other)
+    public void Colliding(IRectCollider other)
     {
+        if (!_collisions.ContainsKey(other.GetName()))
+        {
+            parent.OnCollisionEnter(other);
+            _collisions.Add(other.GetName(), other);
+        }
+        else
+        {
+            parent.OnCollisionStay(other);
+        }
+    }
 
+    public void NotColliding(IRectCollider other)
+    {
+        if (_collisions.ContainsKey(other.GetName()))
+        {
+            _collisions.Remove(other.GetName());
+            parent.OnCollisionExit(other);
+        }
     }
 }

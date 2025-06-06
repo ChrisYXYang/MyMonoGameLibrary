@@ -8,6 +8,7 @@ using System.Xml;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Net.Mime;
+using MyMonoGameLibrary.Behavior;
 
 namespace MyMonoGameLibrary.Scene;
 
@@ -15,6 +16,7 @@ namespace MyMonoGameLibrary.Scene;
 public class GameObject : ICollidable, IRenderable, IAnimatable
 {
     // variables and properties
+    public string Name { get; private set; }
     private Dictionary<string, Component> _components = new Dictionary<string, Component>();
     private Dictionary<string, IBehavior> _behaviors = new Dictionary<string, IBehavior>();
     
@@ -23,6 +25,8 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
     // param: fileName - xml file that stores game object information
     public GameObject(string fileName)
     {
+        Name = fileName;
+        
         // read and use information from the xml file
         string filePath = Path.Combine("Content", fileName) + ".xml";
 
@@ -48,21 +52,21 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
 
                     // create the new component
                     string componentName = component.Name.ToString();
-                    string typeName = "MyMonoGameLibrary.Scene." + componentName;
+                    string typeName = componentName;
 
                     bool behavior = false;
                     if (componentName.Contains("Behavior"))
                     {
                         behavior = true;
-                        typeName = componentName;
+                    }
+                    else
+                    {
+                        typeName = "MyMonoGameLibrary.Scene." + componentName;
                     }
 
                     Component newComponent =
-                                (Component)Activator.CreateInstance
-                                                (
-                                                    Type.GetType(typeName),
-                                                    [attributes]
-                                                );
+                        (Component)Activator.CreateInstance(Type.GetType(typeName),[attributes]);
+                    
                     _components.Add(componentName, newComponent);
 
                     if (behavior)
@@ -96,9 +100,28 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
     // on collision with other collider
     //
     // param: other - other collider
-    public void OnCollision(IRectCollider other)
+    public void OnCollisionEnter(IRectCollider other)
     {
+        foreach (IBehavior behavior in _behaviors.Values)
+        {
+            behavior.OnCollisionEnter(other);
+        }
+    }
 
+    public void OnCollisionExit(IRectCollider other)
+    {
+        foreach (IBehavior behavior in _behaviors.Values)
+        {
+            behavior.OnCollisionExit(other);
+        }
+    }
+
+    public void OnCollisionStay(IRectCollider other)
+    {
+        foreach (IBehavior behavior in _behaviors.Values)
+        {
+            behavior.OnCollisionStay(other);
+        }
     }
 
     // get the collider
