@@ -2,12 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using MyMonoGameLibrary.Scene;
+using MyMonoGameLibrary.Graphics;
 
-namespace MyMonoGameLibrary.Graphics;
+namespace MyMonoGameLibrary.Scene;
 
-// Component for managing a sprite for a game object.
-public class SpriteManager : Component
+// Component for drawing a sprite for a game object.
+public class SpriteRenderer : Component, IRenderer
 {
     // variables and properties
     public Sprite Sprite { get; set; }
@@ -20,7 +20,7 @@ public class SpriteManager : Component
     // constructor
     //
     // attributes - attributes
-    public SpriteManager(Dictionary<string, string> attributes)
+    public SpriteRenderer(Dictionary<string, string> attributes)
     {
         Sprite = SpriteLibrary.GetSprite(attributes["spriteSheet"], attributes["sprite"]);
 

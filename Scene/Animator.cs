@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using MyMonoGameLibrary.Scene;
+using MyMonoGameLibrary.Graphics;
 
-namespace MyMonoGameLibrary.Graphics;
+namespace MyMonoGameLibrary.Scene;
 
 // responsible for animating game object
-public class Animator : Component
+public class Animator : Component, IAnimator
 {
     // variables and properties
-    private SpriteManager _spriteManager;
+    private SpriteRenderer _spriteManager;
     private int _currentFrame = 0;
     private TimeSpan _elapsed;
     private Animation _animation;
@@ -63,7 +63,7 @@ public class Animator : Component
     public override void Initialize(GameObject parent)
     {
         base.Initialize(parent);
-        _spriteManager = GetComponent<SpriteManager>();
+        _spriteManager = GetComponent<SpriteRenderer>();
         _spriteManager.Sprite = _animation.Frames[0];
     }
 }

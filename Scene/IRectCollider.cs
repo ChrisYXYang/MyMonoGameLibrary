@@ -14,4 +14,9 @@ public interface IRectCollider
     public float Top { get; }
     public float Right { get; }
     public float Bottom { get; }
+
+    // get parent of collider
+    //
+    // return: parent object
+    public ICollidable GetParent();
 }

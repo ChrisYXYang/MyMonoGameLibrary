@@ -12,10 +12,10 @@ namespace MyMonoGameLibrary.Tilemap;
 public class TileCollider : IRectCollider
 {
     // variables and properties
-    public Tile Tile { get; private set; }
-    public float Left => Tile.Position.X - 0.5f;
+    public Tile Parent { get; private set; }
+    public float Left => Parent.Position.X - 0.5f;
     public float Right => Left + _width;
-    public float Top => Tile.Position.Y + _yOffset;
+    public float Top => Parent.Position.Y + _yOffset;
     public float Bottom => Top + _height;
 
     private float _yOffset;
@@ -25,12 +25,20 @@ public class TileCollider : IRectCollider
     // constructor 
     // 
     // param: tile - the tile that holds the collider
-    public TileCollider(Tile tile)
+    public TileCollider(Tile parent)
     {
-        Tile = tile;
+        Parent = parent;
 
-        _yOffset = -(float)Tile.Size / Camera.SpritePixelsPerUnit;
-        _width = (float)Tile.Size / Camera.SpritePixelsPerUnit;
-        _height = (float)Tile.Size / Camera.SpritePixelsPerUnit;
+        _yOffset = -(float)Parent.Size / Camera.SpritePixelsPerUnit;
+        _width = (float)Parent.Size / Camera.SpritePixelsPerUnit;
+        _height = (float)Parent.Size / Camera.SpritePixelsPerUnit;
+    }
+
+    // get parent of collider
+    //
+    // return: parent object
+    public ICollidable GetParent()
+    {
+        return Parent;
     }
 }

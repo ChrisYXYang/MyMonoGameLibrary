@@ -8,12 +8,13 @@ using System.Xml.Linq;
 using System.Xml;
 using System.Diagnostics;
 using System.Linq;
+using MyMonoGameLibrary.Scene;
 
 
 namespace MyMonoGameLibrary.Tilemap;
 
 // this class represents a tilemap
-public class TileMap
+public class TileMap : IRenderable, IRenderer
 {
     // variables and properties
     public int Rows { get; private set; }
@@ -114,6 +115,15 @@ public class TileMap
             }
         }
     }
+
+    // get the renderer
+    //
+    // return: the renderer
+    public IRenderer GetRenderer()
+    {
+        return this;
+    }
+
 
     // get a tile
     //

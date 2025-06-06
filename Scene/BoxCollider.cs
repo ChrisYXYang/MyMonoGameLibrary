@@ -73,4 +73,12 @@ public class BoxCollider : Component, IRectCollider
         base.Initialize(parent);
         _transform = GetComponent<Transform>();
     }
+
+    // get parent of collider
+    //
+    // return: parent object
+    public ICollidable GetParent()
+    {
+        return parent;
+    }
 }

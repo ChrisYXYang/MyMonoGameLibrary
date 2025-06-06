@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using MyMonoGameLibrary.Graphics;
 using System.IO;
 using System.Xml.Linq;
 using System.Xml;
@@ -11,11 +10,10 @@ using System.Linq;
 namespace MyMonoGameLibrary.Scene;
 
 // This class represents the objects in the game. Each object will have multiple components.
-public class GameObject : ICollidable
+public class GameObject : ICollidable, IRenderable, IAnimatable
 {
     // variables and properties
     private Dictionary<string, Component> _components = new Dictionary<string, Component>();
-    private SpriteManager _spriteManager;
     
     // constructs the game object using information from xml file
     //
@@ -48,14 +46,15 @@ public class GameObject : ICollidable
                     // create the new component
                     string componentName = component.Name.ToString();
                     Component newComponent =
-                        (Component)Activator.CreateInstance(Type.GetType(componentName), [attributes]);
-                    _components.Add(componentName.Split(".").Last(), newComponent);
+                        (Component)Activator.CreateInstance
+                                        (
+                                            Type.GetType("MyMonoGameLibrary.Scene." + componentName), 
+                                            [attributes]
+                                        );
+                    _components.Add(componentName, newComponent);
                 }
             }
         }
-
-        // set sprite manager
-        _spriteManager = GetComponent<SpriteManager>();
 
         // initialize all components
         foreach (var entry in _components)
@@ -79,18 +78,28 @@ public class GameObject : ICollidable
         return null;
     }
 
-    // return the collider
+    // get the collider
     //
-    // return: the collider
+    // return: box collider
     public IRectCollider GetCollider()
     {
         return GetComponent<BoxCollider>();
     }
 
-    // draw this game object
-    public void Draw()
+    // get the renderer
+    //
+    // return: sprite renderer
+    public IRenderer GetRenderer()
     {
-        _spriteManager.Draw();
+        return GetComponent<SpriteRenderer>();
+    }
+
+    // get the animator
+    //
+    // return: animator
+    public IAnimator GetAnimator()
+    {
+        return GetComponent<Animator>();
     }
 
     // 4 testing
