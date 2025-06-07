@@ -14,29 +14,30 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
     private Dictionary<string, Component> _components = new Dictionary<string, Component>();
     private Dictionary<string, IBehavior> _behaviors = new Dictionary<string, IBehavior>();
 
-    // add a component to the game object
+    // constructor
     //
-    // param: component - component to be added
-    public void AddComponent<T>(T component) where T : Component
+    // param: name - name of game object
+    // param: components - components of game object
+    public GameObject(string name, Component[] components)
     {
-        // add component
-        string compName = typeof(T).Name;
-        _components.Add(compName, component);
+        Name = name;
 
-        // if component is behavior
-        if (component is IBehavior)
-            _behaviors.Add(compName, (IBehavior)component);
-    }
+        // store every component
+        foreach (Component component in components)
+        {
+            string compName = component.GetType().Name;
 
-    // initialize the game object
-    public void Initialize()
-    {
+            _components.Add(compName, component);
+
+            if (component is IBehavior)
+                _behaviors.Add(compName, (IBehavior)component);
+        }
+
         foreach (Component component in _components.Values)
         {
             component.Initialize(this);
         }
     }
-
 
     // get chosen component from game object.
     //
