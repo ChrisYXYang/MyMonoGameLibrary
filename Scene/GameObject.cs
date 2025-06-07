@@ -2,13 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using System.IO;
-using System.Xml.Linq;
-using System.Xml;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Net.Mime;
-using MyMonoGameLibrary.Behavior;
+
 
 namespace MyMonoGameLibrary.Scene;
 
@@ -19,68 +13,30 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
     public string Name { get; private set; }
     private Dictionary<string, Component> _components = new Dictionary<string, Component>();
     private Dictionary<string, IBehavior> _behaviors = new Dictionary<string, IBehavior>();
-    
-    // constructs the game object using information from xml file
+
+    // add a component to the game object
     //
-    // param: fileName - xml file that stores game object information
-    public GameObject(string fileName)
+    // param: component - component to be added
+    public void AddComponent<T>(T component) where T : Component
     {
-        Name = fileName;
-        
-        // read and use information from the xml file
-        string filePath = Path.Combine("Content", fileName) + ".xml";
+        // add component
+        string compName = typeof(T).Name;
+        _components.Add(compName, component);
 
-        using (Stream stream = TitleContainer.OpenStream(filePath))
+        // if component is behavior
+        if (component is IBehavior)
+            _behaviors.Add(compName, (IBehavior)component);
+    }
+
+    // initialize the game object
+    public void Initialize()
+    {
+        foreach (Component component in _components.Values)
         {
-            using (XmlReader reader = XmlReader.Create(stream))
-            {
-                XDocument doc = XDocument.Load(reader);
-                XElement root = doc.Root;
-
-                // create component for each element in <Components>
-                var components = root.Element("Components").Elements();
-
-                foreach (var component in components)
-                {
-                    // store all attributes in component
-                    Dictionary<string, string> attributes = new Dictionary<string, string>();
-
-                    foreach (var attribute in component.Attributes())
-                    {
-                        attributes.Add(attribute.Name.ToString(), attribute.Value);
-                    }
-
-                    // create the new component
-                    string componentName = component.Name.ToString();
-                    string typeName = componentName;
-
-                    bool behavior = false;
-                    if (componentName.Contains("Behavior"))
-                    {
-                        behavior = true;
-                    }
-                    else
-                    {
-                        typeName = "MyMonoGameLibrary.Scene." + componentName;
-                    }
-
-                    Component newComponent =
-                        (Component)Activator.CreateInstance(Type.GetType(typeName),[attributes]);
-                    
-                    _components.Add(componentName, newComponent);
-
-                    if (behavior)
-                        _behaviors.Add(componentName, (IBehavior)newComponent);
-                }
-            }
-        }
-
-        // initialize all components
-        foreach (var entry in _components)
-        {
-            entry.Value.Initialize(this);
+            component.Initialize(this);
         }
     }
+
 
     // get chosen component from game object.
     //
@@ -97,7 +53,7 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
         return null;
     }
 
-    // on collision with other collider
+    // what to do when just collided
     //
     // param: other - other collider
     public void OnCollisionEnter(IRectCollider other)
@@ -108,6 +64,9 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
         }
     }
 
+    // what to do when collision exit
+    //
+    // param: other - other collider
     public void OnCollisionExit(IRectCollider other)
     {
         foreach (IBehavior behavior in _behaviors.Values)
@@ -116,6 +75,9 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
         }
     }
 
+    // what to do when ongoing collision
+    //
+    // param: other - other collider
     public void OnCollisionStay(IRectCollider other)
     {
         foreach (IBehavior behavior in _behaviors.Values)

@@ -44,6 +44,9 @@ public class TileCollider : IRectCollider
         
     }
 
+    // get name of parent
+    //
+    // return: name of parent
     public string GetName()
     {
         return Parent.Name;

@@ -74,6 +74,9 @@ public class BoxCollider : Component, IRectCollider
         _transform = GetComponent<Transform>();
     }
 
+    // get name of parent
+    //
+    // return: name of parent
     public string GetName()
     {
         return parent.Name;

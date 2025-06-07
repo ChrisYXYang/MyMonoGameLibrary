@@ -84,7 +84,7 @@ public class TileMap : IRenderable, IRenderer
                                 {
                                     tileGrid[i, j] = new Tile
                                                         (
-                                                            Name + " tile r" + i + "col " + j,
+                                                            Name + "_" + layerName + " tile r" + i + "col " + j,
                                                             tileSet.GetTile(int.Parse(line_tiles[j])),
                                                             new Vector2(j + 0.5f - (float)Columns / 2, i - (float)Rows / 2 + 1),
                                                             tileSize,

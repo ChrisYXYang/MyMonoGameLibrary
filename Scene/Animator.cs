@@ -29,10 +29,10 @@ public class Animator : Component, IAnimator
 
     // constructor
     //
-    // param: attributes - attributes
-    public Animator(Dictionary<string, string> attributes)
+    // param: animation - the animation
+    public Animator(Animation animation)
     {
-        _animation = SpriteLibrary.GetAnimation(attributes["spriteSheet"], attributes["animation"]);
+        _animation = animation;
     }
 
     // updates the animation

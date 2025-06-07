@@ -17,7 +17,7 @@ public interface IRectCollider
 
     // get name of parent
     //
-    // return: name of parentt
+    // return: name of parent
     public string GetName();
 
     // what to do when colliding
@@ -26,6 +26,8 @@ public interface IRectCollider
     public void Colliding(IRectCollider other);
 
     // what to do when not colliding
+    //
+    // param: other - other collider
     public void NotColliding(IRectCollider other);
 
 }
