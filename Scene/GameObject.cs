@@ -29,8 +29,8 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
 
             _components.Add(compName, component);
 
-            if (component is IBehavior)
-                _behaviors.Add(compName, (IBehavior)component);
+            if (component is IBehavior behavior)
+                _behaviors.Add(compName, behavior);
         }
 
         foreach (Component component in _components.Values)
