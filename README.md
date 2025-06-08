@@ -1,6 +1,6 @@
 # MyMonoGameLibrary
 
-Created by Chris Yang
+**Created by Chris Yang, earlier commits are from my school account**
 
 This contains my class library for my Monogame projects. This class library is pretty much like a simple version of Unity. It supports game objects and components, scenes, tilemaps, camera, collision behavior, input management, and other important parts of a game engine such as a debugging mode.
 
