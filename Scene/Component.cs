@@ -13,14 +13,14 @@ namespace MyMonoGameLibrary.Scene;
 public abstract class Component
 {
     // variables and properties
-    protected GameObject parent;
+    protected GameObject Parent { get; private set; }
 
     // initialization for the component
     //
     // param: parent - parent game object
     public virtual void Initialize(GameObject parent)
     {
-        this.parent = parent;
+        Parent = parent;
     }
 
     // get component of parent game object
@@ -28,7 +28,7 @@ public abstract class Component
     // return: chosen component
     public T GetComponent<T>() where T : Component
     {
-        return parent.GetComponent<T>();
+        return Parent.GetComponent<T>();
     }
 }
 

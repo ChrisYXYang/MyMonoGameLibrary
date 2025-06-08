@@ -11,7 +11,7 @@ using MyMonoGameLibrary.Input;
 namespace MyMonoGameLibrary;
 
 // Core is an extension of the Game class that simplifies the code needed in Game1 by handling
-// tasks such as creating GraphicsDeviceManager and SpriteBatch
+// important tasks such as updating.
 public class Core : Game
 {
     // variables and properties
@@ -139,6 +139,19 @@ public class Core : Game
         }
 
         base.Update(gameTime);
+    }
+
+    protected override void Draw(GameTime gameTime)
+    {
+        // game rendering
+        foreach (IRenderer renderer in _renderers)
+        {
+            renderer.Draw();
+        }
+
+        SpriteBatch.End();
+
+        base.Draw(gameTime);
     }
 
     // get a game object
