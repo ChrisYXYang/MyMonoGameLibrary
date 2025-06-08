@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.Xna.Framework;
 
 
@@ -12,7 +13,7 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
     // variables and properties
     public string Name { get; private set; }
     private Dictionary<string, Component> _components = new Dictionary<string, Component>();
-    private Dictionary<string, IBehavior> _behaviors = new Dictionary<string, IBehavior>();
+    private Dictionary<string, IGameBehavior> _behaviors = new Dictionary<string, IGameBehavior>();
 
     // constructor
     //
@@ -29,7 +30,7 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
 
             _components.Add(compName, component);
 
-            if (component is IBehavior behavior)
+            if (component is IGameBehavior behavior)
                 _behaviors.Add(compName, behavior);
         }
 
@@ -59,7 +60,7 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
     // param: other - other collider
     public void OnCollisionEnter(IRectCollider other)
     {
-        foreach (IBehavior behavior in _behaviors.Values)
+        foreach (IGameBehavior behavior in _behaviors.Values)
         {
             behavior.OnCollisionEnter(other);
         }
@@ -70,7 +71,7 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
     // param: other - other collider
     public void OnCollisionExit(IRectCollider other)
     {
-        foreach (IBehavior behavior in _behaviors.Values)
+        foreach (IGameBehavior behavior in _behaviors.Values)
         {
             behavior.OnCollisionExit(other);
         }
@@ -81,7 +82,7 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
     // param: other - other collider
     public void OnCollisionStay(IRectCollider other)
     {
-        foreach (IBehavior behavior in _behaviors.Values)
+        foreach (IGameBehavior behavior in _behaviors.Values)
         {
             behavior.OnCollisionStay(other);
         }
@@ -109,6 +110,11 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
     public IAnimator GetAnimator()
     {
         return GetComponent<Animator>();
+    }
+
+    public List<IGameBehavior> GetBehaviors()
+    {
+        return _behaviors.Values.ToList<IGameBehavior>();
     }
 
     // 4 testing

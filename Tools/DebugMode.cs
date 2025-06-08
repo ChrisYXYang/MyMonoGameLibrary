@@ -35,6 +35,8 @@ public class DebugMode : Core
         _sprites = new SpriteSheet("debug");
         _originPoint = _sprites.GetSprite("origin_point");
         _boxCollider = _sprites.GetSprite("box_collider");
+
+        base.LoadContent();
     }
 
     // draw origin point for a gameobject

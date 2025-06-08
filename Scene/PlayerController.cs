@@ -18,10 +18,10 @@ public class PlayerController : Component
 
     // constructor
     //
-    // param: attributes - attributes of component
-    public PlayerController(Dictionary<string, string> attributes)
+    // param: speed - movement speed
+    public PlayerController(float speed)
     {
-        MoveSpeed = float.Parse(attributes["moveSpeed"]);
+        MoveSpeed = speed;
     }
 
     // initialize

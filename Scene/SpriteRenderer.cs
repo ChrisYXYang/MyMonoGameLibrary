@@ -14,36 +14,42 @@ public class SpriteRenderer : Component, IRenderer
     public Color Color { get; set; } = Color.White;
     public bool FlipX { get; set; } = false;
     public bool FlipY { get; set; } = false;
-    public float LayerDepth { get; set; } = 0;
+    public float LayerDepth { get; set; } = 0.5f;
     private Transform _transform;
 
     // constructor
     //
-    // attributes - attributes
-    public SpriteRenderer(Dictionary<string, string> attributes)
+    // param: sprite - sprite to render
+    public SpriteRenderer(Sprite sprite)
     {
-        Sprite = SpriteLibrary.GetSprite(attributes["spriteSheet"], attributes["sprite"]);
+        Sprite = sprite;
+    }
 
-        if (attributes.ContainsKey("color"))
-        {
-            var prop = typeof(Color).GetProperty(attributes["color"]);
-            Color = (Color)prop.GetValue(null, null);
-        }
+    // constructor
+    //
+    // param: sprite - sprite to render
 
-        if (attributes.ContainsKey("flipX"))
-        {
-            FlipX = bool.Parse(attributes["flipX"]);
-        }
+    // param: layerDepth - layer depth
+    public SpriteRenderer(Sprite sprite, float layerDepth)
+    {
+        Sprite = sprite;
+        LayerDepth = layerDepth;
+    }
 
-        if (attributes.ContainsKey("flipY"))
-        {
-            FlipY = bool.Parse(attributes["flipY"]);
-        }
-
-        if (attributes.ContainsKey("layerDepth"))
-        {
-            LayerDepth = float.Parse(attributes["layerDepth"]);
-        }
+    // constructor
+    //
+    // param: sprite - sprite to render
+    // param: color - sprite color
+    // param: flipX - flip horizontally
+    // param: flipY - flip vertically
+    // param: layerDepth - layer depth
+    public SpriteRenderer(Sprite sprite, Color color, bool flipX, bool flipY, float layerDepth)
+    {
+        Sprite = sprite;
+        Color = color;
+        FlipX = flipX;
+        FlipY = flipY;
+        LayerDepth = layerDepth;
     }
 
 

@@ -13,25 +13,30 @@ public class Transform : Component
     public Vector2 Scale { get; set; } = Vector2.One;
     public float Rotation { get; set; } = 0;
 
+    // default constructor
+    public Transform()
+    {
+
+    }
+
     // constructor
     //
-    // param: attributes - attributes
-    public Transform(Dictionary<string, string> attributes)
+    // param: position - position
+    public Transform(Vector2 position)
     {
-        if (attributes.ContainsKey("position"))
-        {
-            position = Converter.ParseVector2(attributes["position"]);
-        }
+        this.position = position;
+    }
 
-        if (attributes.ContainsKey("scale"))
-        {
-            Scale = Converter.ParseVector2(attributes["scale"]);
-        }
-
-        if (attributes.ContainsKey("rotation"))
-        {
-            Rotation = MathHelper.ToRadians(float.Parse(attributes["rotation"]));
-        }
+    // constructor
+    //
+    // param: position - position
+    // param: scale - scale
+    // param: rotation - rotation
+    public Transform(Vector2 position, Vector2 scale, float rotation)
+    {
+        this.position = position;
+        Scale = scale;
+        Rotation = rotation;
     }
 
 }

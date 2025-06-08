@@ -1,29 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace MyMonoGameLibrary.Scene;
 
-// this interface represents scripts for object behavior
 public interface IBehavior
 {
+    // start the script
+    public void Start();
+
     // update the script
-    public void Update();
-    
-    // what to do when just collided
     //
-    // param: other - other collider
-    public void OnCollisionEnter(IRectCollider other);
+    // param: gameTime - get the game time
+    public void Update(GameTime gameTime);
 
-    // what to do when collision exit
+    // update the script after update
     //
-    // param: other - other collider
-    public void OnCollisionExit(IRectCollider other);
-
-    // what to do when ongoing collision
-    //
-    // param: other - other collider
-    public void OnCollisionStay(IRectCollider other);
+    // param: gameTime - get the game time
+    public void LateUpdate(GameTime gameTime);
 }
