@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
-namespace MyMonoGameLibrary.Scene;
+namespace MyMonoGameLibrary.Scenes;
 
 // interface for animators
 public interface IAnimator

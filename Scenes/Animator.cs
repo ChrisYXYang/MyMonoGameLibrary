@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Graphics;
 
-namespace MyMonoGameLibrary.Scene;
+namespace MyMonoGameLibrary.Scenes;
 
 // responsible for animating game object
 public class Animator : Component, IAnimator

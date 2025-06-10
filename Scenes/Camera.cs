@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.Tools;
 
-namespace MyMonoGameLibrary.Scene;
+namespace MyMonoGameLibrary.Scenes;
 
 // Responsible for the "view" of the game. This includes where in the game world to render and
 // sprite size settings.

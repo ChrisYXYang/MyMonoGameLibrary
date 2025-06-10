@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyMonoGameLibrary.Scene;
+namespace MyMonoGameLibrary.Scenes;
 
 // interface for objects that can use colliders
 public interface ICollidable

@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 
 
-namespace MyMonoGameLibrary.Scene;
+namespace MyMonoGameLibrary.Scenes;
 
 // This class represents the objects in the game. Each object will have multiple components.
 public class GameObject : ICollidable, IRenderable, IAnimatable

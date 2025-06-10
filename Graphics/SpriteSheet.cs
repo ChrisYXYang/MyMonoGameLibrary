@@ -23,9 +23,9 @@ public class SpriteSheet
     // Sprites in the spritesheet. Will also create a dictionary containing user-defined Animations
     // in the spritesheet.
     //
-    // param: spriteSheet - the sprite sheet
+    // param: content - content manager to load the asset
     // param: fileName - xml file for sprite sheet information
-    public SpriteSheet(string fileName)
+    public SpriteSheet(ContentManager content, string fileName)
     {
         // read and use information from the xml file
         string filePath = "Content/images/" + fileName + ".xml";
@@ -40,7 +40,7 @@ public class SpriteSheet
                 // load sprite sheet texture
                 var settings = root.Element("Settings");
                 string texture = settings.Attribute("texture").Value;
-                Sheet = Core.Content.Load<Texture2D>(texture);
+                Sheet = content.Load<Texture2D>(texture);
 
                 // get general sprite information
                 int size = int.Parse(settings.Attribute("size").Value);

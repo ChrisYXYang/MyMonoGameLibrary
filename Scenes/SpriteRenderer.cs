@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using MyMonoGameLibrary.Graphics;
 
-namespace MyMonoGameLibrary.Scene;
+namespace MyMonoGameLibrary.Scenes;
 
 // Component for drawing a sprite for a game object.
 public class SpriteRenderer : Component, IRenderer

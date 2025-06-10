@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using System.Xml;
 using MyMonoGameLibrary.Graphics;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Content;
 
 namespace MyMonoGameLibrary.Tilemap;
 
@@ -24,8 +25,9 @@ public class Tileset
 
     // constructor. Will create a 2d array containing all tiles in the tileset
     //
+    // param: content - content manager to load asset
     // param: fileName - xml file for tile set information
-    public Tileset(string fileName)
+    public Tileset(ContentManager content, string fileName)
     {
         // read and use information from the xml file
         string filePath = "Content/images/" + fileName + ".xml";
@@ -40,7 +42,7 @@ public class Tileset
                 // load tile set texture
                 var settings = root.Element("Settings");
                 string texture = settings.Attribute("texture").Value;
-                Set = Core.Content.Load<Texture2D>(texture);
+                Set = content.Load<Texture2D>(texture);
 
                 // get general tile sprite information
                 int size = int.Parse(settings.Attribute("size").Value);
