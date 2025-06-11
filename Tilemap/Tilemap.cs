@@ -8,13 +8,13 @@ using System.Xml.Linq;
 using System.Xml;
 using System.Diagnostics;
 using System.Linq;
-using MyMonoGameLibrary.Scene;
+using MyMonoGameLibrary.Scenes;
 
 
 namespace MyMonoGameLibrary.Tilemap;
 
 // this class represents a tilemap
-public class TileMap : IRenderable, IRenderer
+public class TileMap : IGameRenderer
 {
     // variables and properties
     public int Rows { get; private set; }
@@ -27,7 +27,7 @@ public class TileMap : IRenderable, IRenderer
     // constructor. Creates a tile map from xml file
     //
     // param: fileName - name of xml file
-    public TileMap(string fileName)
+    public TileMap(string fileName, Tileset tileSet)
     {
         Name = fileName;
         
@@ -50,7 +50,6 @@ public class TileMap : IRenderable, IRenderer
                 Rows = int.Parse(root.Attribute("height").Value);
                 Columns = int.Parse(root.Attribute("width").Value);
                 int tileSize = int.Parse(root.Attribute("tilewidth").Value);
-                Tileset tileSet = SpriteLibrary.GetTileset(fileName);
                 // construct layers
                 var layers = root.Elements("layer");
 
@@ -123,7 +122,7 @@ public class TileMap : IRenderable, IRenderer
     // get the renderer
     //
     // return: the renderer
-    public IRenderer GetRenderer()
+    public IGameRenderer GetRenderer()
     {
         return this;
     }

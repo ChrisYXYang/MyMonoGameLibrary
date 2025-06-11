@@ -2,12 +2,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MyMonoGameLibrary.Graphics;
-using MyMonoGameLibrary.Scene;
+using MyMonoGameLibrary.Scenes;
 
 namespace MyMonoGameLibrary.Tilemap;
 
 // this class represents a tile
-public class Tile : ICollidable
+public class Tile
 {
     // variables and properties
     public Sprite Sprite { get; private set; }

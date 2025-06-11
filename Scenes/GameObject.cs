@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 namespace MyMonoGameLibrary.Scenes;
 
 // This class represents the objects in the game. Each object will have multiple components.
-public class GameObject : ICollidable, IRenderable, IAnimatable
+public class GameObject
 {
     // variables and properties
     public string Name { get; private set; }
@@ -99,7 +99,7 @@ public class GameObject : ICollidable, IRenderable, IAnimatable
     // get the renderer
     //
     // return: sprite renderer
-    public IRenderer GetRenderer()
+    public IGameRenderer GetRenderer()
     {
         return GetComponent<SpriteRenderer>();
     }

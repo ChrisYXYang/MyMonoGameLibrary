@@ -1,12 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using MyMonoGameLibrary.Graphics;
+using MyMonoGameLibrary.Input;
+using MyMonoGameLibrary.Tilemap;
 
 namespace MyMonoGameLibrary.Scenes;
 
 public abstract class Scene : IDisposable
 {
+    // variables and properties
+    protected SpriteLibrary SceneSpriteLibrary { get; private set; }
+
+    private HashSet<string> _names = new HashSet<string>();
+    private Dictionary<string, GameObject> _gameObjects = new Dictionary<string, GameObject>();
+    private Dictionary<string, TileMap> _tileMaps = new Dictionary<string, TileMap>();
+    private List<IBehavior> _behaviors = new List<IBehavior>();
+    private List<IAnimator> _animators = new List<IAnimator>();
+    private List<IRectCollider> _colliders = new List<IRectCollider>();
+    private List<IGameRenderer> _renderers = new List<IGameRenderer>();
+
     /// <summary>
     /// Gets the ContentManager used for loading scene-specific assets.
     /// </summary>
@@ -45,33 +63,77 @@ public abstract class Scene : IDisposable
     /// </remarks>
     public virtual void Initialize()
     {
+        SceneSpriteLibrary = new SpriteLibrary();
         LoadContent();
     }
 
     /// <summary>
     /// Override to provide logic to load content for the scene.
     /// </summary>
-    public virtual void LoadContent() { }
-
-    /// <summary>
-    /// Unloads scene-specific content.
-    /// </summary>
-    public virtual void UnloadContent()
+    public virtual void LoadContent()
     {
-        Content.Unload();
+        // start behavior scripts
+        foreach (IBehavior behavior in _behaviors)
+        {
+            behavior.Start();
+        }
     }
+
 
     /// <summary>
     /// Updates this scene.
     /// </summary>
     /// <param name="gameTime">A snapshot of the timing values for the current frame.</param>
-    public virtual void Update(GameTime gameTime) { }
+    public virtual void Update(GameTime gameTime) 
+    {
+        // update behaviors
+        foreach (IBehavior behavior in _behaviors)
+        {
+            behavior.Update(gameTime);
+        }
+
+        foreach (IBehavior behavior in _behaviors)
+        {
+            behavior.LateUpdate(gameTime);
+        }
+
+        // update aniamtions
+        foreach (IAnimator animator in _animators)
+        {
+            animator.Update(gameTime);
+        }
+
+        // check collisions
+        for (int i = 0; i < _colliders.Count; i++)
+        {
+            for (int k = i + 1; k < _colliders.Count; k++)
+            {
+                if (Collisions.AABBIntersect(_colliders[i], _colliders[k]))
+                {
+                    _colliders[i].Colliding(_colliders[k]);
+                    _colliders[k].Colliding(_colliders[i]);
+                }
+                else
+                {
+                    _colliders[i].NotColliding(_colliders[k]);
+                    _colliders[k].NotColliding(_colliders[i]);
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// Draws this scene.
     /// </summary>
     /// <param name="gameTime">A snapshot of the timing values for the current frame.</param>
-    public virtual void Draw(GameTime gameTime) { }
+    public virtual void Draw(GameTime gameTime) 
+    {
+        // game rendering
+        foreach (IGameRenderer renderer in _renderers)
+        {
+            Camera.Draw(renderer);
+        }
+    }
 
     /// <summary>
     /// Disposes of this scene.
@@ -98,8 +160,118 @@ public abstract class Scene : IDisposable
 
         if (disposing)
         {
-            UnloadContent();
             Content.Dispose();
+        }
+
+        IsDisposed = true;
+    }
+
+    // get a game object
+    //
+    // param: name - name of game object
+    // return: requested gameobject or throws exception
+    public GameObject GetGameObject(string name)
+    {
+        return _gameObjects[name];
+    }
+
+    // get all game objects
+    //
+    // return: list of all game objects
+    public List<GameObject> GetGameObjects()
+    {
+        return _gameObjects.Values.ToList();
+    }
+
+    // get all tilemaps
+    //
+    // return: list of all game objects
+    public List<TileMap> GetTileMaps()
+    {
+        return _tileMaps.Values.ToList();
+    }
+
+    // add a behavior to list
+    //
+    // param: behavior - behavior to add
+    public void AddBehavior(IBehavior behavior)
+    {
+        _behaviors.Add(behavior);
+    }
+
+
+    // instantiate a gameobject and register it
+    //
+    // param: name - name of game object
+    // param: components - components of game object
+    public void Instantiate(string name, Component[] components)
+    {
+        // create game object
+        GameObject gameObject = new GameObject(name, components);
+
+        _gameObjects.Add(name, gameObject);
+
+        if (!_names.Add(name))
+            throw new Exception("name already taken");
+
+        // register relevant gameobject components
+        foreach (IBehavior behavior in gameObject.GetBehaviors())
+        {
+            _behaviors.Add(behavior);
+        }
+
+        if (gameObject.GetRenderer() != null)
+            _renderers.Add(gameObject.GetRenderer());
+
+        if (gameObject.GetCollider() != null)
+            _colliders.Add(gameObject.GetCollider());
+
+        if (gameObject.GetAnimator() != null)
+            _animators.Add(gameObject.GetAnimator());
+    }
+
+    // instantiate a tilemap and register it
+    //
+    // param: name - name of tilemap
+    // param: tileset - the tileset
+    public void Instantiate(string name, Tileset tileset)
+    {
+        // create tilemap
+        TileMap tileMap = new TileMap(name, tileset);
+
+        // add tilemap to dictionary
+        _tileMaps.Add(name, tileMap);
+
+        if (!_names.Add(name))
+            throw new Exception("name already taken");
+
+        // add tilemap to renderers
+        _renderers.Add(tileMap.GetRenderer());
+
+        // add tile colliders to colliders
+        List<string> layerNames = tileMap.Layers;
+
+        foreach (string layerName in layerNames)
+        {
+            for (int i = 0; i < tileMap.Rows; i++)
+            {
+                for (int j = 0; j < tileMap.Columns; j++)
+                {
+                    Tile tile = tileMap.GetTile(layerName, i, j);
+
+                    if (tile == null)
+                        continue;
+
+                    if (tile.Collider == null)
+                        continue;
+
+                    _colliders.Add(tile.GetCollider());
+
+                    if (!_names.Add(tile.Name))
+                        throw new Exception("name taken");
+
+                }
+            }
         }
     }
 }

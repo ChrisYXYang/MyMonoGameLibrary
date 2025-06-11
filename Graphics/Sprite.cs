@@ -30,7 +30,7 @@ public class Sprite
         OriginPoint = originPoint;
     }
 
-    // in-general draw
+    // draw in game world
     //
     // param: position - position
     // param: color - color
@@ -38,10 +38,10 @@ public class Sprite
     // param: scale - scale
     // param: spriteEffects - sprite effects
     // param: layerDepth - layerDepth
-    public void Draw(Vector2 position, Color color, float rotation, Vector2 scale,
+    public void GameDraw(Vector2 position, Color color, float rotation, Vector2 scale,
         SpriteEffects spriteEffects, float layerDepth)
     {
-        Core.SpriteBatch.Draw
+        Camera.Draw
             (
                 SpriteSheet,
                 position,
@@ -63,18 +63,18 @@ public class Sprite
     // param: scale - scale
     // param: spriteEffects - sprite effects
     // param: layerDepth - layerDepth
-    public void GameDraw(Vector2 position, Color color, float rotation, Vector2 scale,
+    public void GameDraw(Vector2 position, Color color, float rotation, float scale,
         SpriteEffects spriteEffects, float layerDepth)
     {
-        Core.SpriteBatch.Draw
+        Camera.Draw
             (
                 SpriteSheet,
-                Camera.UnitToPixel(position),
+                position,
                 SourceRectangle,
                 color,
                 rotation,
                 OriginPoint,
-                Camera.PixelScale * scale,
+                scale,
                 spriteEffects,
                 layerDepth
             );

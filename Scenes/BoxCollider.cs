@@ -82,7 +82,7 @@ public class BoxCollider : Component, IRectCollider
     // return: name of parent
     public string GetName()
     {
-        return parent.Name;
+        return Parent.Name;
     }
 
     // what to do when collision happens
@@ -92,12 +92,12 @@ public class BoxCollider : Component, IRectCollider
     {
         if (!_collisions.Contains(other.GetName()))
         {
-            parent.OnCollisionEnter(other);
+            Parent.OnCollisionEnter(other);
             _collisions.Add(other.GetName());
         }
         else
         {
-            parent.OnCollisionStay(other);
+            Parent.OnCollisionStay(other);
         }
     }
 
@@ -109,7 +109,7 @@ public class BoxCollider : Component, IRectCollider
         if (_collisions.Contains(other.GetName()))
         {
             _collisions.Remove(other.GetName());
-            parent.OnCollisionExit(other);
+            Parent.OnCollisionExit(other);
         }
     }
 }

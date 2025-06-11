@@ -6,7 +6,7 @@ using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.Tools;
 using MyMonoGameLibrary.Tilemap;
 using System.Collections.Generic;
-using MyMonoGameLibrary.Scene;
+using MyMonoGameLibrary.Scenes;
 
 namespace MyMonoGameLibrary.Tools;
 
@@ -32,7 +32,7 @@ public class DebugMode : Core
     // load content
     protected override void LoadContent()
     {
-        _sprites = new SpriteSheet("debug");
+        _sprites = new SpriteSheet(Core.Content, "debug");
         _originPoint = _sprites.GetSprite("origin_point");
         _boxCollider = _sprites.GetSprite("box_collider");
 
@@ -42,15 +42,16 @@ public class DebugMode : Core
     // draw origin point for a gameobject
     //
     // param: gameObject - game object to draw origin point for
-    protected static void DrawOrigin(GameObject gameObject)
+    public static void DrawOrigin(GameObject gameObject)
     {
         Transform transform = gameObject.GetComponent<Transform>();
-        _originPoint.Draw
+        Camera.Draw
             (
-                Camera.UnitToPixel(transform.position),
+                _originPoint,
+                transform.position,
                 Color.White,
                 0f,
-                Vector2.One,
+                1/Camera.PixelScale,
                 SpriteEffects.None,
                 1f
             );
@@ -59,28 +60,29 @@ public class DebugMode : Core
     // draw box collider for gameObject
     //
     // param: gameObject - game object to draw collider
-    protected static void DrawBoxCollider(GameObject gameObject)
+    public static void DrawBoxCollider(GameObject gameObject)
     {
         BoxCollider collider = gameObject.GetComponent<BoxCollider>();
 
         if (collider == null)
             return;
 
-        _boxCollider.GameDraw
+        Camera.Draw
             (
-                 new Vector2(collider.Left, collider.Top),
-                 Color.White,
-                 0f,
-                 new Vector2((float)collider.Width / Camera.SpritePixelsPerUnit, (float)collider.Height / Camera.SpritePixelsPerUnit),
-                 SpriteEffects.None,
-                 0.9f
+                _boxCollider, 
+                new Vector2(collider.Left, collider.Top),
+                Color.White,
+                0f,
+                new Vector2((float)collider.Width / Camera.SpritePixelsPerUnit, (float)collider.Height / Camera.SpritePixelsPerUnit),
+                SpriteEffects.None,
+                0.9f
             );
     }
 
     // draw tile colliders for a tilemap
     //
     // param: tilemap - tile map to draw collider
-    protected static void DrawTilemapCollider(TileMap tilemap)
+    public static void DrawTilemapCollider(TileMap tilemap)
     {
         List<string> layerNames = tilemap.Layers;
 
@@ -98,14 +100,15 @@ public class DebugMode : Core
                     if (tile.Collider == null)
                         continue;
 
-                    _boxCollider.GameDraw
+                    Camera.Draw
                         (
-                             new Vector2(tile.Collider.Left, tile.Collider.Top),
-                             Color.White,
-                             0f,
-                             Vector2.One,
-                             SpriteEffects.None,
-                             0.9f
+                            _boxCollider, 
+                            new Vector2(tile.Collider.Left, tile.Collider.Top),
+                            Color.White,
+                            0f,
+                            Vector2.One,
+                            SpriteEffects.None,
+                            0.9f
                         );
                 }
             }

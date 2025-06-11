@@ -7,8 +7,7 @@ using MyMonoGameLibrary.Tools;
 
 namespace MyMonoGameLibrary.Scenes;
 
-// Responsible for the "view" of the game. This includes where in the game world to render and
-// sprite size settings.
+// camera for the game world.
 public static class Camera
 {
     // position of the camera in the game world
@@ -44,5 +43,97 @@ public static class Camera
         return (coordinate - position) * UnitPixels + 
             new Vector2(Core.GraphicsDevice.PresentationParameters.BackBufferWidth, 
             Core.GraphicsDevice.PresentationParameters.BackBufferHeight) * 0.5f;
+    }
+
+    // draw texture in game world.
+    //
+    // param: texture - texture
+    // param: position - position
+    // param: sourceRect - source rectangle
+    // param: color - color
+    // parm: rotation - rotation
+    // param: origin - origin point
+    // param: scale - scale
+    // param: spriteEffects - sprite effects
+    // param: layerDepth - layerDepth
+    public static void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRect, Color color, 
+        float rotation, Vector2 origin, Vector2 scale, SpriteEffects spriteEffects, float layerDepth)
+    {
+        Core.SpriteBatch.Draw
+            (
+                texture,
+                Camera.UnitToPixel(position),
+                sourceRect,
+                color,
+                rotation,
+                origin,
+                Camera.PixelScale * scale,
+                spriteEffects,
+                layerDepth
+            );
+    }
+
+    // draw texture in game world. 
+    //
+    // param: texture - texture
+    // param: position - position
+    // param: sourceRect - source rectangle
+    // param: color - color
+    // parm: rotation - rotation
+    // param: origin - origin point
+    // param: scale - scale
+    // param: spriteEffects - sprite effects
+    // param: layerDepth - layerDepth
+    public static void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRect, Color color,
+        float rotation, Vector2 origin, float scale, SpriteEffects spriteEffects, float layerDepth)
+    {
+        Core.SpriteBatch.Draw
+            (
+                texture,
+                Camera.UnitToPixel(position),
+                sourceRect,
+                color,
+                rotation,
+                origin,
+                Camera.PixelScale * scale,
+                spriteEffects,
+                layerDepth
+            );
+    }
+
+    // draw sprite in game world
+    //
+    // param: position - position
+    // param: color - color
+    // parm: rotation - rotation
+    // param: scale - scale
+    // param: spriteEffects - sprite effects
+    // param: layerDepth - layerDepth
+    public static void Draw(Sprite sprite, Vector2 position, Color color, float rotation, Vector2 scale,
+        SpriteEffects spriteEffects, float layerDepth)
+    {
+        sprite.GameDraw(position, color, rotation, scale, spriteEffects, layerDepth);
+    }
+
+    // draw sprite in game world
+    //
+    // param: position - position
+    // param: color - color
+    // parm: rotation - rotation
+    // param: scale - scale
+    // param: spriteEffects - sprite effects
+    // param: layerDepth - layerDepth
+    public static void Draw(Sprite sprite, Vector2 position, Color color, float rotation, float scale,
+        SpriteEffects spriteEffects, float layerDepth)
+    {
+        sprite.GameDraw(position, color, rotation, scale, spriteEffects, layerDepth);
+    }
+
+    // draw object in game world
+    //
+    // param: renderer - the renderer
+    public static void Draw(IGameRenderer renderer)
+    {
+        renderer.Draw();
     }
 }

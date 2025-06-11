@@ -4,7 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using MyMonoGameLibrary.Scene;
+using MyMonoGameLibrary.Scenes;
 
 namespace MyMonoGameLibrary.Tilemap;
 

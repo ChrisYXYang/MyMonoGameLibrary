@@ -7,7 +7,7 @@ using MyMonoGameLibrary.Graphics;
 namespace MyMonoGameLibrary.Scenes;
 
 // Component for drawing a sprite for a game object.
-public class SpriteRenderer : Component, IRenderer
+public class SpriteRenderer : Component, IGameRenderer
 {
     // variables and properties
     public Sprite Sprite { get; set; }
