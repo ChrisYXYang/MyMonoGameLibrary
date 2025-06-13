@@ -53,7 +53,7 @@ public class Tile
     // return collider
     //
     // return: the collider
-    public IRectCollider GetCollider()
+    public IAABBCollider GetCollider()
     {
         return Collider;
     }

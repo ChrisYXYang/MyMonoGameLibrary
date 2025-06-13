@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace MyMonoGameLibrary.Scenes;
 
+// interface for behavior scripts
 public interface IBehavior
 {
     // start the script

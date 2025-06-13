@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
@@ -17,13 +18,13 @@ public abstract class Scene : IDisposable
     // variables and properties
     protected SpriteLibrary SceneSpriteLibrary { get; private set; }
 
-    private HashSet<string> _names = new HashSet<string>();
-    private Dictionary<string, GameObject> _gameObjects = new Dictionary<string, GameObject>();
-    private Dictionary<string, TileMap> _tileMaps = new Dictionary<string, TileMap>();
-    private List<IBehavior> _behaviors = new List<IBehavior>();
-    private List<IAnimator> _animators = new List<IAnimator>();
-    private List<IRectCollider> _colliders = new List<IRectCollider>();
-    private List<IGameRenderer> _renderers = new List<IGameRenderer>();
+    private readonly HashSet<string> _names = [];
+    private readonly Dictionary<string, GameObject> _gameObjects = [];
+    private readonly Dictionary<string, TileMap> _tileMaps = [];
+    private readonly List<IBehavior> _behaviors = [];
+    private readonly List<IAnimator> _animators = [];
+    private readonly List<ICollider> _colliders = [];
+    private readonly List<IGameRenderer> _renderers = [];
 
     /// <summary>
     /// Gets the ContentManager used for loading scene-specific assets.
@@ -108,7 +109,7 @@ public abstract class Scene : IDisposable
         {
             for (int k = i + 1; k < _colliders.Count; k++)
             {
-                if (Collisions.AABBIntersect(_colliders[i], _colliders[k]))
+                if (Collisions.Intersect(_colliders[i], _colliders[k]))
                 {
                     _colliders[i].Colliding(_colliders[k]);
                     _colliders[k].Colliding(_colliders[i]);
@@ -180,7 +181,7 @@ public abstract class Scene : IDisposable
     // return: list of all game objects
     public List<GameObject> GetGameObjects()
     {
-        return _gameObjects.Values.ToList();
+        return [.. _gameObjects.Values];
     }
 
     // get all tilemaps
@@ -188,7 +189,7 @@ public abstract class Scene : IDisposable
     // return: list of all game objects
     public List<TileMap> GetTileMaps()
     {
-        return _tileMaps.Values.ToList();
+        return [.. _tileMaps.Values];
     }
 
     // add a behavior to list
@@ -207,7 +208,7 @@ public abstract class Scene : IDisposable
     public void Instantiate(string name, Component[] components)
     {
         // create game object
-        GameObject gameObject = new GameObject(name, components);
+        GameObject gameObject = new(name, components);
 
         _gameObjects.Add(name, gameObject);
 
@@ -237,7 +238,7 @@ public abstract class Scene : IDisposable
     public void Instantiate(string name, Tileset tileset)
     {
         // create tilemap
-        TileMap tileMap = new TileMap(name, tileset);
+        TileMap tileMap = new(name, tileset);
 
         // add tilemap to dictionary
         _tileMaps.Add(name, tileMap);

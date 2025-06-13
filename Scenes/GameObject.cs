@@ -12,8 +12,8 @@ public class GameObject
 {
     // variables and properties
     public string Name { get; private set; }
-    private Dictionary<string, Component> _components = new Dictionary<string, Component>();
-    private Dictionary<string, IGameBehavior> _behaviors = new Dictionary<string, IGameBehavior>();
+    private readonly Dictionary<string, Component> _components = [];
+    private readonly Dictionary<string, IGameBehavior> _behaviors = [];
 
     // constructor
     //
@@ -58,7 +58,7 @@ public class GameObject
     // what to do when just collided
     //
     // param: other - other collider
-    public void OnCollisionEnter(IRectCollider other)
+    public void OnCollisionEnter(ICollider other)
     {
         foreach (IGameBehavior behavior in _behaviors.Values)
         {
@@ -69,7 +69,7 @@ public class GameObject
     // what to do when collision exit
     //
     // param: other - other collider
-    public void OnCollisionExit(IRectCollider other)
+    public void OnCollisionExit(ICollider other)
     {
         foreach (IGameBehavior behavior in _behaviors.Values)
         {
@@ -80,7 +80,7 @@ public class GameObject
     // what to do when ongoing collision
     //
     // param: other - other collider
-    public void OnCollisionStay(IRectCollider other)
+    public void OnCollisionStay(ICollider other)
     {
         foreach (IGameBehavior behavior in _behaviors.Values)
         {
@@ -91,9 +91,13 @@ public class GameObject
     // get the collider
     //
     // return: box collider
-    public IRectCollider GetCollider()
+    public ICollider GetCollider()
     {
-        return GetComponent<BoxCollider>();
+        ICollider collider = GetComponent<BoxCollider>();
+
+        collider ??= GetComponent<CircleCollider>();
+        
+        return collider;
     }
 
     // get the renderer
@@ -114,7 +118,7 @@ public class GameObject
 
     public List<IGameBehavior> GetBehaviors()
     {
-        return _behaviors.Values.ToList<IGameBehavior>();
+        return [.. _behaviors.Values];
     }
 
     // 4 testing

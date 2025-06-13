@@ -13,15 +13,15 @@ public interface IGameBehavior : IBehavior
     // what to do when just collided
     //
     // param: other - other collider
-    public void OnCollisionEnter(IRectCollider other);
+    public void OnCollisionEnter(ICollider other);
 
     // what to do when collision exit
     //
     // param: other - other collider
-    public void OnCollisionExit(IRectCollider other);
+    public void OnCollisionExit(ICollider other);
 
     // what to do when ongoing collision
     //
     // param: other - other collider
-    public void OnCollisionStay(IRectCollider other);
+    public void OnCollisionStay(ICollider other);
 }

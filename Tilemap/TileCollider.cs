@@ -1,26 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using MyMonoGameLibrary.Scenes;
+using Microsoft.Xna.Framework;
 
 namespace MyMonoGameLibrary.Tilemap;
 
 // square collider for a tile
-public class TileCollider : IRectCollider
+public class TileCollider : IAABBCollider
 {
     // variables and properties
     public Tile Parent { get; private set; }
     public float Left => Parent.Position.X - 0.5f;
-    public float Right => Left + _width;
-    public float Top => Parent.Position.Y + _yOffset;
-    public float Bottom => Top + _height;
-
-    private float _yOffset;
-    private float _width;
-    private float _height;
+    public float Right => Parent.Position.X + 0.5f;
+    public float Top => Parent.Position.Y - 1;
+    public float Bottom => Parent.Position.Y;
+    public float Width => 1;
+    public float Height => 1;
+    public Vector2 Center => Parent.Position - (Vector2.UnitY * 0.5f); 
 
     // constructor 
     // 
@@ -28,18 +24,14 @@ public class TileCollider : IRectCollider
     public TileCollider(Tile parent)
     {
         Parent = parent;
-
-        _yOffset = -(float)Parent.Size / Camera.SpritePixelsPerUnit;
-        _width = (float)Parent.Size / Camera.SpritePixelsPerUnit;
-        _height = (float)Parent.Size / Camera.SpritePixelsPerUnit;
     }
 
-    public void Colliding(IRectCollider other)
+    public void Colliding(ICollider other)
     {
         
     }
 
-    public void NotColliding(IRectCollider other)
+    public void NotColliding(ICollider other)
     {
         
     }

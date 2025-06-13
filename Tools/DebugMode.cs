@@ -17,6 +17,7 @@ public class DebugMode : Core
     private static SpriteSheet _sprites;
     private static Sprite _originPoint;
     private static Sprite _boxCollider;
+    private static Sprite _circleCollider;
 
     // constructor
     //
@@ -35,6 +36,8 @@ public class DebugMode : Core
         _sprites = new SpriteSheet(Core.Content, "debug");
         _originPoint = _sprites.GetSprite("origin_point");
         _boxCollider = _sprites.GetSprite("box_collider");
+        _circleCollider = _sprites.GetSprite("circle_collider");
+
 
         base.LoadContent();
     }
@@ -57,26 +60,22 @@ public class DebugMode : Core
             );
     }
 
-    // draw box collider for gameObject
+    // draw collider for game object
     //
-    // param: gameObject - game object to draw collider
-    public static void DrawBoxCollider(GameObject gameObject)
+    // param: gameObject - game object to draw
+    public static void DrawGameObjectCollider(GameObject gameObject)
     {
-        BoxCollider collider = gameObject.GetComponent<BoxCollider>();
+        BoxCollider boxCollider = gameObject.GetComponent<BoxCollider>();
+        if (boxCollider != null)
+        {
+            DrawBoxCollider(boxCollider);
+        }
 
-        if (collider == null)
-            return;
-
-        Camera.Draw
-            (
-                _boxCollider, 
-                new Vector2(collider.Left, collider.Top),
-                Color.White,
-                0f,
-                new Vector2((float)collider.Width / Camera.SpritePixelsPerUnit, (float)collider.Height / Camera.SpritePixelsPerUnit),
-                SpriteEffects.None,
-                0.9f
-            );
+        CircleCollider circleCollider = gameObject.GetComponent<CircleCollider>();
+        if (circleCollider != null)
+        {
+            DrawCircleCollider(circleCollider);
+        }
     }
 
     // draw tile colliders for a tilemap
@@ -100,18 +99,43 @@ public class DebugMode : Core
                     if (tile.Collider == null)
                         continue;
 
-                    Camera.Draw
-                        (
-                            _boxCollider, 
-                            new Vector2(tile.Collider.Left, tile.Collider.Top),
-                            Color.White,
-                            0f,
-                            Vector2.One,
-                            SpriteEffects.None,
-                            0.9f
-                        );
+                    DrawBoxCollider(tile.Collider);
                 }
             }
         }
+    }
+
+    // helper method to draw box collider
+    //
+    // param: collider - box collider to draw
+    private static void DrawBoxCollider(IAABBCollider collider)
+    {
+        Camera.Draw
+            (
+                _boxCollider, 
+                new Vector2(collider.Left, collider.Top),
+                Color.White,
+                0f,
+                new Vector2(collider.Right - collider.Left, collider.Bottom - collider.Top) * 0.5f,
+                SpriteEffects.None,
+                0.9f
+            );
+    }
+
+    // helper method to draw circle collider 
+    //
+    // param: collider - circle collider to draw
+    private static void DrawCircleCollider(CircleCollider collider)
+    {
+        Camera.Draw
+            (
+                _circleCollider,
+                collider.Center,
+                Color.White,
+                0f,
+                collider.Radius,
+                SpriteEffects.None,
+                0.9f
+            );
     }
 }
