@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -11,13 +12,13 @@ public class MouseInfo
     // variables and properties
     public MouseState PreviousState { get; private set; }
     public MouseState CurrentState { get; private set; }
-    public Point Position => CurrentState.Position;
+    public Vector2 Position => CurrentState.Position.ToVector2();
     public int X => CurrentState.X;
     public int Y => CurrentState.Y;
-    public Point PositionDelta => CurrentState.Position - PreviousState.Position;
+    public Vector2 PositionDelta => (CurrentState.Position - PreviousState.Position).ToVector2();
     public int XDelta => CurrentState.X - PreviousState.X;
     public int YDelta => CurrentState.Y - PreviousState.Y;
-    public bool WasMoved => PositionDelta != Point.Zero;
+    public bool WasMoved => !PositionDelta.Equals(Vector2.Zero);
     public int ScrollWheel => CurrentState.ScrollWheelValue;
     public int ScrollWheelDelta => CurrentState.ScrollWheelValue- PreviousState.ScrollWheelValue;
     
