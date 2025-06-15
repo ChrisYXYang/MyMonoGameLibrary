@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 namespace MyMonoGameLibrary.Scenes;
 
 // base class for a collider component. Contains implementations of ICollider for game objects
-public abstract class ColliderComponent : Component, ICollider
+public abstract class ColliderComponent : CoreComponent, ICollider
 {
     // set of names of objects colliding with this collider
     protected HashSet<string> Collisions { get; private set; } = [];

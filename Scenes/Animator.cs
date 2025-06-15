@@ -9,7 +9,7 @@ using MyMonoGameLibrary.Graphics;
 namespace MyMonoGameLibrary.Scenes;
 
 // responsible for animating game object
-public class Animator : Component, IAnimator
+public class Animator : CoreComponent, IAnimator
 {
     // variables and properties
     private SpriteRenderer _spriteManager;

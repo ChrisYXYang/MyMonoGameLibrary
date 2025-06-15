@@ -13,7 +13,7 @@ public class GameObject
     // variables and properties
     public string Name { get; private set; }
     private readonly Dictionary<string, Component> _components = [];
-    private readonly Dictionary<string, IGameBehavior> _behaviors = [];
+    private readonly Dictionary<string, BehaviorComponent> _behaviors = [];
 
     // constructor
     //
@@ -30,13 +30,17 @@ public class GameObject
 
             _components.Add(compName, component);
 
-            if (component is IGameBehavior behavior)
+            if (component is BehaviorComponent behavior)
                 _behaviors.Add(compName, behavior);
         }
 
         foreach (Component component in _components.Values)
         {
-            component.Initialize(this);
+            if (component is CoreComponent core)
+                ((CoreComponent)component).Initialize(this);
+            else
+                component.Initialize(this);
+
         }
     }
 
@@ -60,7 +64,7 @@ public class GameObject
     // param: other - other collider
     public void OnCollisionEnter(ICollider other)
     {
-        foreach (IGameBehavior behavior in _behaviors.Values)
+        foreach (BehaviorComponent behavior in _behaviors.Values)
         {
             behavior.OnCollisionEnter(other);
         }
@@ -71,7 +75,7 @@ public class GameObject
     // param: other - other collider
     public void OnCollisionExit(ICollider other)
     {
-        foreach (IGameBehavior behavior in _behaviors.Values)
+        foreach (BehaviorComponent behavior in _behaviors.Values)
         {
             behavior.OnCollisionExit(other);
         }
@@ -82,7 +86,7 @@ public class GameObject
     // param: other - other collider
     public void OnCollisionStay(ICollider other)
     {
-        foreach (IGameBehavior behavior in _behaviors.Values)
+        foreach (BehaviorComponent behavior in _behaviors.Values)
         {
             behavior.OnCollisionStay(other);
         }
@@ -116,7 +120,7 @@ public class GameObject
         return GetComponent<Animator>();
     }
 
-    public List<IGameBehavior> GetBehaviors()
+    public List<BehaviorComponent> GetBehaviors()
     {
         return [.. _behaviors.Values];
     }

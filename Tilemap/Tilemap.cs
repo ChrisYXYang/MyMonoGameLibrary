@@ -60,7 +60,7 @@ public class TileMap : IGameRenderer
                     {
                         // get layer name
                         string layerName = layer.Attribute("name").Value;
-                        bool collide = layerName.Contains("collide");
+                        bool collide = layerName.Contains("col");
 
                         // create the tile grid from data csv
                         var data = layer.Element("data");

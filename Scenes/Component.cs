@@ -18,7 +18,7 @@ public abstract class Component
     // initialization for the component
     //
     // param: parent - parent game object
-    public virtual void Initialize(GameObject parent)
+    public void Initialize(GameObject parent)
     {
         Parent = parent;
     }

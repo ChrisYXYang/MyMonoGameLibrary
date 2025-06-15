@@ -6,7 +6,7 @@ using MyMonoGameLibrary.Tools;
 namespace MyMonoGameLibrary.Scenes;
 
 // component for the transform of gameobject, which is position, scale, rotation
-public class Transform : Component
+public class Transform : CoreComponent
 {
     // variables and properties
     public Vector2 position = Vector2.Zero;
