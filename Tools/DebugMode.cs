@@ -54,7 +54,7 @@ public class DebugMode : Core
                 transform.position,
                 Color.White,
                 0f,
-                1/Camera.PixelScale,
+                0.05f,
                 SpriteEffects.None,
                 1f
             );
@@ -120,6 +120,17 @@ public class DebugMode : Core
                 SpriteEffects.None,
                 0.9f
             );
+
+        Camera.Draw
+            (
+                _originPoint,
+                collider.Center,
+                Color.White,
+                0f,
+                0.05f,
+                SpriteEffects.None,
+                1f
+            );
     }
 
     // helper method to draw circle collider 
@@ -137,5 +148,16 @@ public class DebugMode : Core
                 SpriteEffects.None,
                 0.9f
             );
+
+        Camera.Draw
+        (
+            _originPoint,
+            collider.Center,
+            Color.White,
+            0f,
+            0.05f,
+            SpriteEffects.None,
+            1f
+        );
     }
 }

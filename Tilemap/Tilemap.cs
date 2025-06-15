@@ -85,7 +85,7 @@ public class TileMap : IGameRenderer
                                                         (
                                                             Name + "_" + layerName + " tile r" + i + "col " + j,
                                                             tileSet.GetTile(int.Parse(line_tiles[j])),
-                                                            new Vector2(j + 0.5f - (float)Columns / 2, i - (float)Rows / 2 + 1),
+                                                            new Vector2(j + 0.5f - (float)Columns / 2, i - (float)Rows / 2 + 0.5f),
                                                             tileSize,
                                                             0 + layerDepth * 0.01f,
                                                             collide

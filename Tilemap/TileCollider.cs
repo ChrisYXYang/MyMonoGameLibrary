@@ -12,11 +12,11 @@ public class TileCollider : IAABBCollider
     public Tile Parent { get; private set; }
     public float Left => Parent.Position.X - 0.5f;
     public float Right => Parent.Position.X + 0.5f;
-    public float Top => Parent.Position.Y - 1;
-    public float Bottom => Parent.Position.Y;
+    public float Top => Parent.Position.Y - 0.5f;
+    public float Bottom => Parent.Position.Y + 0.5f;
     public float Width => 1;
     public float Height => 1;
-    public Vector2 Center => Parent.Position - (Vector2.UnitY * 0.5f); 
+    public Vector2 Center => Parent.Position; 
 
     // constructor 
     // 

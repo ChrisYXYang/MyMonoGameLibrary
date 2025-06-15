@@ -15,6 +15,7 @@ public class SpriteRenderer : Component, IGameRenderer
     public bool FlipX { get; set; } = false;
     public bool FlipY { get; set; } = false;
     public float LayerDepth { get; set; } = 0.5f;
+    public bool IsVisible { get; set; } = true;
     private Transform _transform;
 
     // constructor
@@ -28,12 +29,21 @@ public class SpriteRenderer : Component, IGameRenderer
     // constructor
     //
     // param: sprite - sprite to render
-
     // param: layerDepth - layer depth
     public SpriteRenderer(Sprite sprite, float layerDepth)
     {
         Sprite = sprite;
         LayerDepth = layerDepth;
+    }
+
+    // constructor
+    //
+    // param: sprite - sprite to render
+    // param: color - color
+    public SpriteRenderer(Sprite sprite, Color color)
+    {
+        Sprite = sprite;
+        Color = color;
     }
 
     // constructor
@@ -65,6 +75,9 @@ public class SpriteRenderer : Component, IGameRenderer
     // draw the sprite using sprite manager and transform properties
     public void Draw()
     {
+        if (!IsVisible)
+            return;
+        
         // set sprite effects
         int spriteEffect = 0;
         if (FlipX)

@@ -18,7 +18,7 @@ public class CircleCollider : ColliderComponent, ICircleCollider
     {
         Diameter = (float)diameter / Camera.SpritePixelsPerUnit;
         Radius = Diameter / 2;
-        Offset = new Vector2(0, -Radius);
+        Offset = Vector2.Zero;
     }
 
     // constructor

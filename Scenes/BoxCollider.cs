@@ -28,7 +28,7 @@ public class BoxCollider : ColliderComponent, IAABBCollider
         // set the properties
         Width = (float)width / Camera.SpritePixelsPerUnit;
         Height = (float)height / Camera.SpritePixelsPerUnit;
-        Offset = new Vector2(0, -(Height / 2));
+        Offset = Vector2.Zero;
     }
 
     // constructor

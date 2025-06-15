@@ -56,7 +56,7 @@ public class Tileset
                     for (int j = 0; j < _columns; j++)
                     {
                         // create new tile sprite
-                        Sprite newTile = new Sprite(Set, new Vector2(size * 0.5f, size), j * size, i * size, size);
+                        Sprite newTile = new Sprite(Set, new Vector2(size,size) * 0.5f, j * size, i * size, size);
                         _tiles[i, j] = newTile;
                     }
                 }

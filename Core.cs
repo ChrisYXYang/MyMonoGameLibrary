@@ -141,6 +141,7 @@ public class Core : Game
 
         // Change the currently active scene to the new scene
         s_activeScene = s_nextScene;
+        SceneTools.ChangeActive(s_nextScene);
 
         // Null out the next scene value so it does not trigger a change over and over.
         s_nextScene = null;
