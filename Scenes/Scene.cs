@@ -19,7 +19,7 @@ public abstract class Scene : IDisposable
     // variables and properties
     protected SpriteLibrary SceneSpriteLibrary { get; private set; }
 
-    private readonly HashSet<string> _names = [];
+    private readonly Dictionary<string, int> _names = [];
     private readonly Dictionary<string, GameObject> _gameObjects = [];
     private readonly Dictionary<string, TileMap> _tileMaps = [];
     private readonly List<IBehavior> _behaviors = [];
@@ -27,13 +27,13 @@ public abstract class Scene : IDisposable
     private readonly List<ICollider> _colliders = [];
     private readonly List<IGameRenderer> _renderers = [];
 
-    /// <summary>
-    /// Gets the ContentManager used for loading scene-specific assets.
-    /// </summary>
-    /// <remarks>
-    /// Assets loaded through this ContentManager will be automatically unloaded when this scene ends.
-    /// </remarks>
-    protected ContentManager Content { get; }
+/// <summary>
+/// Gets the ContentManager used for loading scene-specific assets.
+/// </summary>
+/// <remarks>
+/// Assets loaded through this ContentManager will be automatically unloaded when this scene ends.
+/// </remarks>
+protected ContentManager Content { get; }
 
     /// <summary>
     /// Gets a value that indicates if the scene has been disposed of.
@@ -78,6 +78,21 @@ public abstract class Scene : IDisposable
         foreach (IBehavior behavior in _behaviors)
         {
             behavior.Start();
+        }
+
+        // testing
+        List<GameObject> gameObjects = [.. _gameObjects.Values];
+        for (int i = 0; i < gameObjects.Count; i++)
+        {
+            Debug.WriteLine(gameObjects[i].Name);
+
+            for (int k = i + 1; k < gameObjects.Count; k++)
+            {
+                if (gameObjects[i].Name.Equals(gameObjects[k].Name))
+                {
+                    throw new Exception("same name");
+                }
+            }
         }
     }
 
@@ -202,19 +217,18 @@ public abstract class Scene : IDisposable
     }
 
 
-    // instantiate a gameobject and register it
+    // instantiate a gameobject using a list of components and register it
     //
     // param: name - name of game object
     // param: components - components of game object
     public void Instantiate(string name, Component[] components)
     {
+        // check if name is unique and register it
+        name = RegisterName(name);
+
         // create game object
         GameObject gameObject = new(name, components);
-
         _gameObjects.Add(name, gameObject);
-
-        if (!_names.Add(name))
-            throw new Exception("name already taken");
 
         // register relevant gameobject components
         foreach (IBehavior behavior in gameObject.GetBehaviors())
@@ -232,20 +246,28 @@ public abstract class Scene : IDisposable
             _animators.Add(gameObject.GetAnimator());
     }
 
+    // instantiate a gameobject using prefab
+    //
+    // param: prefab - prefab
+    public void Instantiate((string, Component[]) prefab)
+    {
+        Instantiate(prefab.Item1, prefab.Item2);
+    }
+
     // instantiate a tilemap and register it
     //
     // param: name - name of tilemap
     // param: tileset - the tileset
     public void Instantiate(string name, Tileset tileset)
     {
+        // check if name is unique and register it
+        name = RegisterName(name);
+
         // create tilemap
         TileMap tileMap = new(name, tileset);
 
         // add tilemap to dictionary
         _tileMaps.Add(name, tileMap);
-
-        if (!_names.Add(name))
-            throw new Exception("name already taken");
 
         // add tilemap to renderers
         _renderers.Add(tileMap.GetRenderer());
@@ -269,11 +291,32 @@ public abstract class Scene : IDisposable
 
                     _colliders.Add(tile.GetCollider());
 
-                    if (!_names.Add(tile.Name))
+                    if (_names.ContainsKey(tile.Name))
                         throw new Exception("name taken");
+                    else
+                        _names.Add(tile.Name, 0);
 
                 }
             }
         }
+    }
+
+    // check if name is unique and register
+    //
+    // param: name - name to check and register
+    // return: new unique name
+    private string RegisterName(string name)
+    {
+        name = name.Split('_')[0];
+
+        if (_names.ContainsKey(name))
+        {
+            _names[name] += 1;
+            name = name + "_" + _names[name];
+        }
+        else
+            _names.Add(name, 0);
+
+        return name;
     }
 }
