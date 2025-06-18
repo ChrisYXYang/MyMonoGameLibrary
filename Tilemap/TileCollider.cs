@@ -10,20 +10,22 @@ public class TileCollider : IAABBCollider
 {
     // variables and properties
     public Tile Parent { get; private set; }
-    public float Left => Parent.Position.X - 0.5f;
-    public float Right => Parent.Position.X + 0.5f;
-    public float Top => Parent.Position.Y - 0.5f;
-    public float Bottom => Parent.Position.Y + 0.5f;
+    public float Left => Center.X - 0.5f;
+    public float Right => Center.X + 0.5f;
+    public float Top => Center.Y - 0.5f;
+    public float Bottom => Center.Y + 0.5f;
     public float Width => 1;
     public float Height => 1;
     public Vector2 Center => Parent.Position; 
+    public bool Solid { get; set; }
 
     // constructor 
     // 
     // param: tile - the tile that holds the collider
-    public TileCollider(Tile parent)
+    public TileCollider(Tile parent, bool solid)
     {
         Parent = parent;
+        Solid = solid;
     }
 
     public void Colliding(ICollider other)

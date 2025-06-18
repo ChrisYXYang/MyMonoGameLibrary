@@ -25,6 +25,7 @@ public abstract class Scene : IDisposable
     private readonly List<IBehavior> _behaviors = [];
     private readonly List<IAnimator> _animators = [];
     private readonly List<ICollider> _colliders = [];
+    private readonly List<ColliderComponent> _moveableColliders = [];
     private readonly List<IGameRenderer> _renderers = [];
 
 /// <summary>
@@ -103,6 +104,12 @@ protected ContentManager Content { get; }
     /// <param name="gameTime">A snapshot of the timing values for the current frame.</param>
     public virtual void Update(GameTime gameTime) 
     {
+        // store previous positions of game objects
+        foreach (ColliderComponent collider in _moveableColliders)
+        {
+            collider.UpdatePrevPos();
+        }
+        
         // update behaviors
         foreach (IBehavior behavior in _behaviors)
         {
@@ -136,6 +143,12 @@ protected ContentManager Content { get; }
                     _colliders[k].NotColliding(_colliders[i]);
                 }
             }
+        }
+
+        // correct moveable collider positions
+        foreach (ColliderComponent collider in _moveableColliders)
+        {
+            collider.CorrectPosition();
         }
     }
 
@@ -240,7 +253,11 @@ protected ContentManager Content { get; }
             _renderers.Add(gameObject.GetRenderer());
 
         if (gameObject.GetCollider() != null)
-            _colliders.Add(gameObject.GetCollider());
+        {
+            ColliderComponent collider = (ColliderComponent)gameObject.GetCollider(); 
+            _colliders.Add(collider);
+            _moveableColliders.Add(collider);
+        }
 
         if (gameObject.GetAnimator() != null)
             _animators.Add(gameObject.GetAnimator());

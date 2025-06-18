@@ -7,6 +7,9 @@ namespace MyMonoGameLibrary.Scenes;
 // interface for colliders
 public interface ICollider
 {
+    // is collider solid
+    public bool Solid { get; }
+    
     // center of collider
     public Vector2 Center { get; }
 

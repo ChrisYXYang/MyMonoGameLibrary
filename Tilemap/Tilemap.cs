@@ -61,6 +61,7 @@ public class TileMap : IGameRenderer
                         // get layer name
                         string layerName = layer.Attribute("name").Value;
                         bool collide = layerName.Contains("col");
+                        bool solid = layerName.Contains("sol");
 
                         // create the tile grid from data csv
                         var data = layer.Element("data");
@@ -88,7 +89,8 @@ public class TileMap : IGameRenderer
                                                             new Vector2(j + 0.5f - (float)Columns / 2, i - (float)Rows / 2 + 0.5f),
                                                             tileSize,
                                                             0 + layerDepth * 0.01f,
-                                                            collide
+                                                            collide,
+                                                            solid
                                                          );
                                 }
                             }
