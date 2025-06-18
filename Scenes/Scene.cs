@@ -25,7 +25,7 @@ public abstract class Scene : IDisposable
     private readonly List<IBehavior> _behaviors = [];
     private readonly List<IAnimator> _animators = [];
     private readonly List<ICollider> _colliders = [];
-    private readonly List<BoxCollider> _boxColliders = [];
+    private readonly List<Rigidbody> _rigidbodies = [];
     private readonly List<IGameRenderer> _renderers = [];
 
 /// <summary>
@@ -105,9 +105,9 @@ protected ContentManager Content { get; }
     public virtual void Update(GameTime gameTime) 
     {
         // store previous positions of game objects
-        foreach (BoxCollider collider in _boxColliders)
+        foreach (Rigidbody rigidbody in _rigidbodies)
         {
-            collider.UpdatePrevPos();
+            rigidbody.UpdatePrevPos();
         }
         
         // update behaviors
@@ -146,9 +146,9 @@ protected ContentManager Content { get; }
         }
 
         // correct moveable collider positions
-        foreach (BoxCollider collider in _boxColliders)
+        foreach (Rigidbody rigidbody in _rigidbodies)
         {
-            collider.CorrectPosition();
+            rigidbody.CorrectPosition();
         }
     }
 
@@ -249,20 +249,22 @@ protected ContentManager Content { get; }
             _behaviors.Add(behavior);
         }
 
-        if (gameObject.GetRenderer() != null)
-            _renderers.Add(gameObject.GetRenderer());
+        SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
+        if (sr != null)
+            _renderers.Add(sr);
 
-        if (gameObject.GetCollider() != null)
+        ICollider collider = gameObject.GetCollider();
+        if (collider != null)
         {
-            ColliderComponent collider = (ColliderComponent)gameObject.GetCollider(); 
             _colliders.Add(collider);
-            
-            if (collider is BoxCollider box)
-                _boxColliders.Add(box);
+
+            if (collider is Rigidbody rb)
+                _rigidbodies.Add(rb);
         }
 
-        if (gameObject.GetAnimator() != null)
-            _animators.Add(gameObject.GetAnimator());
+        Animator anim = gameObject.GetComponent<Animator>();
+        if (anim != null)
+            _animators.Add(anim);
     }
 
     // instantiate a gameobject using prefab

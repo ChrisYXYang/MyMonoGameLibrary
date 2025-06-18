@@ -95,43 +95,20 @@ public class GameObject
     // get the collider
     //
     // return: box collider
-    public ICollider GetCollider()
+    public ColliderComponent GetCollider()
     {
-        ICollider collider = GetComponent<BoxCollider>();
+        ColliderComponent collider = GetComponent<BoxCollider>();
 
         collider ??= GetComponent<CircleCollider>();
+
+        collider ??= GetComponent<Rigidbody>();
         
         return collider;
-    }
-
-    // get the renderer
-    //
-    // return: sprite renderer
-    public IGameRenderer GetRenderer()
-    {
-        return GetComponent<SpriteRenderer>();
-    }
-
-    // get the animator
-    //
-    // return: animator
-    public IAnimator GetAnimator()
-    {
-        return GetComponent<Animator>();
     }
 
     public List<BehaviorComponent> GetBehaviors()
     {
         return [.. _behaviors.Values];
-    }
-
-    // 4 testing
-    public void PrintComponents()
-    {
-        foreach (var entry in _components)
-        {
-            Debug.WriteLine(entry.Key + "\n");
-        }
     }
 }
 

@@ -9,6 +9,7 @@ namespace MyMonoGameLibrary.Tilemap;
 public class TileCollider : IAABBCollider
 {
     // variables and properties
+    public string Layer { get; set; }
     public Tile Parent { get; private set; }
     public float Left => Center.X - 0.5f;
     public float Right => Center.X + 0.5f;

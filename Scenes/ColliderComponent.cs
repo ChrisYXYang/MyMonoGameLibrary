@@ -10,6 +10,7 @@ namespace MyMonoGameLibrary.Scenes;
 // base class for a collider component. Contains implementations of ICollider for game objects
 public abstract class ColliderComponent : CoreComponent, ICollider
 {
+    public string Layer { get; set; }
     // set of names of objects colliding with this collider
     protected Dictionary<string, ICollider> Colliders { get; private set; } = [];
     protected Transform ParentTransform { get; private set; }

@@ -65,16 +65,16 @@ public class DebugMode : Core
     // param: gameObject - game object to draw
     public static void DrawGameObjectCollider(GameObject gameObject)
     {
-        BoxCollider boxCollider = gameObject.GetComponent<BoxCollider>();
-        if (boxCollider != null)
-        {
-            DrawBoxCollider(boxCollider);
-        }
+        ICollider collider = gameObject.GetCollider();
 
-        CircleCollider circleCollider = gameObject.GetComponent<CircleCollider>();
-        if (circleCollider != null)
+        if (collider != null)
         {
-            DrawCircleCollider(circleCollider);
+            if (collider is Rigidbody rb)
+                DrawBoxCollider(rb);
+            else if (collider is BoxCollider box)
+                DrawBoxCollider(box);
+            else if (collider is CircleCollider circle)
+                DrawCircleCollider(circle);
         }
     }
 
