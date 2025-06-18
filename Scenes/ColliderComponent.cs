@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Tilemap;
@@ -15,8 +16,6 @@ public abstract class ColliderComponent : CoreComponent, ICollider
     public Vector2 Offset { get; protected set; }
     // center of collider
     public Vector2 Center => ParentTransform.position + Offset;
-    public bool Solid { get; set; }
-    public Vector2 PreviousPosition { get; private set; }
 
     // initialize
     //
@@ -61,63 +60,5 @@ public abstract class ColliderComponent : CoreComponent, ICollider
             Colliders.Remove(other.GetName());
             Parent.OnCollisionExit(other);
         }
-    }
-
-    // update previous position
-    public void UpdatePrevPos()
-    {
-        if (Solid)
-            PreviousPosition = ParentTransform.position;
-    }
-
-    // correct the position of collider of within a solid tile collider
-    public void CorrectPosition()
-    {
-        if (Solid)
-        {
-            Vector2 currentPos = ParentTransform.position;
-
-            // check whether moving x or y will cause collision. If so, then don't move x or y
-            Vector2 newPos = PreviousPosition;
-
-            // check if moving x will collide with any tile colliders
-            ParentTransform.position = new Vector2(currentPos.X, PreviousPosition.Y);
-
-            bool xCollides = false;
-            foreach (ICollider other in Colliders.Values)
-            {
-                if (other is TileCollider tile)
-                {
-                    if (Collisions.Intersect(this, other))
-                        xCollides = true;
-                }
-            }
-
-            if (!xCollides)
-            {
-                newPos.X = currentPos.X;
-            }
-
-            // check if moving y will collide with any tile colliders
-            ParentTransform.position = new Vector2(PreviousPosition.X, currentPos.Y);
-
-            bool yCollides = false;
-            foreach (ICollider other in Colliders.Values)
-            {
-                if (other is TileCollider tile)
-                {
-                    if (Collisions.Intersect(this, other))
-                        yCollides = true;
-                }
-            }
-
-            if (!yCollides)
-            {
-                newPos.Y = currentPos.Y;
-            }
-
-            // move transform to new position
-            ParentTransform.position = newPos;
-        }  
     }
 }

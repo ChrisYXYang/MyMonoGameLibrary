@@ -14,13 +14,11 @@ public class CircleCollider : ColliderComponent, ICircleCollider
     // constructor
     //
     // param: diameter - diameter of collider
-    // param: solid - solid or not
-    public CircleCollider(int diameter, bool solid)
+    public CircleCollider(int diameter)
     {
         Diameter = (float)diameter / Camera.SpritePixelsPerUnit;
         Radius = Diameter / 2;
         Offset = Vector2.Zero;
-        Solid = solid;
     }
 
     // constructor
@@ -28,12 +26,10 @@ public class CircleCollider : ColliderComponent, ICircleCollider
     // param: diameter - diameter of collider
     // param: xOffset - x offset
     // param: yOffset - y offset
-    // param: solid - solid or not
-    public CircleCollider(int diameter, float xOffset, float yOffset, bool solid)
+    public CircleCollider(int diameter, float xOffset, float yOffset)
     {
         Diameter = (float)diameter / Camera.SpritePixelsPerUnit;
         Radius = Diameter / 2;
         Offset = new Vector2(xOffset, yOffset) / Camera.SpritePixelsPerUnit;
-        Solid = solid;
     }
 }
