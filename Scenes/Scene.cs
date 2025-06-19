@@ -25,16 +25,20 @@ public abstract class Scene : IDisposable
     private readonly List<IBehavior> _behaviors = [];
     private readonly List<IAnimator> _animators = [];
     private readonly List<ICollider> _colliders = [];
-    private readonly List<Rigidbody> _rigidbodies = [];
     private readonly List<IGameRenderer> _renderers = [];
 
-/// <summary>
-/// Gets the ContentManager used for loading scene-specific assets.
-/// </summary>
-/// <remarks>
-/// Assets loaded through this ContentManager will be automatically unloaded when this scene ends.
-/// </remarks>
-protected ContentManager Content { get; }
+    private readonly List<TileCollider> _tileColliders = [];
+    private readonly List<Rigidbody> _rigidbodies = [];
+
+    public float Gravity { get; protected set; } = 9.8f;
+
+    /// <summary>
+    /// Gets the ContentManager used for loading scene-specific assets.
+    /// </summary>
+    /// <remarks>
+    /// Assets loaded through this ContentManager will be automatically unloaded when this scene ends.
+    /// </remarks>
+    protected ContentManager Content { get; }
 
     /// <summary>
     /// Gets a value that indicates if the scene has been disposed of.
@@ -103,13 +107,7 @@ protected ContentManager Content { get; }
     /// </summary>
     /// <param name="gameTime">A snapshot of the timing values for the current frame.</param>
     public virtual void Update(GameTime gameTime) 
-    {
-        // store previous positions of game objects
-        foreach (Rigidbody rigidbody in _rigidbodies)
-        {
-            rigidbody.UpdatePrevPos();
-        }
-        
+    {        
         // update behaviors
         foreach (IBehavior behavior in _behaviors)
         {
@@ -125,6 +123,37 @@ protected ContentManager Content { get; }
         foreach (IAnimator animator in _animators)
         {
             animator.Update(gameTime);
+        }
+
+        // update rigidbodies
+        foreach (Rigidbody rigidbody in _rigidbodies)
+        {
+            rigidbody.UpdatePrevPos();
+
+
+            // afflict gravity
+            if (rigidbody.UseGravity)
+                rigidbody.YVelocity += Gravity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            // move rigidbodies
+            rigidbody.ParentTransform.position.X += (rigidbody.movePosition.X + rigidbody.XVelocity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            rigidbody.ParentTransform.position.Y += (rigidbody.movePosition.Y + rigidbody.YVelocity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            rigidbody.movePosition = Vector2.Zero;
+
+            foreach (TileCollider tileCol in _tileColliders)
+            {
+                if (Collisions.Intersect(rigidbody.Collider, tileCol))
+                {
+                    rigidbody.AddCollision(tileCol);
+                }
+                else
+                {
+                    rigidbody.RemoveCollision(tileCol);
+                }
+            }
+
+            rigidbody.CorrectPosition();
+
         }
 
         // check collisions
@@ -143,12 +172,6 @@ protected ContentManager Content { get; }
                     _colliders[k].NotColliding(_colliders[i]);
                 }
             }
-        }
-
-        // correct moveable collider positions
-        foreach (Rigidbody rigidbody in _rigidbodies)
-        {
-            rigidbody.CorrectPosition();
         }
     }
 
@@ -255,12 +278,11 @@ protected ContentManager Content { get; }
 
         ICollider collider = gameObject.GetCollider();
         if (collider != null)
-        {
             _colliders.Add(collider);
 
-            if (collider is Rigidbody rb)
-                _rigidbodies.Add(rb);
-        }
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        if (rb != null)
+            _rigidbodies.Add(rb);
 
         Animator anim = gameObject.GetComponent<Animator>();
         if (anim != null)
@@ -311,6 +333,7 @@ protected ContentManager Content { get; }
                         continue;
 
                     _colliders.Add(tile.GetCollider());
+                    _tileColliders.Add(tile.GetCollider());
 
                     if (_names.ContainsKey(tile.Name))
                         throw new Exception("name taken");

@@ -69,9 +69,7 @@ public class DebugMode : Core
 
         if (collider != null)
         {
-            if (collider is Rigidbody rb)
-                DrawBoxCollider(rb);
-            else if (collider is BoxCollider box)
+            if (collider is BoxCollider box)
                 DrawBoxCollider(box);
             else if (collider is CircleCollider circle)
                 DrawCircleCollider(circle);

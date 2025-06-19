@@ -100,8 +100,6 @@ public class GameObject
         ColliderComponent collider = GetComponent<BoxCollider>();
 
         collider ??= GetComponent<CircleCollider>();
-
-        collider ??= GetComponent<Rigidbody>();
         
         return collider;
     }

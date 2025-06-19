@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Tilemap;
 
@@ -13,7 +14,7 @@ public abstract class ColliderComponent : CoreComponent, ICollider
     public string Layer { get; set; }
     // set of names of objects colliding with this collider
     protected Dictionary<string, ICollider> Colliders { get; private set; } = [];
-    protected Transform ParentTransform { get; private set; }
+    public Transform ParentTransform { get; private set; }
     public Vector2 Offset { get; protected set; }
     // center of collider
     public Vector2 Center => ParentTransform.position + Offset;
@@ -61,5 +62,11 @@ public abstract class ColliderComponent : CoreComponent, ICollider
             Colliders.Remove(other.GetName());
             Parent.OnCollisionExit(other);
         }
+    }
+
+    // get colliders colliding with collider
+    public List<ICollider> GetColliders()
+    {
+        return [.. Colliders.Values];
     }
 }

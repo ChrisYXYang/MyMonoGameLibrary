@@ -54,7 +54,7 @@ public class Tile
     // return collider
     //
     // return: the collider
-    public IAABBCollider GetCollider()
+    public TileCollider GetCollider()
     {
         return Collider;
     }
