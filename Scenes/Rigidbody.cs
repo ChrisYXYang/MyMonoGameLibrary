@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Tilemap;
 
@@ -11,17 +12,31 @@ public class Rigidbody : CoreComponent
     // velocities
     public float XVelocity { get; set; } = 0;
     public float YVelocity { get; set; } = 0;
+
     // can collide with walls or not
     public bool Solid { get; set; }
+
     // affected by gravity or not
     public bool UseGravity { get; set; }
-    public bool TouchingBottom { get; private set; }
-    public Transform ParentTransform { get; private set; }
-    public BoxCollider Collider { get; private set; }
-    public Vector2 movePosition;
 
+    // is bottom of rigidbody touching tile collider
+    public bool TouchingBottom { get; private set; }
+
+    // gameobject transform
+    public Transform ParentTransform { get; private set; }
+
+    // collider rigidbody will use
+    public BoxCollider Collider { get; private set; }
+
+    // tile colliders intersecting the rigidbody
     private Dictionary<string, TileCollider> _colliders = new(10);
+
+    // position before updating the position
     private Vector2 _previousPosition;
+
+    // how much rigidbody should move in one update
+    private Vector2 _movePosition;
+
 
     // constructor
     //
@@ -46,11 +61,36 @@ public class Rigidbody : CoreComponent
             Solid = false;
     }
 
+    // update move position
+    //
+    // param: x - x to move
+    // param: y - y to move
+    public void MovePosition(float x, float y)
+    {
+        _movePosition.X += x;
+        _movePosition.Y += y;
+    }
+
+    // clear move position
+    public void ClearMovePosition()
+    {
+        _movePosition.X = 0;
+        _movePosition.Y = 0;
+    }
+
+    // get move position
+    //
+    // return: _movePosition
+    public Vector2 GetMovePosition()
+    {
+        return _movePosition;
+    }
+
     // update previous position
     public void UpdatePrevPos()
     {
         if (Solid)
-            _previousPosition = Collider.ParentTransform.position;
+            _previousPosition = ParentTransform.position;
     }
 
     // correct the position of collider of within a solid tile collider
@@ -59,7 +99,7 @@ public class Rigidbody : CoreComponent
         if (!Solid)
             return;
 
-        Vector2 currentPos = Collider.ParentTransform.position;
+        Vector2 currentPos = ParentTransform.position;
         Vector2 newPos = _previousPosition;
 
         // correct x movement
@@ -68,38 +108,38 @@ public class Rigidbody : CoreComponent
         // correct left movement
         if (xDelta > 0)
         {
-            Collider.ParentTransform.position = new Vector2(currentPos.X, _previousPosition.Y);
+            ParentTransform.position = new Vector2(currentPos.X, _previousPosition.Y);
             foreach (ICollider other in _colliders.Values)
             {
                 if (other is TileCollider tile)
                 {
                     if (Collisions.Intersect(Collider, tile))
                     {
-                        Collider.ParentTransform.position.X = tile.Right + (Collider.Width * 0.5f);
+                        ParentTransform.position.X = tile.Right + (Collider.Width * 0.5f);
                         this.XVelocity = 0;
                     }
                 }
             }
 
-            newPos.X = Collider.ParentTransform.position.X;
+            newPos.X = ParentTransform.position.X;
         }
 
         // correct right movement
         if (xDelta < 0)
         {
-            Collider.ParentTransform.position = new Vector2(currentPos.X, _previousPosition.Y);
+            ParentTransform.position = new Vector2(currentPos.X, _previousPosition.Y);
             foreach (ICollider other in _colliders.Values)
             {
                 if (other is TileCollider tile)
                 {
                     if (Collisions.Intersect(Collider, tile))
                     {
-                        Collider.ParentTransform.position.X = tile.Left - (Collider.Width * 0.5f);
+                        ParentTransform.position.X = tile.Left - (Collider.Width * 0.5f);
                         this.XVelocity = 0;
                     }
                 }
             }
-            newPos.X = Collider.ParentTransform.position.X;
+            newPos.X = ParentTransform.position.X;
         }
 
         // correct y movement
@@ -108,53 +148,59 @@ public class Rigidbody : CoreComponent
         // correct up movement
         if (yDelta > 0)
         {
-            Collider.ParentTransform.position = new Vector2(_previousPosition.X, currentPos.Y);
+            ParentTransform.position = new Vector2(_previousPosition.X, currentPos.Y);
             foreach (ICollider other in _colliders.Values)
             {
                 if (other is TileCollider tile)
                 {
                     if (Collisions.Intersect(Collider, tile))
                     {
-                        Collider.ParentTransform.position.Y = tile.Bottom + (Collider.Height * 0.5f);
+                        ParentTransform.position.Y = tile.Bottom + (Collider.Height * 0.5f);
                         this.YVelocity = 0;
                     }
                 }
             }
 
-            newPos.Y = Collider.ParentTransform.position.Y;
+            newPos.Y = ParentTransform.position.Y;
         }
 
-        // correct down movement
+        // correct down movement (also check if touching bottom)
         TouchingBottom = false;
         if (yDelta < 0)
         {
-            Collider.ParentTransform.position = new Vector2(_previousPosition.X, currentPos.Y);
+            ParentTransform.position = new Vector2(_previousPosition.X, currentPos.Y);
             foreach (ICollider other in _colliders.Values)
             {
                 if (other is TileCollider tile)
                 {
                     if (Collisions.Intersect(Collider, tile))
                     {
-                        Collider.ParentTransform.position.Y = tile.Top - (Collider.Height * 0.5f);
+                        ParentTransform.position.Y = tile.Top - (Collider.Height * 0.5f);
                         this.YVelocity = 0;
                         TouchingBottom = true;
                     }
                 }
             }
 
-            newPos.Y = Collider.ParentTransform.position.Y;
+            newPos.Y = ParentTransform.position.Y;
         }
 
         // move transform to new position
-        Collider.ParentTransform.position = newPos;
+        ParentTransform.position = newPos;
     }
 
+    // add a tile collider to collisions
+    //
+    // param: other - collider to add
     public void AddCollision(TileCollider other)
     {
         if (!_colliders.ContainsKey(other.GetName()))
             _colliders.Add(other.GetName(), other);
     }
 
+    // remove a tile collider from collisions
+    //
+    // param: other - collider to remove
     public void RemoveCollision(TileCollider other)
     {
         if (_colliders.ContainsKey(other.GetName()))

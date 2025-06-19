@@ -14,6 +14,8 @@ using MyMonoGameLibrary.Tilemap;
 
 namespace MyMonoGameLibrary.Scenes;
 
+// this class represents the inner workings of a scene such as updating all the gameobjects,
+// handling the physics, etc.
 public abstract class Scene : IDisposable
 {
     // variables and properties
@@ -107,7 +109,13 @@ public abstract class Scene : IDisposable
     /// </summary>
     /// <param name="gameTime">A snapshot of the timing values for the current frame.</param>
     public virtual void Update(GameTime gameTime) 
-    {        
+    {
+        // store previous position of rigidbody
+        foreach (Rigidbody rigidbody in _rigidbodies)
+        {
+            rigidbody.UpdatePrevPos();
+        }
+
         // update behaviors
         foreach (IBehavior behavior in _behaviors)
         {
@@ -128,18 +136,17 @@ public abstract class Scene : IDisposable
         // update rigidbodies
         foreach (Rigidbody rigidbody in _rigidbodies)
         {
-            rigidbody.UpdatePrevPos();
-
-
             // afflict gravity
             if (rigidbody.UseGravity)
                 rigidbody.YVelocity += Gravity * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // move rigidbodies
-            rigidbody.ParentTransform.position.X += (rigidbody.movePosition.X + rigidbody.XVelocity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            rigidbody.ParentTransform.position.Y += (rigidbody.movePosition.Y + rigidbody.YVelocity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            rigidbody.movePosition = Vector2.Zero;
+            Vector2 movePosition = rigidbody.GetMovePosition();
+            rigidbody.ParentTransform.position.X += (movePosition.X + rigidbody.XVelocity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            rigidbody.ParentTransform.position.Y += (movePosition.Y + rigidbody.YVelocity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            rigidbody.ClearMovePosition();
 
+            // get tile collisions with rigidbody
             foreach (TileCollider tileCol in _tileColliders)
             {
                 if (Collisions.Intersect(rigidbody.Collider, tileCol))
@@ -152,11 +159,12 @@ public abstract class Scene : IDisposable
                 }
             }
 
+            // correct collisions with tilemap
             rigidbody.CorrectPosition();
 
         }
 
-        // check collisions
+        // check all collisions
         for (int i = 0; i < _colliders.Count; i++)
         {
             for (int k = i + 1; k < _colliders.Count; k++)
