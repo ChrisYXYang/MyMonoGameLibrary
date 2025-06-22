@@ -14,7 +14,7 @@ using MyMonoGameLibrary.Scenes;
 namespace MyMonoGameLibrary.Tilemap;
 
 // this class represents a tilemap
-public class TileMap : IGameRenderer
+public class TileMap
 {
     // variables and properties
     public int Rows { get; private set; }
@@ -104,31 +104,6 @@ public class TileMap : IGameRenderer
             }
         }
     }
-
-    // draw the tilemap
-    public void Draw()
-    {
-        foreach (Tile[,] layer in _tilemap.Values)
-        {
-            for (int i = 0; i < Rows; i++)
-            {
-                for (int j = 0; j < Columns; j++)
-                {
-                    if (layer[i, j] != null)
-                        layer[i,j].Draw();
-                }
-            }
-        }
-    }
-
-    // get the renderer
-    //
-    // return: the renderer
-    public IGameRenderer GetRenderer()
-    {
-        return this;
-    }
-
 
     // get a tile
     //

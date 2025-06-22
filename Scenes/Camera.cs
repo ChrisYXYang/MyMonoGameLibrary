@@ -4,10 +4,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.Tools;
+using MyMonoGameLibrary.Tilemap;
+using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace MyMonoGameLibrary.Scenes;
 
-// camera for the game world.
+// camera for the game world. Handles drawing game world objects
 public static class Camera
 {
     // position of the camera in the game world
@@ -112,7 +115,18 @@ public static class Camera
     public static void Draw(Sprite sprite, Vector2 position, Color color, float rotation, Vector2 scale,
         SpriteEffects spriteEffects, float layerDepth)
     {
-        sprite.GameDraw(position, color, rotation, scale, spriteEffects, layerDepth);
+        Camera.Draw
+            (
+                sprite.SpriteSheet,
+                position,
+                sprite.SourceRectangle,
+                color,
+                rotation,
+                sprite.OriginPoint,
+                scale,
+                spriteEffects,
+                layerDepth
+            );
     }
 
     // draw sprite in game world
@@ -126,14 +140,61 @@ public static class Camera
     public static void Draw(Sprite sprite, Vector2 position, Color color, float rotation, float scale,
         SpriteEffects spriteEffects, float layerDepth)
     {
-        sprite.GameDraw(position, color, rotation, scale, spriteEffects, layerDepth);
+        Camera.Draw
+            (
+                sprite.SpriteSheet,
+                position,
+                sprite.SourceRectangle,
+                color,
+                rotation,
+                sprite.OriginPoint,
+                scale,
+                spriteEffects,
+                layerDepth
+            );
     }
 
-    // draw object in game world
+    // draw game object in game world
     //
-    // param: renderer - the renderer
-    public static void Draw(IGameRenderer renderer)
+    // param: renderer - the sprite renderer
+    public static void Draw(SpriteRenderer renderer)
     {
-        renderer.Draw();
+        if (!renderer.IsVisible)
+            return;
+
+        // set sprite effects
+        int spriteEffect = 0;
+        if (renderer.FlipX)
+            spriteEffect += 1;
+        if (renderer.FlipY)
+            spriteEffect += 2;
+
+        Camera.Draw(renderer.Sprite, renderer.ParentTransform.position, renderer.Color, renderer.ParentTransform.Rotation,
+            renderer.ParentTransform.Scale, (SpriteEffects)spriteEffect, renderer.LayerDepth);
+    }
+
+    // draw a tilemap in game world
+    //
+    // param: tilemap - the tilemap to draw
+    public static void Draw(TileMap tilemap)
+    {
+        List<string> layerNames = tilemap.Layers;
+
+        foreach (string layerName in layerNames)
+        {
+            for (int i = 0; i < tilemap.Rows; i++)
+            {
+                for (int j = 0; j < tilemap.Columns; j++)
+                {
+                    Tile tile = tilemap.GetTile(layerName, i, j);
+
+                    if (tile == null)
+                        continue;
+
+                    Camera.Draw(tile.Sprite, tile.Position, Color.White, 0f, Vector2.One, SpriteEffects.None, tile.LayerDepth);
+
+                }
+            }
+        }
     }
 }

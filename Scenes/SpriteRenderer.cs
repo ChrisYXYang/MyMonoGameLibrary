@@ -7,7 +7,7 @@ using MyMonoGameLibrary.Graphics;
 namespace MyMonoGameLibrary.Scenes;
 
 // Component for drawing a sprite for a game object.
-public class SpriteRenderer : CoreComponent, IGameRenderer
+public class SpriteRenderer : CoreComponent
 {
     // variables and properties
     public Sprite Sprite { get; set; }
@@ -16,7 +16,7 @@ public class SpriteRenderer : CoreComponent, IGameRenderer
     public bool FlipY { get; set; } = false;
     public float LayerDepth { get; set; } = 0.5f;
     public bool IsVisible { get; set; } = true;
-    private Transform _transform;
+    public Transform ParentTransform { get; private set; }
 
     // constructor
     //
@@ -69,31 +69,7 @@ public class SpriteRenderer : CoreComponent, IGameRenderer
     public override void Initialize(GameObject parent)
     {
         base.Initialize(parent);
-        _transform = GetComponent<Transform>();
-    }
-
-    // draw the sprite using sprite manager and transform properties
-    public void Draw()
-    {
-        if (!IsVisible)
-            return;
-        
-        // set sprite effects
-        int spriteEffect = 0;
-        if (FlipX)
-            spriteEffect += 1;
-        if (FlipY)
-            spriteEffect += 2;
-
-        Sprite.GameDraw
-            (
-                _transform.position,
-                Color,
-                _transform.Rotation,
-                _transform.Scale,
-                (SpriteEffects)spriteEffect,
-                LayerDepth
-            );
+        ParentTransform = GetComponent<Transform>();
     }
 }
 

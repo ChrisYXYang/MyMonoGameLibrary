@@ -7,6 +7,7 @@ using MyMonoGameLibrary.Tools;
 using MyMonoGameLibrary.Tilemap;
 using System.Collections.Generic;
 using MyMonoGameLibrary.Scenes;
+using System.Reflection.Metadata.Ecma335;
 
 namespace MyMonoGameLibrary.Tools;
 
@@ -48,6 +49,10 @@ public class DebugMode : Core
     public static void DrawOrigin(GameObject gameObject)
     {
         Transform transform = gameObject.GetComponent<Transform>();
+
+        if (transform == null)
+            return;
+
         Camera.Draw
             (
                 _originPoint,

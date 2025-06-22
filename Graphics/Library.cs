@@ -5,24 +5,30 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using MyMonoGameLibrary.Tilemap;
 
 namespace MyMonoGameLibrary.Graphics;
 
-// This class stores the spritesheets and tilesetsof the game and allows access to them.
-public class SpriteLibrary
+// This class stores assets needed for the game such as spritesheets, fonts, and tilesets.
+public class Library
 {
     // variables and properties
-    private Dictionary<string, SpriteSheet> _spriteSheets = new Dictionary<string, SpriteSheet>();
-    private Dictionary<string, Tileset> _tileSets = new Dictionary<string, Tileset>();
+    private Dictionary<string, SpriteSheet> _spriteSheets = [];
+    private Dictionary<string, Tileset> _tileSets = [];
+    private Dictionary<string, SpriteFont> _fonts = [];
+    private ContentManager _content;
+    public Library(ContentManager content)
+    {
+        _content = content;
+    }
 
     // add sprite sheet to library
     //
-    // param: content - content manager
     // param: spriteSheetName - name of sprite sheet
-    public void AddSpriteSheet(ContentManager content, string spriteSheetName)
+    public void AddSpriteSheet(string spriteSheetName)
     {
-        _spriteSheets.Add(spriteSheetName, new SpriteSheet(content, spriteSheetName));
+        _spriteSheets.Add(spriteSheetName, new SpriteSheet(_content, spriteSheetName));
     }
     
     // get sprite sheet
@@ -56,19 +62,36 @@ public class SpriteLibrary
 
     // add tile set to library
     //
-    // param: content - content manager
     // param: tileSetName - name of tile set
-    public void AddTileset(ContentManager content, string tileSetName)
+    public void AddTileset(string tileSetName)
     {
-        _tileSets.Add(tileSetName, new Tileset(content, tileSetName));
+        _tileSets.Add(tileSetName, new Tileset(_content, tileSetName));
     }
 
     // get tile set
     //
     // param: tileSetName - name of tile set
-    // param: tile set requested
+    // return: tile set requested
     public Tileset GetTileset(string tileSetName)
     {
         return _tileSets[tileSetName];
+    }
+
+
+    // add font to library
+    //
+    // param: fontName - name of font
+    public void AddFont(string fontName)
+    {
+        _fonts.Add(fontName, _content.Load<SpriteFont>("fonts/" + fontName));
+    }
+
+    // get font
+    //
+    // param: fontName - name of font
+    // return: font requested
+    public SpriteFont GetFont(string fontName)
+    {
+        return _fonts[fontName];
     }
 }

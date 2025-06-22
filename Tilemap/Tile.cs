@@ -36,20 +36,6 @@ public class Tile
         if (collider)
             Collider = new TileCollider(this, solid);
     }
-   
-    // draw the tile
-    public void Draw()
-    {
-        Sprite.GameDraw
-            (
-                Position,
-                Color.White,
-                0f,
-                Vector2.One,
-                SpriteEffects.None,
-                LayerDepth
-            );
-    }
 
     // return collider
     //

@@ -19,7 +19,7 @@ namespace MyMonoGameLibrary.Scenes;
 public abstract class Scene : IDisposable
 {
     // variables and properties
-    protected SpriteLibrary SceneSpriteLibrary { get; private set; }
+    protected Library SceneLibrary { get; private set; }
 
     private readonly Dictionary<string, int> _names = [];
     private readonly Dictionary<string, GameObject> _gameObjects = [];
@@ -27,7 +27,7 @@ public abstract class Scene : IDisposable
     private readonly List<IBehavior> _behaviors = [];
     private readonly List<IAnimator> _animators = [];
     private readonly List<ICollider> _colliders = [];
-    private readonly List<IGameRenderer> _renderers = [];
+    private readonly List<SpriteRenderer> _spriteRenderers = [];
 
     private readonly List<TileCollider> _tileColliders = [];
     private readonly List<Rigidbody> _rigidbodies = [];
@@ -72,7 +72,7 @@ public abstract class Scene : IDisposable
     /// </remarks>
     public virtual void Initialize()
     {
-        SceneSpriteLibrary = new SpriteLibrary();
+        SceneLibrary = new Library(Content);
         LoadContent();
     }
 
@@ -116,21 +116,10 @@ public abstract class Scene : IDisposable
             rigidbody.UpdatePrevPos();
         }
 
-        // update behaviors
+        // behavior update
         foreach (IBehavior behavior in _behaviors)
         {
             behavior.Update(gameTime);
-        }
-
-        foreach (IBehavior behavior in _behaviors)
-        {
-            behavior.LateUpdate(gameTime);
-        }
-
-        // update aniamtions
-        foreach (IAnimator animator in _animators)
-        {
-            animator.Update(gameTime);
         }
 
         // update rigidbodies
@@ -164,7 +153,7 @@ public abstract class Scene : IDisposable
 
         }
 
-        // check all collisions
+        // update collisions
         for (int i = 0; i < _colliders.Count; i++)
         {
             for (int k = i + 1; k < _colliders.Count; k++)
@@ -181,6 +170,18 @@ public abstract class Scene : IDisposable
                 }
             }
         }
+
+        // update aniamtions
+        foreach (IAnimator animator in _animators)
+        {
+            animator.Update(gameTime);
+        }
+
+        // behavior late update
+        foreach (IBehavior behavior in _behaviors)
+        {
+            behavior.LateUpdate(gameTime);
+        }
     }
 
     /// <summary>
@@ -190,10 +191,15 @@ public abstract class Scene : IDisposable
     public virtual void Draw(GameTime gameTime) 
     {
         // game rendering
-        foreach (IGameRenderer renderer in _renderers)
+        foreach (SpriteRenderer renderer in _spriteRenderers)
         {
             Camera.Draw(renderer);
         }
+        foreach (TileMap tilemap in _tileMaps.Values)
+        {
+            Camera.Draw(tilemap);
+        }
+        
     }
 
     /// <summary>
@@ -282,7 +288,7 @@ public abstract class Scene : IDisposable
 
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
         if (sr != null)
-            _renderers.Add(sr);
+            _spriteRenderers.Add(sr);
 
         ICollider collider = gameObject.GetCollider();
         if (collider != null)
@@ -319,9 +325,6 @@ public abstract class Scene : IDisposable
 
         // add tilemap to dictionary
         _tileMaps.Add(name, tileMap);
-
-        // add tilemap to renderers
-        _renderers.Add(tileMap.GetRenderer());
 
         // add tile colliders to colliders
         List<string> layerNames = tileMap.Layers;

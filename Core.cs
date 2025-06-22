@@ -27,7 +27,7 @@ public class Core : Game
     public static new GraphicsDevice GraphicsDevice { get; private set; }
     public static new ContentManager Content { get; private set; }
 
-    public static SpriteLibrary GlobalSpriteLibrary { get; private set; }
+    public static Library GlobalLibrary { get; private set; }
 
     // constructor
     //
@@ -68,7 +68,7 @@ public class Core : Game
         Content.RootDirectory = "Content";
 
         // set sprite library
-        GlobalSpriteLibrary = new SpriteLibrary();
+        GlobalLibrary = new Library(Content);
     }
 
     protected override void Initialize()
