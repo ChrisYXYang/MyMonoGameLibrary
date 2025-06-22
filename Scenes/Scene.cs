@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.Input;
 using MyMonoGameLibrary.Tilemap;
+using MyMonoGameLibrary.UI;
 
 namespace MyMonoGameLibrary.Scenes;
 
@@ -199,7 +200,13 @@ public abstract class Scene : IDisposable
         {
             Camera.Draw(tilemap);
         }
-        
+        Core.SpriteBatch.End();
+
+        // UI rendering
+        Core.SpriteBatch.Begin(sortMode: SpriteSortMode.Deferred);
+
+        Core.SpriteBatch.End();
+
     }
 
     /// <summary>

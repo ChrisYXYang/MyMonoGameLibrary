@@ -112,7 +112,6 @@ public class Core : Game
         if (s_activeScene != null)
         {
             s_activeScene.Draw(gameTime);
-            SpriteBatch.End();
         }
 
         base.Draw(gameTime);

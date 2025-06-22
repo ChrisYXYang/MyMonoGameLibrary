@@ -1,36 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MyMonoGameLibrary.UI;
 
-// this class represents a UI element in the game. It will also manage the overall UI of the game.
-public abstract class UI
+// this class is responsible for drawing UI canvas/elements
+public static class UICamera
 {
-    // the scale of all UI
-    public static float CanvasScale;
-
-    // position of UI element
-    public Vector2 position;
-
-    // scale of UI element
-    public Vector2 Scale { get; set; }
-    
-    // color of UI
-    public Color Color { get; set; }
-
-    // rotation of UI
-    public float Rotation { get; set; }
-
-    // flip horizontally
-    public bool FlipX { get; set; }
-
-    // flip vertically
-    public bool FlipY { get; set; }
-    
     // draw an UI element
-    public static void Draw(UI ui)
+    //
+    // param: ui - the ui element
+    // param: canvasScale - the scale of the canvas
+    public static void Draw(UIElement ui, float canvasScale)
     {
         // set sprite effects
         int spriteEffect = 0;
@@ -64,7 +48,7 @@ public abstract class UI
                     sprite.Color,
                     sprite.Rotation,
                     sprite.Origin,
-                    sprite.Scale,
+                    canvasScale * sprite.Scale,
                     (SpriteEffects)spriteEffect,
                     0f
                 );
