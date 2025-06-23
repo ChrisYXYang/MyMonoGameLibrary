@@ -29,6 +29,7 @@ public abstract class Scene : IDisposable
     private readonly List<IAnimator> _animators = [];
     private readonly List<ICollider> _colliders = [];
     private readonly List<SpriteRenderer> _spriteRenderers = [];
+    private readonly List<Canvas> _canvases = [];
 
     private readonly List<TileCollider> _tileColliders = [];
     private readonly List<Rigidbody> _rigidbodies = [];
@@ -204,7 +205,7 @@ public abstract class Scene : IDisposable
 
         // UI rendering
         Core.SpriteBatch.Begin(sortMode: SpriteSortMode.Deferred);
-
+        
         Core.SpriteBatch.End();
 
     }

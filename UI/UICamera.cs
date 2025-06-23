@@ -14,7 +14,7 @@ public static class UICamera
     //
     // param: ui - the ui element
     // param: canvasScale - the scale of the canvas
-    public static void Draw(UIElement ui, float canvasScale)
+    public static void Draw(BaseUI ui, float canvasScale)
     {
         // set sprite effects
         int spriteEffect = 0;

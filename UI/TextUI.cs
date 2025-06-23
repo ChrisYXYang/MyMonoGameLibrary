@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace MyMonoGameLibrary.UI;
 
 // text UI element
-public class TextUI : UIElement
+public class TextUI : BaseUI
 {
     // font
     public SpriteFont Font { get; set; }
@@ -78,7 +78,7 @@ public class TextUI : UIElement
     // param: anchorMode - anchoring point mode
     // param: children - children UI
     public TextUI(SpriteFont font, string text, AnchorMode anchorMode, 
-        List<UIElement> children) : base(children)
+        List<BaseUI> children) : base(children)
     {
         Font = font;
         Text = text;
@@ -92,7 +92,7 @@ public class TextUI : UIElement
     // param: anchorMode - anchoring point mode
     // param: children - children UI
     public TextUI(SpriteFont font, string text, AnchorMode anchorMode, Vector2 position, 
-        List<UIElement> children) : base(children)
+        List<BaseUI> children) : base(children)
     {
         Font = font;
         Text = text;
@@ -114,7 +114,7 @@ public class TextUI : UIElement
     // param: children - children UI
     public TextUI(SpriteFont font, string text, AnchorMode anchorMode, Vector2 position, 
         Color color, float rotation, Vector2 scale, bool flipX, bool flipY, 
-        List<UIElement> children) : base(position, color, rotation, scale, flipX, flipY, children)
+        List<BaseUI> children) : base(position, color, rotation, scale, flipX, flipY, children)
     {
         Font = font;
         Text = text;
