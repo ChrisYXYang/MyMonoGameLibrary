@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 namespace MyMonoGameLibrary.Scenes;
 
 // this is the base class for behavior components, and contains all the methods needed.
-public abstract class BehaviorComponent : Component, IBehavior
+public abstract class BehaviorComponent : Component
 {
     public virtual void Start()
     {

@@ -27,8 +27,8 @@ public abstract class Scene : IDisposable
 
     private readonly Dictionary<string, int> _names = [];
     private readonly Dictionary<string, GameObject> _gameObjects = [];
-    private readonly List<IBehavior> _behaviors = [];
-    private readonly List<IAnimator> _animators = [];
+    private readonly List<BehaviorComponent> _behaviors = [];
+    private readonly List<Animator> _animators = [];
     private readonly List<ICollider> _colliders = [];
     private readonly List<SpriteRenderer> _spriteRenderers = [];
 
@@ -85,10 +85,12 @@ public abstract class Scene : IDisposable
     public virtual void LoadContent()
     {
         // start behavior scripts
-        foreach (IBehavior behavior in _behaviors)
+        foreach (BehaviorComponent behavior in _behaviors)
         {
             behavior.Start();
         }
+
+        Canvas.Start();
 
         // testing
         List<GameObject> gameObjects = [.. _gameObjects.Values];
@@ -120,7 +122,7 @@ public abstract class Scene : IDisposable
         }
 
         // behavior update
-        foreach (IBehavior behavior in _behaviors)
+        foreach (BehaviorComponent behavior in _behaviors)
         {
             behavior.Update(gameTime);
         }
@@ -174,16 +176,19 @@ public abstract class Scene : IDisposable
             }
         }
 
-        // update aniamtions
-        foreach (IAnimator animator in _animators)
-        {
-            animator.Update(gameTime);
-        }
-
         // behavior late update
-        foreach (IBehavior behavior in _behaviors)
+        foreach (BehaviorComponent behavior in _behaviors)
         {
             behavior.LateUpdate(gameTime);
+        }
+
+        // update UI
+        Canvas.Update();
+
+        // update aniamtions
+        foreach (Animator animator in _animators)
+        {
+            animator.Update(gameTime);
         }
     }
 
@@ -259,7 +264,7 @@ public abstract class Scene : IDisposable
     // add a behavior to list
     //
     // param: behavior - behavior to add
-    public void AddBehavior(IBehavior behavior)
+    public void AddBehavior(BehaviorComponent behavior)
     {
         _behaviors.Add(behavior);
     }
@@ -279,7 +284,7 @@ public abstract class Scene : IDisposable
         _gameObjects.Add(name, gameObject);
 
         // register relevant gameobject components
-        foreach (IBehavior behavior in gameObject.GetBehaviors())
+        foreach (BehaviorComponent behavior in gameObject.GetBehaviors())
         {
             _behaviors.Add(behavior);
         }

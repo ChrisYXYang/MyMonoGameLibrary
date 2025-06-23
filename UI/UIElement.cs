@@ -41,4 +41,14 @@ public abstract class UIElement
     {
         return _children[index];
     }
+
+    public virtual void Start()
+    {
+
+    }
+
+    public virtual void Update()
+    {
+
+    }
 }
