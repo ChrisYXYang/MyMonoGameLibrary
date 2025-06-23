@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MyMonoGameLibrary.UI;
@@ -10,6 +7,33 @@ namespace MyMonoGameLibrary.UI;
 // this class is responsible for drawing UI canvas/elements
 public static class UICamera
 {
+    // draw a canvas
+    //
+    // param: canvas - canvas to draw
+    public static void Draw(Canvas canvas)
+    {
+        Queue<BaseUI> drawQueue = [];
+
+        // add canvas children to draw queue
+        for (int i = 0; i < canvas.ChildCount; i++)
+        {
+            drawQueue.Enqueue(canvas.GetChild(i));
+        }
+
+        // draw element and add its children to draw queue until all drawn
+        while (drawQueue.Count > 0)
+        {
+            BaseUI current = drawQueue.Dequeue();
+
+            for (int i = 0; i < current.ChildCount; i++)
+            {
+                drawQueue.Enqueue(current.GetChild(i));
+            }
+
+            UICamera.Draw(current, canvas.Scale);
+        }
+    }
+    
     // draw an UI element
     //
     // param: ui - the ui element

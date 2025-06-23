@@ -22,14 +22,15 @@ public abstract class Scene : IDisposable
     // variables and properties
     protected Library SceneLibrary { get; private set; }
 
+    protected Canvas Canvas { get; private set; } = new Canvas();
+    protected TileMap Tilemap { get; private set; }
+
     private readonly Dictionary<string, int> _names = [];
     private readonly Dictionary<string, GameObject> _gameObjects = [];
-    private readonly Dictionary<string, TileMap> _tileMaps = [];
     private readonly List<IBehavior> _behaviors = [];
     private readonly List<IAnimator> _animators = [];
     private readonly List<ICollider> _colliders = [];
     private readonly List<SpriteRenderer> _spriteRenderers = [];
-    private readonly List<Canvas> _canvases = [];
 
     private readonly List<TileCollider> _tileColliders = [];
     private readonly List<Rigidbody> _rigidbodies = [];
@@ -197,15 +198,12 @@ public abstract class Scene : IDisposable
         {
             Camera.Draw(renderer);
         }
-        foreach (TileMap tilemap in _tileMaps.Values)
-        {
-            Camera.Draw(tilemap);
-        }
+        Camera.Draw(Tilemap);
         Core.SpriteBatch.End();
 
         // UI rendering
-        Core.SpriteBatch.Begin(sortMode: SpriteSortMode.Deferred);
-        
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.Deferred);
+        UICamera.Draw(Canvas);
         Core.SpriteBatch.End();
 
     }
@@ -256,14 +254,6 @@ public abstract class Scene : IDisposable
     public List<GameObject> GetGameObjects()
     {
         return [.. _gameObjects.Values];
-    }
-
-    // get all tilemaps
-    //
-    // return: list of all game objects
-    public List<TileMap> GetTileMaps()
-    {
-        return [.. _tileMaps.Values];
     }
 
     // add a behavior to list
@@ -319,20 +309,18 @@ public abstract class Scene : IDisposable
         Instantiate(prefab.Item1, prefab.Item2);
     }
 
-    // instantiate a tilemap and register it
+    // set the tilemap and register it
     //
     // param: name - name of tilemap
     // param: tileset - the tileset
-    public void Instantiate(string name, Tileset tileset)
+    public void SetTilemap(string name, Tileset tileset)
     {
         // check if name is unique and register it
         name = RegisterName(name);
 
         // create tilemap
         TileMap tileMap = new(name, tileset);
-
-        // add tilemap to dictionary
-        _tileMaps.Add(name, tileMap);
+        Tilemap = tileMap;
 
         // add tile colliders to colliders
         List<string> layerNames = tileMap.Layers;

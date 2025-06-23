@@ -11,20 +11,14 @@ public class Canvas : UIElement
 {
     // scale of canvas
     public float Scale { get; set; } = Camera.PixelScale;
-    
+
+    // empty constructor
+    public Canvas() { }
 
     // constructor
     //
-    // param: children - children UI elements
-    public Canvas(List<BaseUI> children) : base(children)
-    {
-    }
-
-    // constructor
-    //
-    // param: children - chidlren UI elements
     // param: scale - scale of canvas
-    public Canvas(List<BaseUI> children, float scale) : base(children)
+    public Canvas(float scale)
     {
         Scale = scale;
     }

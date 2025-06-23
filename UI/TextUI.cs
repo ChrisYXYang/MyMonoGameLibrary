@@ -77,8 +77,7 @@ public class TextUI : BaseUI
     // param: text - the text
     // param: anchorMode - anchoring point mode
     // param: children - children UI
-    public TextUI(SpriteFont font, string text, AnchorMode anchorMode, 
-        List<BaseUI> children) : base(children)
+    public TextUI(SpriteFont font, string text, AnchorMode anchorMode)
     {
         Font = font;
         Text = text;
@@ -91,8 +90,7 @@ public class TextUI : BaseUI
     // param: text - the text
     // param: anchorMode - anchoring point mode
     // param: children - children UI
-    public TextUI(SpriteFont font, string text, AnchorMode anchorMode, Vector2 position, 
-        List<BaseUI> children) : base(children)
+    public TextUI(SpriteFont font, string text, AnchorMode anchorMode, Vector2 position)
     {
         Font = font;
         Text = text;
@@ -113,8 +111,7 @@ public class TextUI : BaseUI
     // param: flipY - flip vertically or not
     // param: children - children UI
     public TextUI(SpriteFont font, string text, AnchorMode anchorMode, Vector2 position, 
-        Color color, float rotation, Vector2 scale, bool flipX, bool flipY, 
-        List<BaseUI> children) : base(position, color, rotation, scale, flipX, flipY, children)
+        Color color, float rotation, Vector2 scale, bool flipX, bool flipY) : base(position, color, rotation, scale, flipX, flipY)
     {
         Font = font;
         Text = text;

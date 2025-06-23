@@ -44,8 +44,8 @@ public static class Camera
     public static Vector2 UnitToPixel(Vector2 coordinate)
     {
         return (coordinate - position) * UnitPixels + 
-            new Vector2(Core.GraphicsDevice.PresentationParameters.BackBufferWidth, 
-            Core.GraphicsDevice.PresentationParameters.BackBufferHeight) * 0.5f;
+            (new Vector2(Core.GraphicsDevice.PresentationParameters.BackBufferWidth, 
+            Core.GraphicsDevice.PresentationParameters.BackBufferHeight) * 0.5f);
     }
 
     // draw texture in game world.

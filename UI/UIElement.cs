@@ -9,19 +9,18 @@ namespace MyMonoGameLibrary.UI;
 // this class represents every UI element in the game.
 public abstract class UIElement
 {
-    private List<BaseUI> _children;
+    // number of children
+    public int ChildCount { get => _children.Count; }
 
-    // constructor
+    // children of elemente
+    private List<BaseUI> _children = [];
+
+    // add a child
     //
-    // param: children - children UI elements
-    public UIElement(List<BaseUI> children)
+    // param: child - child to add
+    public void AddChild(BaseUI child)
     {
-        _children = children;
-
-        if (children == null)
-        {
-            _children = new List<BaseUI>();
-        }
+        _children.Add(child);
     }
 
     // get all children

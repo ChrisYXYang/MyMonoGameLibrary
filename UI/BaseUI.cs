@@ -27,15 +27,8 @@ public abstract class BaseUI : UIElement
     // flip vertically
     public bool FlipY { get; set; } = false;
 
-    // children of this element
-    private List<BaseUI> _children;
-
-    // constructor
-    //
-    // param: children - children UI
-    public BaseUI(List<BaseUI> children) : base(children)
-    {
-    }
+    // empty constructor
+    public BaseUI() {}
 
     // constructor
     //
@@ -47,7 +40,7 @@ public abstract class BaseUI : UIElement
     // param: flipY - flip vertically or not
     // param: children - children UI
     public BaseUI(Vector2 position, Color color, float rotation, Vector2 scale, bool flipX, 
-        bool flipY, List<BaseUI> children) : base(children)
+        bool flipY)
     {
         this.position = position;
         Color = color;

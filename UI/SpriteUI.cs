@@ -33,7 +33,7 @@ public class SpriteUI : BaseUI
     //
     // param: sprite - the sprite
     // param: children - children UI
-    public SpriteUI(Sprite sprite, List<BaseUI> children) : base(children)
+    public SpriteUI(Sprite sprite)
     {
         Sprite = sprite;
         Origin = Vector2.Zero;
@@ -45,7 +45,7 @@ public class SpriteUI : BaseUI
     // param: sprite - the sprite
     // param: origin - origin point for UI
     // param: children - children UI
-    public SpriteUI(Sprite sprite, Vector2 origin, List<BaseUI> children) : base(children)
+    public SpriteUI(Sprite sprite, Vector2 origin)
     {
         Sprite = sprite;
         Origin = origin;
@@ -58,8 +58,7 @@ public class SpriteUI : BaseUI
     // param: origin - origin point for UI
     // param: position - position
     // param: children - children UI
-    public SpriteUI(Sprite sprite, Vector2 origin, Vector2 position, List<BaseUI> children)
-        : base(children)
+    public SpriteUI(Sprite sprite, Vector2 origin, Vector2 position)
     {
         Sprite = sprite;
         Origin = origin;
@@ -78,7 +77,7 @@ public class SpriteUI : BaseUI
     // param: flipY - flip vertically or not
     // param: children - children UI
     public SpriteUI(Sprite sprite, Vector2 position, Color color, float rotation, Vector2 scale, 
-        bool flipX, bool flipY, List<BaseUI> children) : base(position, color, rotation, scale, flipX, flipY, children)
+        bool flipX, bool flipY) : base(position, color, rotation, scale, flipX, flipY)
     {
         Sprite = sprite;
         Origin = Vector2.Zero;
@@ -98,8 +97,7 @@ public class SpriteUI : BaseUI
     // param: flipY - flip vertically or not
     // param: children - children UI
     public SpriteUI(Sprite sprite, Vector2 origin, Vector2 position, Color color, float rotation, 
-        Vector2 scale, bool flipX, bool flipY, 
-        List<BaseUI> children) : base(position, color, rotation, scale, flipX, flipY, children)
+        Vector2 scale, bool flipX, bool flipY) : base(position, color, rotation, scale, flipX, flipY)
     {
         Sprite = sprite;
         Origin = origin;
