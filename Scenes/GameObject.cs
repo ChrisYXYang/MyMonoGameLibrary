@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
+using MyMonoGameLibrary.UI;
 
 
 namespace MyMonoGameLibrary.Scenes;
@@ -13,8 +14,10 @@ public class GameObject
 {
     // variables and properties
     public string Name { get; private set; }
+    public GameObject Parent { get; private set; }
     private readonly Dictionary<string, Component> _components = [];
     private readonly Dictionary<string, BehaviorComponent> _behaviors = [];
+    private readonly List<GameObject> _children = [];
 
     // constructor
     //
@@ -59,6 +62,34 @@ public class GameObject
                 component.Initialize(this);
 
         }
+    }
+
+    // add a child
+    //
+    // param: child - child to add
+    public void AddChild(GameObject child)
+    {
+        _children.Add(child);
+        child.Parent = this;
+    }
+
+    // get all children
+    //
+    // return: array of children
+    public GameObject[] GetChildren()
+    {
+        GameObject[] output = new GameObject[_children.Count];
+        _children.CopyTo(output);
+        return output;
+    }
+
+    // get a child
+    //
+    // param: index - index of child in list
+    // return: chosen child based on index
+    public GameObject GetChild(int index)
+    {
+        return _children[index];
     }
 
     // get chosen component from game object.

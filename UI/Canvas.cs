@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MyMonoGameLibrary.Scenes;
 
@@ -47,7 +48,7 @@ public class Canvas : UIElement
         }
     }
 
-    public override void Update()
+    public override void Update(GameTime gameTime)
     {
         Queue<BaseUI> updateQueue = [];
 
@@ -67,7 +68,7 @@ public class Canvas : UIElement
                 updateQueue.Enqueue(current.GetChild(i));
             }
 
-            current.Update();
+            current.Update(gameTime);
         }
     }
 }

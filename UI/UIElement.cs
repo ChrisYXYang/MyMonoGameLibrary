@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace MyMonoGameLibrary.UI;
 
 // this class represents every UI element in the game.
 public abstract class UIElement
 {
+    // parent element
+    public UIElement Parent { get; private set; }
+    
     // number of children
     public int ChildCount { get => _children.Count; }
 
     // children of elemente
-    private List<BaseUI> _children = [];
+    private readonly List<BaseUI> _children = [];
 
     // add a child
     //
@@ -21,6 +25,7 @@ public abstract class UIElement
     public void AddChild(BaseUI child)
     {
         _children.Add(child);
+        child.Parent = this;
     }
 
     // get all children
@@ -47,7 +52,7 @@ public abstract class UIElement
 
     }
 
-    public virtual void Update()
+    public virtual void Update(GameTime gameTime)
     {
 
     }

@@ -12,6 +12,9 @@ public class SpriteRenderer : RendererComponent
     // the sprite to render
     public Sprite Sprite { get; set; }
 
+    // sprite to default on if no animations
+    public Sprite DefaultSprite { get; set; }
+
 
     // constructor
     //
@@ -19,6 +22,7 @@ public class SpriteRenderer : RendererComponent
     public SpriteRenderer(Sprite sprite)
     {
         Sprite = sprite;
+        DefaultSprite = sprite;
     }
 
     // constructor
@@ -28,6 +32,7 @@ public class SpriteRenderer : RendererComponent
     public SpriteRenderer(Sprite sprite, float layerDepth) : base(layerDepth)
     {
         Sprite = sprite;
+        DefaultSprite = sprite;
     }
 
     // constructor
@@ -37,6 +42,7 @@ public class SpriteRenderer : RendererComponent
     public SpriteRenderer(Sprite sprite, Color color) : base(color)
     {
         Sprite = sprite;
+        DefaultSprite = sprite;
     }
 
     // constructor
@@ -47,6 +53,7 @@ public class SpriteRenderer : RendererComponent
     public SpriteRenderer(Sprite sprite, Color color, float layerDepth) : base(color, layerDepth)
     {
         Sprite = sprite;
+        DefaultSprite = sprite;
     }
 
     // constructor
@@ -60,6 +67,7 @@ public class SpriteRenderer : RendererComponent
         : base(color, flipX, flipY, layerDepth)
     {
         Sprite = sprite;
+        DefaultSprite = sprite;
     }
 }
 

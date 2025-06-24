@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Graphics;
+using MyMonoGameLibrary.Scenes;
 
-namespace MyMonoGameLibrary.Scenes;
+namespace MyMonoGameLibrary.UI;
 
-// responsible for animating game object
-public class Animator : CoreComponent
+public class UIAnimator
 {
     // variables and properties
-    private SpriteRenderer _spriteManager;
+    private SpriteUI _parent;
     private int _currentFrame = 0;
     private TimeSpan _elapsed;
     private Animation _animation;
@@ -25,7 +25,7 @@ public class Animator : CoreComponent
 
             if (value != null)
             {
-                _spriteManager.Sprite = _animation.Frames[0];
+                _parent.Sprite = _animation.Frames[0];
                 _currentFrame = 0;
                 _elapsed = TimeSpan.Zero;
             }
@@ -34,9 +34,11 @@ public class Animator : CoreComponent
 
     // constructor
     //
+    // param: parent- the parent
     // param: animation - the animation
-    public Animator(Animation animation)
+    public UIAnimator(SpriteUI parent, Animation animation)
     {
+        _parent = parent;
         _animation = animation;
     }
 
@@ -60,22 +62,12 @@ public class Animator : CoreComponent
                     _currentFrame = 0;
                 }
 
-                _spriteManager.Sprite = _animation.Frames[_currentFrame];
+                _parent.Sprite = _animation.Frames[_currentFrame];
             }
         }
         else
         {
-            _spriteManager.Sprite = _spriteManager.DefaultSprite;
+            _parent.Sprite = _parent.DefaultSprite;
         }
-    }
-
-    // initialize
-    //
-    // param: parent - parent game object
-    public override void Initialize(GameObject parent)
-    {
-        base.Initialize(parent);
-        _spriteManager = GetComponent<SpriteRenderer>();
-        _spriteManager.Sprite = _animation.Frames[0];
     }
 }

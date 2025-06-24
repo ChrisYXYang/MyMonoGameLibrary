@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyMonoGameLibrary.Graphics;
 
 namespace MyMonoGameLibrary.Scenes;
 
@@ -10,6 +11,9 @@ namespace MyMonoGameLibrary.Scenes;
 public static class SceneTools
 {
     private static Scene _activeScene;
+
+    // get sprite library
+    public static Library SceneLibrary { get => _activeScene.SceneLibrary; }
 
     // change the active scene
     //
@@ -27,4 +31,6 @@ public static class SceneTools
     {
         return _activeScene.GetGameObject(name);
     }
+
+
 }

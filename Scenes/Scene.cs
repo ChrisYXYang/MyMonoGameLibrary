@@ -20,7 +20,7 @@ namespace MyMonoGameLibrary.Scenes;
 public abstract class Scene : IDisposable
 {
     // variables and properties
-    protected Library SceneLibrary { get; private set; }
+    public Library SceneLibrary { get; private set; }
 
     protected Canvas Canvas { get; private set; } = new Canvas();
     protected TileMap Tilemap { get; private set; }
@@ -183,7 +183,7 @@ public abstract class Scene : IDisposable
         }
 
         // update UI
-        Canvas.Update();
+        Canvas.Update(gameTime);
 
         // update aniamtions
         foreach (Animator animator in _animators)

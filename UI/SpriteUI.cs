@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Graphics;
+using MyMonoGameLibrary.Scenes;
 
 namespace MyMonoGameLibrary.UI;
 
 public class SpriteUI : BaseUI
 {
-    // sprite
-    public Sprite Sprite;
+    // sprite to render
+    public Sprite Sprite { get; set; }
+    
+    // default sprite to render
+    public Sprite DefaultSprite { get; set; }
+
+    public UIAnimator Animator { get; private set; }
 
     // custom origin point for this UI
     private Vector2 _origin;
@@ -36,6 +42,7 @@ public class SpriteUI : BaseUI
     public SpriteUI(Sprite sprite)
     {
         Sprite = sprite;
+        DefaultSprite = sprite;
         Origin = Vector2.Zero;
         OverrideOrigin = false;
     }
@@ -48,6 +55,7 @@ public class SpriteUI : BaseUI
     public SpriteUI(Sprite sprite, Vector2 origin)
     {
         Sprite = sprite;
+        DefaultSprite = sprite;
         Origin = origin;
         OverrideOrigin = true;
     }
@@ -61,6 +69,7 @@ public class SpriteUI : BaseUI
     public SpriteUI(Sprite sprite, Vector2 origin, Vector2 position)
     {
         Sprite = sprite;
+        DefaultSprite = sprite;
         Origin = origin;
         OverrideOrigin = true;
         this.position = position;
@@ -80,6 +89,7 @@ public class SpriteUI : BaseUI
         bool flipX, bool flipY) : base(position, color, rotation, scale, flipX, flipY)
     {
         Sprite = sprite;
+        DefaultSprite = sprite;
         Origin = Vector2.Zero;
         OverrideOrigin = false;
 
@@ -100,8 +110,26 @@ public class SpriteUI : BaseUI
         Vector2 scale, bool flipX, bool flipY) : base(position, color, rotation, scale, flipX, flipY)
     {
         Sprite = sprite;
+        DefaultSprite = sprite;
         Origin = origin;
         OverrideOrigin = true;
 
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        if (Animator != null)
+        {
+            Animator.Update(gameTime);
+        }
+    }
+
+    // add animator
+    public void AddAnimator(Animation animation)
+    {
+        if (Animator == null)
+        {
+            Animator = new UIAnimator(this, animation);
+        }
     }
 }

@@ -99,6 +99,12 @@ public static class Collisions
         return PointInCircle((ICircleCollider)collider, point);
     }
 
+    // check if mouse is in collider
+    public static bool MouseInCollider(ICollider collider)
+    {
+        return PointInCollider(collider, Camera.PixelToUnit(InputManager.Mouse.Position));
+    }
+
     // check fi point is in circle collider
     //
     // param: collider - collider to check

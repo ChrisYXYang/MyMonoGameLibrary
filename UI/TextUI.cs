@@ -21,6 +21,7 @@ public class TextUI : BaseUI
         {
             _text = value;
             _textSize = Font.MeasureString(value);
+            Origin = AnchorCalc.GetOrigin(Anchor, _textSize);
         }
     }
 
