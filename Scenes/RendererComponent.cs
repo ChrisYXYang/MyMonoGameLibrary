@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+
+namespace MyMonoGameLibrary.Scenes;
+
+// component for rendering
+public class RendererComponent : CoreComponent
+{
+    // variables and properties
+    public Color Color { get; set; } = Color.White;
+    public bool FlipX { get; set; } = false;
+    public bool FlipY { get; set; } = false;
+    public float LayerDepth { get; set; } = 0.5f;
+    public bool IsVisible { get; set; } = true;
+    public Transform ParentTransform { get; private set; }
+
+    // initialize
+    //
+    // param: parent - parent game object
+    public override void Initialize(GameObject parent)
+    {
+        base.Initialize(parent);
+        ParentTransform = GetComponent<Transform>();
+    }
+
+    // empty constructor
+    public RendererComponent() { }
+
+    // constructor
+    //
+    // param: layerDepth - layer depth
+    public RendererComponent(float layerDepth)
+    {
+        LayerDepth = layerDepth;
+    }
+
+    // constructor
+    //
+    // param: color - color
+    public RendererComponent(Color color)
+    {
+        Color = color;
+    }
+
+    // constructor
+    //
+    // param: color - sprite color
+    // param: flipX - flip horizontally
+    // param: flipY - flip vertically
+    // param: layerDepth - layer depth
+    public RendererComponent(Color color, bool flipX, bool flipY, float layerDepth)
+    {
+        Color = color;
+        FlipX = flipX;
+        FlipY = flipY;
+        LayerDepth = layerDepth;
+    }
+}

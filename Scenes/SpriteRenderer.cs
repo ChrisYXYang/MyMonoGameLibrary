@@ -7,16 +7,11 @@ using MyMonoGameLibrary.Graphics;
 namespace MyMonoGameLibrary.Scenes;
 
 // Component for drawing a sprite for a game object.
-public class SpriteRenderer : CoreComponent
+public class SpriteRenderer : RendererComponent
 {
-    // variables and properties
+    // the sprite to render
     public Sprite Sprite { get; set; }
-    public Color Color { get; set; } = Color.White;
-    public bool FlipX { get; set; } = false;
-    public bool FlipY { get; set; } = false;
-    public float LayerDepth { get; set; } = 0.5f;
-    public bool IsVisible { get; set; } = true;
-    public Transform ParentTransform { get; private set; }
+
 
     // constructor
     //
@@ -30,20 +25,18 @@ public class SpriteRenderer : CoreComponent
     //
     // param: sprite - sprite to render
     // param: layerDepth - layer depth
-    public SpriteRenderer(Sprite sprite, float layerDepth)
+    public SpriteRenderer(Sprite sprite, float layerDepth) : base(layerDepth)
     {
         Sprite = sprite;
-        LayerDepth = layerDepth;
     }
 
     // constructor
     //
     // param: sprite - sprite to render
     // param: color - color
-    public SpriteRenderer(Sprite sprite, Color color)
+    public SpriteRenderer(Sprite sprite, Color color) : base(color)
     {
         Sprite = sprite;
-        Color = color;
     }
 
     // constructor
@@ -54,22 +47,9 @@ public class SpriteRenderer : CoreComponent
     // param: flipY - flip vertically
     // param: layerDepth - layer depth
     public SpriteRenderer(Sprite sprite, Color color, bool flipX, bool flipY, float layerDepth)
+        : base(color, flipX, flipY, layerDepth)
     {
         Sprite = sprite;
-        Color = color;
-        FlipX = flipX;
-        FlipY = flipY;
-        LayerDepth = layerDepth;
-    }
-
-
-    // initialize
-    //
-    // param: parent - parent game object
-    public override void Initialize(GameObject parent)
-    {
-        base.Initialize(parent);
-        ParentTransform = GetComponent<Transform>();
     }
 }
 

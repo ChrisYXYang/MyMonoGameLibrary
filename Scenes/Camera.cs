@@ -154,7 +154,7 @@ public static class Camera
             );
     }
 
-    // draw game object in game world
+    // draw sprite renderers in game world
     //
     // param: renderer - the sprite renderer
     public static void Draw(SpriteRenderer renderer)

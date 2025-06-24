@@ -20,7 +20,7 @@ public class TextUI : BaseUI
         set
         {
             _text = value;
-            _textSize = Font.MeasureString(_text);
+            _textSize = Font.MeasureString(value);
         }
     }
 
@@ -32,44 +32,13 @@ public class TextUI : BaseUI
         set
         {
             _anchor = value;
-
-            switch (_anchor)
-            {
-                case AnchorMode.TopLeft:
-                    Origin = Vector2.Zero;
-                    break;
-                case AnchorMode.MiddleLeft:
-                    Origin = new Vector2(0, _textSize.Y * 0.5f);
-                    break;
-                case AnchorMode.BottomLeft:
-                    Origin = new Vector2(0, _textSize.Y);
-                    break;
-                case AnchorMode.TopCenter:
-                    Origin = new Vector2(_textSize.X * 0.5f, 0);
-                    break;
-                case AnchorMode.MiddleCenter:
-                    Origin = new Vector2(_textSize.X * 0.5f, _textSize.Y * 0.5f);
-                    break;
-                case AnchorMode.BottomCenter:
-                    Origin = new Vector2(_textSize.X * 0.5f, _textSize.Y);
-                    break;
-                case AnchorMode.TopRight:
-                    Origin = new Vector2(_textSize.X, 0);
-                    break;
-                case AnchorMode.MiddleRight:
-                    Origin = new Vector2(_textSize.X, _textSize.Y * 0.5f);
-                    break;
-                case AnchorMode.BottomRight:
-                    Origin = new Vector2(_textSize.X, _textSize.Y);
-                    break;
-                default:
-                    break;
-            }
+            Origin = AnchorCalc.GetOrigin(value, _textSize);
+            
         }
     }
 
     // origin point
-    public Vector2 Origin { get; private set; }
+    public Vector2 Origin { get; set; }
 
     // constructor
     //

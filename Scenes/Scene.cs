@@ -30,7 +30,7 @@ public abstract class Scene : IDisposable
     private readonly List<BehaviorComponent> _behaviors = [];
     private readonly List<Animator> _animators = [];
     private readonly List<ICollider> _colliders = [];
-    private readonly List<SpriteRenderer> _spriteRenderers = [];
+    private readonly List<RendererComponent> _renderComps = [];
 
     private readonly List<TileCollider> _tileColliders = [];
     private readonly List<Rigidbody> _rigidbodies = [];
@@ -199,7 +199,7 @@ public abstract class Scene : IDisposable
     public virtual void Draw(GameTime gameTime) 
     {
         // game rendering
-        foreach (SpriteRenderer renderer in _spriteRenderers)
+        foreach (RendererComponent renderer in _renderComps)
         {
             Camera.Draw(renderer);
         }
@@ -289,9 +289,9 @@ public abstract class Scene : IDisposable
             _behaviors.Add(behavior);
         }
 
-        SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
-        if (sr != null)
-            _spriteRenderers.Add(sr);
+        RendererComponent renderer = gameObject.GetRenderer();
+        if (renderer != null)
+            _renderComps.Add(renderer);
 
         ICollider collider = gameObject.GetCollider();
         if (collider != null)

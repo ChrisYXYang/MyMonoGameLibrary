@@ -104,6 +104,21 @@ public class GameObject
         return collider;
     }
 
+    // get the renderer
+    //
+    // return: the renderer component
+    public RendererComponent GetRenderer()
+    {
+        RendererComponent renderer = GetComponent<SpriteRenderer>();
+
+        renderer ??= GetComponent<TextRenderer>();
+
+        return renderer;
+    }
+
+    // get all behavior components
+    //
+    // return: behavior components
     public List<BehaviorComponent> GetBehaviors()
     {
         return [.. _behaviors.Values];
