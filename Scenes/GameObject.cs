@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 
 
@@ -23,7 +24,9 @@ public class GameObject
     {
         Name = name;
 
-        // store every component
+        // store every component and check for only one collider and one renderer
+        bool hasRenderer = false;
+        bool hasCollider = false;
         foreach (Component component in components)
         {
             string compName = component.GetType().Name;
@@ -32,6 +35,20 @@ public class GameObject
 
             if (component is BehaviorComponent behavior)
                 _behaviors.Add(compName, behavior);
+            else if (component is ColliderComponent collider)
+            {
+                if (!hasCollider)
+                    hasCollider = true;
+                else
+                    throw new Exception("multiple colliders!");
+            }
+            else if (component is RendererComponent renderer)
+            {
+                if (!hasRenderer)
+                    hasRenderer = true;
+                else
+                    throw new Exception("multiple renderers!");
+            }
         }
 
         foreach (Component component in _components.Values)

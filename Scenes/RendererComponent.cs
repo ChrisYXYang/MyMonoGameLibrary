@@ -45,6 +45,16 @@ public class RendererComponent : CoreComponent
 
     // constructor
     //
+    // param: color - color
+    // param: layerDepth - layer depth
+    public RendererComponent(Color color, float layerDepth)
+    {
+        Color = color;
+        LayerDepth = layerDepth;
+    }
+
+    // constructor
+    //
     // param: color - sprite color
     // param: flipX - flip horizontally
     // param: flipY - flip vertically

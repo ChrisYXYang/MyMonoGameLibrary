@@ -86,6 +86,21 @@ public class TextRenderer : RendererComponent
     // param: font - the font to use
     // param: text - the text to render
     // param: anchor - anchoring point mode
+    // param: color - color
+    // param: layerDepth - layer depth
+    public TextRenderer(SpriteFont font, string text, AnchorMode anchor, Color color, float layerDepth) 
+        : base(color, layerDepth)
+    {
+        Font = font;
+        Text = text;
+        Anchor = anchor;
+    }
+
+    // constructor
+    //
+    // param: font - the font to use
+    // param: text - the text to render
+    // param: anchor - anchoring point mode
     // param: color - sprite color
     // param: flipX - flip horizontally
     // param: flipY - flip vertically

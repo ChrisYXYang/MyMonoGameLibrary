@@ -42,6 +42,16 @@ public class SpriteRenderer : RendererComponent
     // constructor
     //
     // param: sprite - sprite to render
+    // param: color - color
+    // param: layerDepth - layer depth
+    public SpriteRenderer(Sprite sprite, Color color, float layerDepth) : base(color, layerDepth)
+    {
+        Sprite = sprite;
+    }
+
+    // constructor
+    //
+    // param: sprite - sprite to render
     // param: color - sprite color
     // param: flipX - flip horizontally
     // param: flipY - flip vertically

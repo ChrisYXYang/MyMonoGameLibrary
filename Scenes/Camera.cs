@@ -65,12 +65,12 @@ public static class Camera
         Core.SpriteBatch.Draw
             (
                 texture,
-                Camera.UnitToPixel(position),
+                UnitToPixel(position),
                 sourceRect,
                 color,
                 rotation,
                 origin,
-                Camera.PixelScale * scale,
+                PixelScale * scale,
                 spriteEffects,
                 layerDepth
             );
@@ -93,13 +93,69 @@ public static class Camera
         Core.SpriteBatch.Draw
             (
                 texture,
-                Camera.UnitToPixel(position),
+                UnitToPixel(position),
                 sourceRect,
                 color,
                 rotation,
                 origin,
-                Camera.PixelScale * scale,
+                PixelScale * scale,
                 spriteEffects,
+                layerDepth
+            );
+    }
+
+    // draw text into game world
+    //
+    // param: font - the font
+    // param: text - the text
+    // param: position - position of text
+    // param: color - color
+    // parm: rotation - rotation
+    // param: origin - origin point
+    // param: scale - scale
+    // param: effects - sprite effects
+    // param: layerDepth - layerDepth
+    public static void Draw(SpriteFont font, string text, Vector2 position, Color color, float rotation,
+        Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+    {
+        Core.SpriteBatch.DrawString
+            (
+                font,
+                text,
+                UnitToPixel(position),
+                color,
+                rotation,
+                origin,
+                scale,
+                effects,
+                layerDepth
+            );
+    }
+
+    // draw text into game world
+    //
+    // param: font - the font
+    // param: text - the text
+    // param: position - position of text
+    // param: color - color
+    // parm: rotation - rotation
+    // param: origin - origin point
+    // param: scale - scale
+    // param: effects - sprite effects
+    // param: layerDepth - layerDepth
+    public static void Draw(SpriteFont font, string text, Vector2 position, Color color, float rotation,
+        Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
+    {
+        Core.SpriteBatch.DrawString
+            (
+                font,
+                text,
+                UnitToPixel(position),
+                color,
+                rotation,
+                origin,
+                scale,
+                effects,
                 layerDepth
             );
     }
@@ -115,7 +171,7 @@ public static class Camera
     public static void Draw(Sprite sprite, Vector2 position, Color color, float rotation, Vector2 scale,
         SpriteEffects spriteEffects, float layerDepth)
     {
-        Camera.Draw
+        Draw
             (
                 sprite.SpriteSheet,
                 position,
@@ -140,7 +196,7 @@ public static class Camera
     public static void Draw(Sprite sprite, Vector2 position, Color color, float rotation, float scale,
         SpriteEffects spriteEffects, float layerDepth)
     {
-        Camera.Draw
+        Draw
             (
                 sprite.SpriteSheet,
                 position,
@@ -152,6 +208,26 @@ public static class Camera
                 spriteEffects,
                 layerDepth
             );
+    }
+
+    // draw text renderer into game world
+    //
+    // param: renderer - the text renderer
+    public static void Draw(TextRenderer renderer)
+    {
+        if (!renderer.IsVisible)
+            return;
+
+        // set sprite effects
+        int spriteEffect = 0;
+        if (renderer.FlipX)
+            spriteEffect += 1;
+        if (renderer.FlipY)
+            spriteEffect += 2;
+
+        Draw(renderer.Font, renderer.Text, renderer.ParentTransform.position, renderer.Color, 
+            renderer.ParentTransform.Rotation, renderer.Origin, renderer.ParentTransform.Scale,
+            (SpriteEffects)spriteEffect, renderer.LayerDepth);
     }
 
     // draw sprite renderers in game world
@@ -169,8 +245,17 @@ public static class Camera
         if (renderer.FlipY)
             spriteEffect += 2;
 
-        Camera.Draw(renderer.Sprite, renderer.ParentTransform.position, renderer.Color, renderer.ParentTransform.Rotation,
+        Draw(renderer.Sprite, renderer.ParentTransform.position, renderer.Color, renderer.ParentTransform.Rotation,
             renderer.ParentTransform.Scale, (SpriteEffects)spriteEffect, renderer.LayerDepth);
+    }
+
+    // draw renderer component into game world
+    public static void Draw(RendererComponent renderer)
+    {
+        if (renderer is SpriteRenderer sr)
+            Draw(sr);
+        else if (renderer is TextRenderer tr)
+            Draw(tr);
     }
 
     // draw a tilemap in game world
@@ -191,7 +276,7 @@ public static class Camera
                     if (tile == null)
                         continue;
 
-                    Camera.Draw(tile.Sprite, tile.Position, Color.White, 0f, Vector2.One, SpriteEffects.None, tile.LayerDepth);
+                    Draw(tile.Sprite, tile.Position, Color.White, 0f, Vector2.One, SpriteEffects.None, tile.LayerDepth);
 
                 }
             }
