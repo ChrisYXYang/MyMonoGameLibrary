@@ -13,7 +13,8 @@ namespace MyMonoGameLibrary.Scenes;
 public abstract class Component
 {
     // variables and properties
-    protected GameObject Parent { get; private set; }
+    public GameObject Parent { get; private set; }
+    public Transform Transform { get; private set; }
 
     // initialization for the component
     //
@@ -21,6 +22,7 @@ public abstract class Component
     public void Initialize(GameObject parent)
     {
         Parent = parent;
+        Transform = Parent.GetComponent<Transform>();
     }
 
     // get component of parent game object

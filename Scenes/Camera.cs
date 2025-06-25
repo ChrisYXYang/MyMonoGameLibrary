@@ -225,8 +225,8 @@ public static class Camera
         if (renderer.FlipY)
             spriteEffect += 2;
 
-        Draw(renderer.Font, renderer.Text, renderer.ParentTransform.position, renderer.Color, 
-            renderer.ParentTransform.Rotation, renderer.Origin, renderer.ParentTransform.Scale,
+        Draw(renderer.Font, renderer.Text, renderer.Transform.position, renderer.Color, 
+            renderer.Transform.Rotation, renderer.Origin, renderer.Transform.Scale,
             (SpriteEffects)spriteEffect, renderer.LayerDepth);
     }
 
@@ -245,8 +245,8 @@ public static class Camera
         if (renderer.FlipY)
             spriteEffect += 2;
 
-        Draw(renderer.Sprite, renderer.ParentTransform.position, renderer.Color, renderer.ParentTransform.Rotation,
-            renderer.ParentTransform.Scale, (SpriteEffects)spriteEffect, renderer.LayerDepth);
+        Draw(renderer.Sprite, renderer.Transform.position, renderer.Color, renderer.Transform.Rotation,
+            renderer.Transform.Scale, (SpriteEffects)spriteEffect, renderer.LayerDepth);
     }
 
     // draw renderer component into game world

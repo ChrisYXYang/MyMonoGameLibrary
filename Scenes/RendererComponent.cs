@@ -13,16 +13,6 @@ public class RendererComponent : CoreComponent
     public bool FlipY { get; set; } = false;
     public float LayerDepth { get; set; } = 0.5f;
     public bool IsVisible { get; set; } = true;
-    public Transform ParentTransform { get; private set; }
-
-    // initialize
-    //
-    // param: parent - parent game object
-    public override void Initialize(GameObject parent)
-    {
-        base.Initialize(parent);
-        ParentTransform = GetComponent<Transform>();
-    }
 
     // empty constructor
     public RendererComponent() { }

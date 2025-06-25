@@ -136,8 +136,8 @@ public abstract class Scene : IDisposable
 
             // move rigidbodies
             Vector2 movePosition = rigidbody.GetMovePosition();
-            rigidbody.ParentTransform.position.X += (movePosition.X + rigidbody.XVelocity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            rigidbody.ParentTransform.position.Y += (movePosition.Y + rigidbody.YVelocity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            rigidbody.Transform.position.X += (movePosition.X + rigidbody.XVelocity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            rigidbody.Transform.position.Y += (movePosition.Y + rigidbody.YVelocity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
             rigidbody.ClearMovePosition();
 
             // get tile collisions with rigidbody

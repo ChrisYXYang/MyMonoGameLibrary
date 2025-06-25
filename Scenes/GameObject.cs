@@ -15,6 +15,7 @@ public class GameObject
     // variables and properties
     public string Name { get; private set; }
     public GameObject Parent { get; private set; }
+    public Transform Transform { get; private set; }
     private readonly Dictionary<string, Component> _components = [];
     private readonly Dictionary<string, BehaviorComponent> _behaviors = [];
     private readonly List<GameObject> _children = [];
@@ -51,6 +52,9 @@ public class GameObject
                     hasRenderer = true;
                 else
                     throw new Exception("multiple renderers!");
+            } else if (component is Transform transform)
+            {
+                Transform = transform;
             }
         }
 
