@@ -8,7 +8,7 @@ namespace MyMonoGameLibrary.Scenes;
 public interface ICollider
 {
     
-    public string Layer { get; set; }
+    public string Layer { get; }
     // center of collider
     public Vector2 Center { get; }
 

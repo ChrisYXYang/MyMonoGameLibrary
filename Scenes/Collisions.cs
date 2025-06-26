@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Input;
+using MyMonoGameLibrary.UI;
 
 namespace MyMonoGameLibrary.Scenes;
 
@@ -103,6 +104,12 @@ public static class Collisions
     public static bool MouseInCollider(ICollider collider)
     {
         return PointInCollider(collider, Camera.PixelToUnit(InputManager.Mouse.Position));
+    }
+
+    // check if mouse is in ui collider
+    public static bool MouseInUICollider(UICollider collider)
+    {
+        return PointInCollider(collider, InputManager.Mouse.Position);
     }
 
     // check fi point is in circle collider

@@ -22,7 +22,7 @@ public abstract class Scene : IDisposable
     // variables and properties
     public Library SceneLibrary { get; private set; }
 
-    protected Canvas Canvas { get; private set; } = new Canvas();
+    public Canvas Canvas { get; private set; } = new Canvas();
     protected TileMap Tilemap { get; private set; }
 
     private readonly Dictionary<string, int> _names = [];

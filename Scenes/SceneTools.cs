@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MyMonoGameLibrary.Graphics;
+using MyMonoGameLibrary.UI;
 
 namespace MyMonoGameLibrary.Scenes;
 
@@ -32,5 +33,11 @@ public static class SceneTools
         return _activeScene.GetGameObject(name);
     }
 
-
+    // get the canvas
+    //
+    // return: the canvas of the scene
+    public static Canvas GetCanvas()
+    {
+        return _activeScene.Canvas;
+    }
 }

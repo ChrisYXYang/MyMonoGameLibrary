@@ -42,7 +42,7 @@ public class TextRenderer : RendererComponent
     }
 
     // origin point
-    public Vector2 Origin { get; set; }
+    public Vector2 Origin { get; private set; }
 
     // constructor
     //

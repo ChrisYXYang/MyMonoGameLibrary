@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MyMonoGameLibrary.Scenes;
 
 namespace MyMonoGameLibrary.UI;
 
@@ -39,7 +40,7 @@ public class TextUI : BaseUI
     }
 
     // origin point
-    public Vector2 Origin { get; set; }
+    public Vector2 Origin { get; private set; }
 
     // constructor
     //
@@ -86,5 +87,13 @@ public class TextUI : BaseUI
         Font = font;
         Text = text;
         Anchor = anchorMode;
+    }
+
+    // add text collider (box collider) to text UI
+    public void AddTextCollider()
+    {
+        Vector2 offset = AnchorCalc.GetOffset(Anchor, _textSize);
+        float scale = SceneTools.GetCanvas().Scale;
+        AddBoxCollider(_textSize.X * scale, _textSize.Y * scale, offset.X * scale, offset.Y * scale);
     }
 }

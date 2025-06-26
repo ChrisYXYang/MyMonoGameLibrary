@@ -124,7 +124,7 @@ public class SpriteUI : BaseUI
         }
     }
 
-    // add animator
+    // add the animator
     public void AddAnimator(Animation animation)
     {
         if (Animator == null)

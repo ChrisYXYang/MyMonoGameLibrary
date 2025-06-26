@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MyMonoGameLibrary.Tilemap;
-using MyMonoGameLibrary.Tools;
+using MyMonoGameLibrary.Scenes;
 
-namespace MyMonoGameLibrary.Scenes;
+namespace MyMonoGameLibrary.UI;
 
-// component for rectangle collider for gameobject
-public class BoxCollider : ColliderComponent, IAABBCollider
+// box collider for UI elements
+public class UIBoxCollider : UICollider, IAABBCollider
 {
     // variables and properties
     public float Width { get; set; }
@@ -24,11 +24,11 @@ public class BoxCollider : ColliderComponent, IAABBCollider
     // param: width - width of collider
     // param: height - height of collider
     // param: solid - solid or not
-    public BoxCollider(int width, int height)
+    public UIBoxCollider(BaseUI parent, float width, float height) : base(parent)
     {
         // set the properties
-        Width = (float)width / Camera.SpritePixelsPerUnit;
-        Height = (float)height / Camera.SpritePixelsPerUnit;
+        Width = width;
+        Height = height;
         Offset = Vector2.Zero;
     }
 
@@ -39,11 +39,11 @@ public class BoxCollider : ColliderComponent, IAABBCollider
     // param: xOffset - x offset of collider
     // param: yOffset - y offset of collider
     // param: solid - solid or not
-    public BoxCollider(int width, int height, float xOffset, float yOffset)
+    public UIBoxCollider(BaseUI parent, float width, float height, float xOffset, float yOffset) : base(parent)
     {
         // set the properties
-        Width = (float)width / Camera.SpritePixelsPerUnit;
-        Height = (float)height / Camera.SpritePixelsPerUnit;
-        Offset = new Vector2(xOffset, yOffset) / Camera.SpritePixelsPerUnit;
+        Width = width;
+        Height = height;
+        Offset = new Vector2(xOffset, yOffset);
     }
 }

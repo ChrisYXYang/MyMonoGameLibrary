@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using MyMonoGameLibrary.Scenes;
 
-namespace MyMonoGameLibrary.Scenes;
+namespace MyMonoGameLibrary.UI;
 
-// circle collider component for game object
-public class CircleCollider : ColliderComponent, ICircleCollider
+// circle collider for UI elements
+public class UICircleCollider : UICollider, ICircleCollider
 {
     // radius of collider
     public float Radius { get; set; }
@@ -14,9 +18,9 @@ public class CircleCollider : ColliderComponent, ICircleCollider
     // constructor
     //
     // param: diameter - diameter of collider
-    public CircleCollider(int diameter)
+    public UICircleCollider(BaseUI parent, float diameter) : base(parent)
     {
-        Diameter = (float)diameter / Camera.SpritePixelsPerUnit;
+        Diameter = diameter;
         Radius = Diameter / 2;
         Offset = Vector2.Zero;
     }
@@ -26,10 +30,10 @@ public class CircleCollider : ColliderComponent, ICircleCollider
     // param: diameter - diameter of collider
     // param: xOffset - x offset
     // param: yOffset - y offset
-    public CircleCollider(int diameter, float xOffset, float yOffset)
+    public UICircleCollider(BaseUI parent, float diameter, float xOffset, float yOffset) : base(parent)
     {
-        Diameter = (float)diameter / Camera.SpritePixelsPerUnit;
+        Diameter = diameter;
         Radius = Diameter / 2;
-        Offset = new Vector2(xOffset, yOffset) / Camera.SpritePixelsPerUnit;
+        Offset = new Vector2(xOffset, yOffset);
     }
 }

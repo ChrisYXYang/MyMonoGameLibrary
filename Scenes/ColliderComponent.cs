@@ -14,7 +14,7 @@ public abstract class ColliderComponent : CoreComponent, ICollider
     public string Layer { get; set; }
     // set of names of objects colliding with this collider
     protected Dictionary<string, ICollider> Colliders { get; private set; } = [];
-    public Vector2 Offset { get; protected set; }
+    public Vector2 Offset { get; set; }
     // center of collider
     public Vector2 Center => Transform.position + Offset;
 
@@ -53,11 +53,5 @@ public abstract class ColliderComponent : CoreComponent, ICollider
             Colliders.Remove(other.GetName());
             Parent.OnCollisionExit(other);
         }
-    }
-
-    // get colliders colliding with collider
-    public List<ICollider> GetColliders()
-    {
-        return [.. Colliders.Values];
     }
 }
