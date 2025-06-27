@@ -27,13 +27,9 @@ public abstract class Scene : IDisposable
 
     private readonly Dictionary<string, int> _names = [];
     private readonly Dictionary<string, GameObject> _gameObjects = [];
-    private readonly List<BehaviorComponent> _behaviors = [];
-    private readonly List<Animator> _animators = [];
-    private readonly List<ICollider> _colliders = [];
-    private readonly List<RendererComponent> _renderComps = [];
 
+    private readonly Dictionary<string, ICollider> _colliders = [];
     private readonly List<TileCollider> _tileColliders = [];
-    private readonly List<Rigidbody> _rigidbodies = [];
 
     public float Gravity { get; protected set; } = 9.8f;
 
@@ -85,9 +81,9 @@ public abstract class Scene : IDisposable
     public virtual void LoadContent()
     {
         // start behavior scripts
-        foreach (BehaviorComponent behavior in _behaviors)
+        foreach (GameObject gameObject in _gameObjects.Values)
         {
-            behavior.Start();
+            gameObject.StartBehaviors();
         }
 
         Canvas.Start();
@@ -116,20 +112,26 @@ public abstract class Scene : IDisposable
     public virtual void Update(GameTime gameTime) 
     {
         // store previous position of rigidbody
-        foreach (Rigidbody rigidbody in _rigidbodies)
+        foreach (GameObject gameObject in _gameObjects.Values)
         {
-            rigidbody.UpdatePrevPos();
+            if (gameObject.Rigidbody != null)
+                gameObject.Rigidbody.UpdatePrevPos();
         }
 
         // behavior update
-        foreach (BehaviorComponent behavior in _behaviors)
+        foreach (GameObject gameObject in _gameObjects.Values)
         {
-            behavior.Update(gameTime);
+            gameObject.UpdateBehaviors(gameTime);
         }
 
         // update rigidbodies
-        foreach (Rigidbody rigidbody in _rigidbodies)
+        foreach (GameObject gameObject in _gameObjects.Values)
         {
+            Rigidbody rigidbody = gameObject.Rigidbody;
+
+            if (rigidbody == null)
+                continue;
+
             // afflict gravity
             if (rigidbody.UseGravity)
                 rigidbody.YVelocity += Gravity * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -159,36 +161,38 @@ public abstract class Scene : IDisposable
         }
 
         // update collisions
-        for (int i = 0; i < _colliders.Count; i++)
+        List<ICollider> colliderList = [.. _colliders.Values];
+        for (int i = 0; i < colliderList.Count; i++)
         {
-            for (int k = i + 1; k < _colliders.Count; k++)
+            for (int k = i + 1; k < colliderList.Count; k++)
             {
-                if (Collisions.Intersect(_colliders[i], _colliders[k]))
+                if (Collisions.Intersect(colliderList[i], colliderList[k]))
                 {
-                    _colliders[i].Colliding(_colliders[k]);
-                    _colliders[k].Colliding(_colliders[i]);
+                    colliderList[i].Colliding(colliderList[k]);
+                    colliderList[k].Colliding(colliderList[i]);
                 }
                 else
                 {
-                    _colliders[i].NotColliding(_colliders[k]);
-                    _colliders[k].NotColliding(_colliders[i]);
+                    colliderList[i].NotColliding(colliderList[k]);
+                    colliderList[k].NotColliding(colliderList[i]);
                 }
             }
         }
 
         // behavior late update
-        foreach (BehaviorComponent behavior in _behaviors)
+        foreach (GameObject gameObject in _gameObjects.Values)
         {
-            behavior.LateUpdate(gameTime);
+            gameObject.LateUpdateBehaviors(gameTime);
         }
 
         // update UI
         Canvas.Update(gameTime);
 
         // update aniamtions
-        foreach (Animator animator in _animators)
+        foreach (GameObject gameObject in _gameObjects.Values)
         {
-            animator.Update(gameTime);
+            if (gameObject.Animator != null)
+                gameObject.Animator.Update(gameTime);
         }
     }
 
@@ -199,9 +203,10 @@ public abstract class Scene : IDisposable
     public virtual void Draw(GameTime gameTime) 
     {
         // game rendering
-        foreach (RendererComponent renderer in _renderComps)
+        foreach (GameObject gameObject in _gameObjects.Values)
         {
-            Camera.Draw(renderer);
+            if (gameObject.Renderer != null)
+                Camera.Draw(gameObject.Renderer);
         }
         Camera.Draw(Tilemap);
         Core.SpriteBatch.End();
@@ -261,15 +266,6 @@ public abstract class Scene : IDisposable
         return [.. _gameObjects.Values];
     }
 
-    // add a behavior to list
-    //
-    // param: behavior - behavior to add
-    public void AddBehavior(BehaviorComponent behavior)
-    {
-        _behaviors.Add(behavior);
-    }
-
-
     // setup a gameobject using a list of components and register it
     //
     // param: name - name of game object
@@ -283,27 +279,11 @@ public abstract class Scene : IDisposable
         GameObject gameObject = new(name, components);
         _gameObjects.Add(name, gameObject);
 
-        // register relevant gameobject components
-        foreach (BehaviorComponent behavior in gameObject.GetBehaviors())
-        {
-            _behaviors.Add(behavior);
-        }
-
-        RendererComponent renderer = gameObject.GetRenderer();
-        if (renderer != null)
-            _renderComps.Add(renderer);
-
-        ICollider collider = gameObject.GetCollider();
+        // register collider
+        ICollider collider = gameObject.Collider;
         if (collider != null)
-            _colliders.Add(collider);
+            _colliders.Add(name, collider);
 
-        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
-        if (rb != null)
-            _rigidbodies.Add(rb);
-
-        Animator anim = gameObject.GetComponent<Animator>();
-        if (anim != null)
-            _animators.Add(anim);
     }
 
     // setup a gameobject using prefab
@@ -344,7 +324,7 @@ public abstract class Scene : IDisposable
                     if (tile.Collider == null)
                         continue;
 
-                    _colliders.Add(tile.GetCollider());
+                    _colliders.Add(tile.Name, tile.GetCollider());
                     _tileColliders.Add(tile.GetCollider());
 
                     if (_names.ContainsKey(tile.Name))

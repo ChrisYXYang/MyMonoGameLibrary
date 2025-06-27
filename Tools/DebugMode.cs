@@ -49,7 +49,7 @@ public class DebugMode : Core
     // param: gameObject - game object to draw origin point for
     public static void DrawOrigin(GameObject gameObject)
     {
-        Transform transform = gameObject.GetComponent<Transform>();
+        Transform transform = gameObject.Transform;
 
         if (transform == null)
             return;
@@ -71,7 +71,7 @@ public class DebugMode : Core
     // param: gameObject - game object to draw
     public static void DrawGameObjectCollider(GameObject gameObject)
     {
-        ICollider collider = gameObject.GetCollider();
+        ICollider collider = gameObject.Collider;
 
         if (collider != null)
         {

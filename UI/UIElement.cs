@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using MyMonoGameLibrary.Scenes;
 
 namespace MyMonoGameLibrary.UI;
 
@@ -25,7 +26,17 @@ public abstract class UIElement
     public void AddChild(BaseUI child)
     {
         _children.Add(child);
+        child.Parent?.RemoveChild(child);
         child.Parent = this;
+    }
+
+    // remove a child
+    //
+    // param: child - child to remove
+    public void RemoveChild(BaseUI child)
+    {
+        child.Parent = null;
+        _children.Remove(child);
     }
 
     // get all children

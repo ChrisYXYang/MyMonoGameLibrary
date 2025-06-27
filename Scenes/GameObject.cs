@@ -16,8 +16,13 @@ public class GameObject
     public string Name { get; private set; }
     public GameObject Parent { get; private set; }
     public Transform Transform { get; private set; }
+    public ColliderComponent Collider { get; private set; }
+    public RendererComponent Renderer { get; private set; }
+    public Animator Animator { get; private set; }
+    public Rigidbody Rigidbody { get; private set; }
+
     private readonly Dictionary<string, Component> _components = [];
-    private readonly Dictionary<string, BehaviorComponent> _behaviors = [];
+    private readonly List<BehaviorComponent> _behaviors = [];
     private readonly List<GameObject> _children = [];
 
     // constructor
@@ -38,23 +43,35 @@ public class GameObject
             _components.Add(compName, component);
 
             if (component is BehaviorComponent behavior)
-                _behaviors.Add(compName, behavior);
+                _behaviors.Add(behavior);
             else if (component is ColliderComponent collider)
             {
                 if (!hasCollider)
+                {
                     hasCollider = true;
+                    Collider = collider;
+                }
                 else
                     throw new Exception("multiple colliders!");
             }
             else if (component is RendererComponent renderer)
             {
                 if (!hasRenderer)
+                {
                     hasRenderer = true;
+                    Renderer = renderer;
+                }
                 else
                     throw new Exception("multiple renderers!");
             } else if (component is Transform transform)
             {
                 Transform = transform;
+            } else if (component is Animator animator)
+            {
+                Animator = animator;
+            } else if (component is Rigidbody rb)
+            {
+                Rigidbody = rb;
             }
         }
 
@@ -74,23 +91,31 @@ public class GameObject
     public void AddChild(GameObject child)
     {
         _children.Add(child);
+        child.Parent?.RemoveChild(child);
         child.Parent = this;
     }
 
-    // get all children
+    // set parent
     //
-    // return: array of children
-    public GameObject[] GetChildren()
+    // param: parent - parent game object
+    public void SetParent(GameObject parent)
     {
-        GameObject[] output = new GameObject[_children.Count];
-        _children.CopyTo(output);
-        return output;
+        parent.AddChild(this);
     }
 
-    // get a child
+    // remove a child
     //
-    // param: index - index of child in list
-    // return: chosen child based on index
+    // param: child - child to remove
+    public void RemoveChild(GameObject child)
+    {
+        child.Parent = null;
+        _children.Remove(child);
+    }
+
+    // get a child by index
+    //
+    // param: index - index of child
+    // return: chosen child based on name
     public GameObject GetChild(int index)
     {
         return _children[index];
@@ -116,7 +141,7 @@ public class GameObject
     // param: other - other collider
     public void OnCollisionEnter(ICollider other)
     {
-        foreach (BehaviorComponent behavior in _behaviors.Values)
+        foreach (BehaviorComponent behavior in _behaviors)
         {
             behavior.OnCollisionEnter(other);
         }
@@ -127,7 +152,7 @@ public class GameObject
     // param: other - other collider
     public void OnCollisionExit(ICollider other)
     {
-        foreach (BehaviorComponent behavior in _behaviors.Values)
+        foreach (BehaviorComponent behavior in _behaviors)
         {
             behavior.OnCollisionExit(other);
         }
@@ -138,42 +163,41 @@ public class GameObject
     // param: other - other collider
     public void OnCollisionStay(ICollider other)
     {
-        foreach (BehaviorComponent behavior in _behaviors.Values)
+        foreach (BehaviorComponent behavior in _behaviors)
         {
             behavior.OnCollisionStay(other);
         }
     }
 
-    // get the collider
-    //
-    // return: box collider
-    public ColliderComponent GetCollider()
+    // start all behaviors
+    public void StartBehaviors()
     {
-        ColliderComponent collider = GetComponent<BoxCollider>();
-
-        collider ??= GetComponent<CircleCollider>();
-        
-        return collider;
+        foreach (BehaviorComponent behavior in _behaviors)
+        {
+            behavior.Start();
+        }
     }
 
-    // get the renderer
+    // update all behaviors
     //
-    // return: the renderer component
-    public RendererComponent GetRenderer()
+    // param: gameTime - the game time
+    public void UpdateBehaviors(GameTime gameTime)
     {
-        RendererComponent renderer = GetComponent<SpriteRenderer>();
-
-        renderer ??= GetComponent<TextRenderer>();
-
-        return renderer;
+        foreach (BehaviorComponent behavior in _behaviors)
+        {
+            behavior.Update(gameTime);
+        }
     }
 
-    // get all behavior components
+    // late update all behaviors
     //
-    // return: behavior components
-    public List<BehaviorComponent> GetBehaviors()
+    // param: gameTime - the game time
+    public void LateUpdateBehaviors(GameTime gameTime)
     {
-        return [.. _behaviors.Values];
+        foreach (BehaviorComponent behavior in _behaviors)
+        {
+            behavior.LateUpdate(gameTime);
+        }
     }
 }
 

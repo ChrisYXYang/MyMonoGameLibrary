@@ -78,6 +78,14 @@ public abstract class BaseUI : UIElement
         FlipY = flipY;
     }
 
+    // set parent
+    //
+    // param: parent - parent ui
+    public void SetParent(UIElement parent)
+    {
+        parent.AddChild(this);
+    }
+
     // add box collider to UI
     //
     // param: width - width of collider
