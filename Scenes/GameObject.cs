@@ -20,6 +20,7 @@ public class GameObject
     public RendererComponent Renderer { get; private set; }
     public Animator Animator { get; private set; }
     public Rigidbody Rigidbody { get; private set; }
+    public int ChildCount { get => _children.Count; }
 
     private readonly Dictionary<string, Component> _components = [];
     private readonly List<BehaviorComponent> _behaviors = [];
@@ -100,6 +101,12 @@ public class GameObject
     // param: parent - parent game object
     public void SetParent(GameObject parent)
     {
+        if (parent == null)
+        {
+            this.Parent.RemoveChild(this);
+            return;
+        }
+        
         parent.AddChild(this);
     }
 

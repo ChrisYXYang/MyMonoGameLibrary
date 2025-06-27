@@ -27,6 +27,8 @@ public abstract class Scene : IDisposable
 
     private readonly Dictionary<string, int> _names = [];
     private readonly Dictionary<string, GameObject> _gameObjects = [];
+    private readonly List<GameObject> _toInstantiate = [];
+    private readonly List<GameObject> _toDestroy = [];
 
     private readonly Dictionary<string, ICollider> _colliders = [];
     private readonly List<TileCollider> _tileColliders = [];
@@ -111,6 +113,26 @@ public abstract class Scene : IDisposable
     /// <param name="gameTime">A snapshot of the timing values for the current frame.</param>
     public virtual void Update(GameTime gameTime) 
     {
+        // destroy instantiated objects from last frame
+        foreach (GameObject gameObject in _toDestroy)
+        {
+            _gameObjects.Remove(gameObject.Name);
+            _colliders.Remove(gameObject.Name);
+        }
+        _toDestroy.Clear();
+        
+        // setup instantiated objects from last frame
+        foreach (GameObject gameObject in _toInstantiate)
+        {
+            _gameObjects.Add(gameObject.Name, gameObject);
+
+            // register collider
+            ICollider collider = gameObject.Collider;
+            if (collider != null)
+                _colliders.Add(gameObject.Name, collider);
+        }
+        _toInstantiate.Clear();
+        
         // store previous position of rigidbody
         foreach (GameObject gameObject in _gameObjects.Values)
         {
@@ -270,7 +292,8 @@ public abstract class Scene : IDisposable
     //
     // param: name - name of game object
     // param: components - components of game object
-    public void Setup(string name, Component[] components)
+    // return: game object that was created
+    public GameObject Setup(string name, Component[] components)
     {
         // check if name is unique and register it
         name = RegisterName(name);
@@ -284,6 +307,7 @@ public abstract class Scene : IDisposable
         if (collider != null)
             _colliders.Add(name, collider);
 
+        return gameObject;
     }
 
     // setup a gameobject using prefab
@@ -292,6 +316,116 @@ public abstract class Scene : IDisposable
     public void Setup((string, Component[]) prefab)
     {
         Setup(prefab.Item1, prefab.Item2);
+    }
+
+    // setup a gameobject using prefab
+    //
+    // param: prefab - prefab
+    // param: position - position
+    public void Setup((string, Component[]) prefab, Vector2 position)
+    {
+        GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
+        gameObject.Transform.position = position;
+    }
+
+    // setup a gameobject using prefab
+    //
+    // param: prefab - prefab
+    // param: position - position
+    // param: rotation - rotation
+    public void Setup((string, Component[]) prefab, Vector2 position, float rotation)
+    {
+        GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
+        gameObject.Transform.position = position;
+        gameObject.Transform.Rotation = rotation;
+    }
+
+    // setup a gameobject using prefab
+    //
+    // param: prefab - prefab
+    // param: position - position
+    // param: rotation - rotation
+    // param: parent - parent game object
+    public void Setup((string, Component[]) prefab, Vector2 position, float rotation, GameObject parent)
+    {
+        GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
+        gameObject.Transform.position = position;
+        gameObject.Transform.Rotation = rotation;
+        gameObject.SetParent(parent);
+    }
+
+    // instantiate a gameobject using a list of components
+    //
+    // param: name - name of game object
+    // param: components - components of game object
+    // return: game object that was created
+    public GameObject Instantiate(string name, Component[] components)
+    {
+        // check if name is unique and register it
+        name = RegisterName(name);
+
+        GameObject gameObject = new(name, components);
+        _toInstantiate.Add(gameObject);
+        
+        return gameObject;
+    }
+
+    // instantiate a gameobject using prefab
+    //
+    // param: prefab - prefab
+    public void Instantiate((string, Component[]) prefab)
+    {
+        Instantiate(prefab.Item1, prefab.Item2);
+    }
+
+    // instantiate a gameobject using prefab
+    //
+    // param: prefab - prefab
+    // param: position - position
+    public void Instantiate((string, Component[]) prefab, Vector2 position)
+    {
+        GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
+        gameObject.Transform.position = position;
+    }
+
+    // instantiate a gameobject using prefab
+    //
+    // param: prefab - prefab
+    // param: position - position
+    // param: rotation - rotation
+    public void Instantiate((string, Component[]) prefab, Vector2 position, float rotation)
+    {
+        GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
+        gameObject.Transform.position = position;
+        gameObject.Transform.Rotation = rotation;
+    }
+
+    // instantiate a gameobject using prefab
+    //
+    // param: prefab - prefab
+    // param: position - position
+    // param: rotation - rotation
+    // param: parent - parent game object
+    public void Instantiate((string, Component[]) prefab, Vector2 position, float rotation, GameObject parent)
+    {
+        GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
+        gameObject.Transform.position = position;
+        gameObject.Transform.Rotation = rotation;
+        gameObject.SetParent(parent);
+    }
+
+    // destroy a game object
+    //
+    // param: gameObject - game object to destroy
+    public void Destroy(GameObject gameObject)
+    {
+        gameObject.SetParent(null);
+        _toDestroy.Add(gameObject);
+
+        for (int i = 0; i < gameObject.ChildCount; i++)
+        {
+            Destroy(gameObject.GetChild(i));
+        }
     }
 
     // set the tilemap and register it

@@ -27,5 +27,12 @@ public abstract class UIBehavior
 
     public virtual void Update(GameTime gameTime)
     {
+        if (Parent is SpriteUI sprite)
+        {
+            if (sprite.Animator != null)
+            {
+                sprite.Animator.Update(gameTime);
+            }
+        }
     }
 }

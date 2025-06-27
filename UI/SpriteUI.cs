@@ -132,14 +132,6 @@ public class SpriteUI : BaseUI
 
     }
 
-    public override void Update(GameTime gameTime)
-    {
-        if (Animator != null)
-        {
-            Animator.Update(gameTime);
-        }
-    }
-
     // add the animator
     public void AddAnimator(Animation animation)
     {
