@@ -270,11 +270,11 @@ public abstract class Scene : IDisposable
     }
 
 
-    // instantiate a gameobject using a list of components and register it
+    // setup a gameobject using a list of components and register it
     //
     // param: name - name of game object
     // param: components - components of game object
-    public void Instantiate(string name, Component[] components)
+    public void Setup(string name, Component[] components)
     {
         // check if name is unique and register it
         name = RegisterName(name);
@@ -306,12 +306,12 @@ public abstract class Scene : IDisposable
             _animators.Add(anim);
     }
 
-    // instantiate a gameobject using prefab
+    // setup a gameobject using prefab
     //
     // param: prefab - prefab
-    public void Instantiate((string, Component[]) prefab)
+    public void Setup((string, Component[]) prefab)
     {
-        Instantiate(prefab.Item1, prefab.Item2);
+        Setup(prefab.Item1, prefab.Item2);
     }
 
     // set the tilemap and register it

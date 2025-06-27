@@ -30,7 +30,8 @@ public static class UICamera
                 drawQueue.Enqueue(current.GetChild(i));
             }
 
-            UICamera.Draw(current, canvas.Scale);
+            if (current.IsVisible)
+                UICamera.Draw(current, canvas.Scale);
         }
     }
     

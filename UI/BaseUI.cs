@@ -10,6 +10,9 @@ namespace MyMonoGameLibrary.UI;
 // this class represents a base UI element (sprite, text) in the game.
 public abstract class BaseUI : UIElement
 {
+    // behavior for the UI
+    public UIBehavior Behavior { get; set; }
+    
     // collider for the UI
     public UICollider Collider { get; private set; }
     
@@ -31,8 +34,29 @@ public abstract class BaseUI : UIElement
     // flip vertically
     public bool FlipY { get; set; } = false;
 
+    // is visible or not
+    public bool IsVisible { get; set; } = true;
+
     // empty constructor
     public BaseUI() {}
+
+    // constructor
+    //
+    // param: position - position
+    public BaseUI(Vector2 position)
+    {
+        this.position = position;
+    }
+
+    // constructor
+    //
+    // param: position - position
+    // param: color - color
+    public BaseUI(Vector2 position, Color color)
+    {
+        this.position = position;
+        Color = color;
+    }
 
     // constructor
     //
@@ -90,5 +114,12 @@ public abstract class BaseUI : UIElement
     public void AddCircleCollider(float diameter)
     {
         Collider ??= new UICircleCollider(this, diameter);
+    }
+
+    // set behavior of UI
+    public void SetBehavior(UIBehavior behavior)
+    {
+        Behavior = behavior;
+        behavior.Initialize(this);
     }
 }

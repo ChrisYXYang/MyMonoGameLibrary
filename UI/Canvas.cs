@@ -44,7 +44,10 @@ public class Canvas : UIElement
                 startQueue.Enqueue(current.GetChild(i));
             }
 
-            current.Start();
+            if (current.Behavior != null)
+            {
+                current.Behavior.Start();
+            }
         }
     }
 
@@ -68,7 +71,10 @@ public class Canvas : UIElement
                 updateQueue.Enqueue(current.GetChild(i));
             }
 
-            current.Update(gameTime);
+            if (current.Behavior != null)
+            {
+                current.Behavior.Update(gameTime);
+            }
         }
     }
 }

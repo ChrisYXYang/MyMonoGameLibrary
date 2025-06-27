@@ -48,19 +48,6 @@ public class TextUI : BaseUI
     // param: text - the text
     // param: anchorMode - anchoring point mode
     // param: children - children UI
-    public TextUI(SpriteFont font, string text, AnchorMode anchorMode)
-    {
-        Font = font;
-        Text = text;
-        Anchor = anchorMode;
-    }
-
-    // constructor
-    //
-    // param: font - the font
-    // param: text - the text
-    // param: anchorMode - anchoring point mode
-    // param: children - children UI
     public TextUI(SpriteFont font, string text, AnchorMode anchorMode, Vector2 position)
     {
         Font = font;
@@ -93,7 +80,6 @@ public class TextUI : BaseUI
     public void AddTextCollider()
     {
         Vector2 offset = AnchorCalc.GetOffset(Anchor, _textSize);
-        float scale = SceneTools.GetCanvas().Scale;
-        AddBoxCollider(_textSize.X * scale, _textSize.Y * scale, offset.X * scale, offset.Y * scale);
+        AddBoxCollider(_textSize.X * Scale.X, _textSize.Y * Scale.X, offset.X * Scale.Y, offset.Y * Scale.Y);
     }
 }

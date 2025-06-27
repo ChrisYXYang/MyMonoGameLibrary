@@ -8,6 +8,7 @@ using MyMonoGameLibrary.Tilemap;
 using System.Collections.Generic;
 using MyMonoGameLibrary.Scenes;
 using System.Reflection.Metadata.Ecma335;
+using MyMonoGameLibrary.UI;
 
 namespace MyMonoGameLibrary.Tools;
 
@@ -81,6 +82,49 @@ public class DebugMode : Core
         }
     }
 
+    // draw collider for ui element
+    //
+    // param: ui - ui to draw
+    public static void DrawUICollider(BaseUI ui)
+    {
+        UICollider collider = ui.Collider;
+
+        if (collider != null)
+        {
+            if (collider is UIBoxCollider box)
+                DrawUIBoxCollider(box);
+            else if (collider is UICircleCollider circle)
+                DrawUICircleCollider(circle);
+        }
+    }
+
+    // draw colliders for canvas
+    //
+    // param: canvas - canvas to draw colliders for
+    public static void DrawCanvasColliders(Canvas canvas)
+    {
+        Queue<BaseUI> drawQueue = [];
+
+        // add canvas children to draw queue
+        for (int i = 0; i < canvas.ChildCount; i++)
+        {
+            drawQueue.Enqueue(canvas.GetChild(i));
+        }
+
+        // draw element and add its children to draw queue until all drawn
+        while (drawQueue.Count > 0)
+        {
+            BaseUI current = drawQueue.Dequeue();
+
+            for (int i = 0; i < current.ChildCount; i++)
+            {
+                drawQueue.Enqueue(current.GetChild(i));
+            }
+
+            DrawUICollider(current);
+        }
+    }
+
     // draw tile colliders for a tilemap
     //
     // param: tilemap - tile map to draw collider
@@ -139,7 +183,7 @@ public class DebugMode : Core
     // helper method to draw circle collider 
     //
     // param: collider - circle collider to draw
-    private static void DrawCircleCollider(CircleCollider collider)
+    private static void DrawCircleCollider(ICircleCollider collider)
     {
         Camera.Draw
             (
@@ -162,5 +206,43 @@ public class DebugMode : Core
             SpriteEffects.None,
             1f
         );
+    }
+
+    // helper method to draw ui box collider
+    //
+    // param: collider - box collider to draw
+    private static void DrawUIBoxCollider(UIBoxCollider collider)
+    {
+        Core.SpriteBatch.Draw
+            (
+                _boxCollider.SpriteSheet,
+                new Vector2(collider.Left, collider.Top),
+                _boxCollider.SourceRectangle,
+                Color.White,
+                0f,
+                _boxCollider.OriginPoint,
+                 new Vector2(collider.Right - collider.Left, collider.Bottom - collider.Top) / 16f,
+                SpriteEffects.None,
+                0.9f
+            );
+    }
+
+    // helper method to draw ui circle collider 
+    //
+    // param: collider - circle collider to draw
+    private static void DrawUICircleCollider(UICircleCollider collider)
+    {
+        Core.SpriteBatch.Draw
+            (
+                _circleCollider.SpriteSheet,
+                collider.Center,
+                _circleCollider.SourceRectangle,
+                Color.White,
+                0f,
+                _circleCollider.OriginPoint,
+                collider.Diameter / 16f,
+                SpriteEffects.None,
+                0.9f
+            );
     }
 }
