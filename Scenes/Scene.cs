@@ -373,19 +373,22 @@ public abstract class Scene : IDisposable
     // instantiate a gameobject using prefab
     //
     // param: prefab - prefab
-    public void Instantiate((string, Component[]) prefab)
+    // return: game object that was created
+    public GameObject Instantiate((string, Component[]) prefab)
     {
-        Instantiate(prefab.Item1, prefab.Item2);
+        return Instantiate(prefab.Item1, prefab.Item2);
     }
 
     // instantiate a gameobject using prefab
     //
     // param: prefab - prefab
     // param: position - position
-    public void Instantiate((string, Component[]) prefab, Vector2 position)
+    // return: game object that was created
+    public GameObject Instantiate((string, Component[]) prefab, Vector2 position)
     {
         GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
         gameObject.Transform.position = position;
+        return gameObject;
     }
 
     // instantiate a gameobject using prefab
@@ -393,11 +396,13 @@ public abstract class Scene : IDisposable
     // param: prefab - prefab
     // param: position - position
     // param: rotation - rotation
-    public void Instantiate((string, Component[]) prefab, Vector2 position, float rotation)
+    // return: game object that was created
+    public GameObject Instantiate((string, Component[]) prefab, Vector2 position, float rotation)
     {
         GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
         gameObject.Transform.position = position;
         gameObject.Transform.Rotation = rotation;
+        return gameObject;
     }
 
     // instantiate a gameobject using prefab
@@ -406,12 +411,14 @@ public abstract class Scene : IDisposable
     // param: position - position
     // param: rotation - rotation
     // param: parent - parent game object
-    public void Instantiate((string, Component[]) prefab, Vector2 position, float rotation, GameObject parent)
+    // return: game object that was created
+    public GameObject Instantiate((string, Component[]) prefab, Vector2 position, float rotation, GameObject parent)
     {
         GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
         gameObject.Transform.position = position;
         gameObject.Transform.Rotation = rotation;
         gameObject.SetParent(parent);
+        return gameObject;
     }
 
     // destroy a game object

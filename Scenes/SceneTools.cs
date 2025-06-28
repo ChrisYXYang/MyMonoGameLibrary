@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.UI;
 
@@ -39,5 +36,65 @@ public static class SceneTools
     public static Canvas GetCanvas()
     {
         return _activeScene.Canvas;
+    }
+
+    // instantiate a gameobject using a list of components
+    //
+    // param: name - name of game object
+    // param: components - components of game object
+    // return: game object that was created
+    public static GameObject Instantiate(string name, Component[] components)
+    {
+        return _activeScene.Instantiate(name, components);
+    }
+
+    // instantiate a gameobject using prefab
+    //
+    // param: prefab - prefab
+    // return: game object that was created
+    public static GameObject Instantiate((string, Component[]) prefab)
+    {
+        return _activeScene.Instantiate(prefab);
+    }
+
+    // instantiate a gameobject using prefab
+    //
+    // param: prefab - prefab
+    // param: position - position
+    // return: game object that was created
+    public static GameObject Instantiate((string, Component[]) prefab, Vector2 position)
+    {
+        return _activeScene.Instantiate(prefab, position);
+    }
+
+    // instantiate a gameobject using prefab
+    //
+    // param: prefab - prefab
+    // param: position - position
+    // param: rotation - rotation
+    // return: game object that was created
+    public static GameObject Instantiate((string, Component[]) prefab, Vector2 position, float rotation)
+    {
+        return _activeScene.Instantiate(prefab, position, rotation);
+    }
+
+    // instantiate a gameobject using prefab
+    //
+    // param: prefab - prefab
+    // param: position - position
+    // param: rotation - rotation
+    // param: parent - parent game object
+    // return: game object that was created
+    public static GameObject Instantiate((string, Component[]) prefab, Vector2 position, float rotation, GameObject parent)
+    {
+        return _activeScene.Instantiate(prefab, position, rotation, parent);
+    }
+
+    // destroy a game object
+    //
+    // param: gameObject - game object to destroy
+    public static void Destroy(GameObject gameObject)
+    {
+        _activeScene.Destroy(gameObject);
     }
 }
