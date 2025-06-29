@@ -27,6 +27,11 @@ public class TileCollider : IAABBCollider
     {
         Parent = parent;
         Solid = solid;
+
+        if (Solid)
+        {
+            Layer = "wall";
+        }
     }
 
     public void Colliding(ICollider other)

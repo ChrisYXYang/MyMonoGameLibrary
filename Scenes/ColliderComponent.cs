@@ -18,6 +18,17 @@ public abstract class ColliderComponent : CoreComponent, ICollider
     // center of collider
     public Vector2 Center => Transform.position + Offset;
 
+    // empty constructor
+    public ColliderComponent() { }
+
+    // constructor
+    //
+    // param: layer - the layer
+    public ColliderComponent(string layer)
+    {
+        Layer = layer;
+    }
+
 
     // get name of parent
     //

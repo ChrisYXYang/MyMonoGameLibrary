@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -94,8 +92,6 @@ public abstract class Scene : IDisposable
         List<GameObject> gameObjects = [.. _gameObjects.Values];
         for (int i = 0; i < gameObjects.Count; i++)
         {
-            Debug.WriteLine(gameObjects[i].Name);
-
             for (int k = i + 1; k < gameObjects.Count; k++)
             {
                 if (gameObjects[i].Name.Equals(gameObjects[k].Name))
@@ -114,16 +110,35 @@ public abstract class Scene : IDisposable
     public virtual void Update(GameTime gameTime) 
     {
         // destroy instantiated objects from last frame
+        int destroyCount = 0;
         foreach (GameObject gameObject in _toDestroy)
         {
+            Debug.WriteLine("Destroy: " + gameObject.Name);
+
             _gameObjects.Remove(gameObject.Name);
-            _colliders.Remove(gameObject.Name);
+
+            if (gameObject.Collider != null)
+            {
+                _colliders.Remove(gameObject.Name);
+                
+                foreach(ICollider collider in _colliders.Values)
+                {
+                    collider.NotColliding(gameObject.Collider);
+                }
+            }
+
+            destroyCount++;
         }
+        if (destroyCount > 0)
+            Debug.WriteLine("Destroyed: " + destroyCount);
         _toDestroy.Clear();
-        
+
         // setup instantiated objects from last frame
+        int instantiateCount = 0;
         foreach (GameObject gameObject in _toInstantiate)
         {
+            Debug.WriteLine("Instiantiate: " +  gameObject.Name);
+            instantiateCount++;
             _gameObjects.Add(gameObject.Name, gameObject);
 
             // register collider
@@ -131,6 +146,8 @@ public abstract class Scene : IDisposable
             if (collider != null)
                 _colliders.Add(gameObject.Name, collider);
         }
+        if (instantiateCount > 0)
+            Debug.WriteLine("Instiantiated: " + instantiateCount);
         _toInstantiate.Clear();
         
         // store previous position of rigidbody
@@ -165,15 +182,21 @@ public abstract class Scene : IDisposable
             rigidbody.ClearMovePosition();
 
             // get tile collisions with rigidbody
-            foreach (TileCollider tileCol in _tileColliders)
+            if (rigidbody.Solid)
             {
-                if (Collisions.Intersect(rigidbody.Collider, tileCol))
+                foreach (TileCollider tileCol in _tileColliders)
                 {
-                    rigidbody.AddCollision(tileCol);
-                }
-                else
-                {
-                    rigidbody.RemoveCollision(tileCol);
+                    if (!tileCol.Solid)
+                        continue;
+                    
+                    if (Collisions.Intersect(rigidbody.Collider, tileCol))
+                    {
+                        rigidbody.AddCollision(tileCol);
+                    }
+                    else
+                    {
+                        rigidbody.RemoveCollision(tileCol);
+                    }
                 }
             }
 
@@ -386,7 +409,7 @@ public abstract class Scene : IDisposable
     // return: game object that was created
     public GameObject Instantiate((string, Component[]) prefab, Vector2 position)
     {
-        GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
+        GameObject gameObject = Instantiate(prefab.Item1, prefab.Item2);
         gameObject.Transform.position = position;
         return gameObject;
     }
@@ -399,7 +422,7 @@ public abstract class Scene : IDisposable
     // return: game object that was created
     public GameObject Instantiate((string, Component[]) prefab, Vector2 position, float rotation)
     {
-        GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
+        GameObject gameObject = Instantiate(prefab.Item1, prefab.Item2);
         gameObject.Transform.position = position;
         gameObject.Transform.Rotation = rotation;
         return gameObject;
@@ -414,7 +437,7 @@ public abstract class Scene : IDisposable
     // return: game object that was created
     public GameObject Instantiate((string, Component[]) prefab, Vector2 position, float rotation, GameObject parent)
     {
-        GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
+        GameObject gameObject = Instantiate(prefab.Item1, prefab.Item2);
         gameObject.Transform.position = position;
         gameObject.Transform.Rotation = rotation;
         gameObject.SetParent(parent);
@@ -431,7 +454,7 @@ public abstract class Scene : IDisposable
 
         for (int i = 0; i < gameObject.ChildCount; i++)
         {
-            Destroy(gameObject.GetChild(i));
+            Destroy(gameObject.GetChild(0));
         }
     }
 

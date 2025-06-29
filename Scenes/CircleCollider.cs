@@ -14,7 +14,8 @@ public class CircleCollider : ColliderComponent, ICircleCollider
     // constructor
     //
     // param: diameter - diameter of collider
-    public CircleCollider(int diameter)
+    // param: layer - the layer
+    public CircleCollider(int diameter, string layer) : base(layer)
     {
         Diameter = (float)diameter / Camera.SpritePixelsPerUnit;
         Radius = Diameter / 2;
@@ -26,7 +27,8 @@ public class CircleCollider : ColliderComponent, ICircleCollider
     // param: diameter - diameter of collider
     // param: xOffset - x offset
     // param: yOffset - y offset
-    public CircleCollider(int diameter, float xOffset, float yOffset)
+    // param: layer - the layer
+    public CircleCollider(int diameter, float xOffset, float yOffset, string layer) : base(layer)
     {
         Diameter = (float)diameter / Camera.SpritePixelsPerUnit;
         Radius = Diameter / 2;

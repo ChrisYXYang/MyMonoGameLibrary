@@ -33,7 +33,7 @@ public abstract class UIElement
     // remove a child
     //
     // param: child - child to remove
-    public void RemoveChild(BaseUI child)
+    private void RemoveChild(BaseUI child)
     {
         child.Parent = null;
         _children.Remove(child);

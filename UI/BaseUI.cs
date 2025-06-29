@@ -124,10 +124,13 @@ public abstract class BaseUI : UIElement
         Collider ??= new UICircleCollider(this, diameter);
     }
 
-    // set behavior of UI
-    public void SetBehavior(UIBehavior behavior)
+    // add behavior of UI
+    public void AddBehavior(UIBehavior behavior)
     {
-        Behavior = behavior;
-        behavior.Initialize(this);
+        if (Behavior == null)
+        {
+            Behavior = behavior;
+            behavior.Initialize(this);
+        }
     }
 }

@@ -103,7 +103,7 @@ public class GameObject
     {
         if (parent == null)
         {
-            this.Parent.RemoveChild(this);
+            this.Parent?.RemoveChild(this);
             return;
         }
         

@@ -24,7 +24,8 @@ public class BoxCollider : ColliderComponent, IAABBCollider
     // param: width - width of collider
     // param: height - height of collider
     // param: solid - solid or not
-    public BoxCollider(int width, int height)
+    // param: layer - the layer
+    public BoxCollider(int width, int height, string layer) : base(layer)
     {
         // set the properties
         Width = (float)width / Camera.SpritePixelsPerUnit;
@@ -39,7 +40,8 @@ public class BoxCollider : ColliderComponent, IAABBCollider
     // param: xOffset - x offset of collider
     // param: yOffset - y offset of collider
     // param: solid - solid or not
-    public BoxCollider(int width, int height, float xOffset, float yOffset)
+    // param: layer - the layer
+    public BoxCollider(int width, int height, float xOffset, float yOffset, string layer) : base(layer)
     {
         // set the properties
         Width = (float)width / Camera.SpritePixelsPerUnit;
