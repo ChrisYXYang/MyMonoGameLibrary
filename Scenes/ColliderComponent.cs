@@ -65,4 +65,12 @@ public abstract class ColliderComponent : CoreComponent, ICollider
             Parent.OnCollisionExit(other);
         }
     }
+
+    // get colliders colliding with it
+    //
+    // return: list of colliders currently colliding with this one
+    public List<ICollider> GetCollisions()
+    {
+        return [.. Colliders.Values];
+    }
 }

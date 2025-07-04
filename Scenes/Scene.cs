@@ -109,19 +109,43 @@ public abstract class Scene : IDisposable
     /// <param name="gameTime">A snapshot of the timing values for the current frame.</param>
     public virtual void Update(GameTime gameTime) 
     {
+        // setup instantiated objects from last frame
+        int instantiateCount = 0;
+        foreach (GameObject gameObject in _toInstantiate)
+        {
+            // register game object
+            Debug.WriteLine("Instiantiate: " +  gameObject.Name);
+            instantiateCount++;
+            _gameObjects.Add(gameObject.Name, gameObject);
+
+            // register collider
+            ICollider collider = gameObject.Collider;
+            if (collider != null)
+                _colliders.Add(gameObject.Name, collider);
+
+            // start game object
+            gameObject.StartBehaviors();
+        }
+        if (instantiateCount > 0)
+            Debug.WriteLine("Instiantiated: " + instantiateCount);
+        _toInstantiate.Clear();
+
         // destroy instantiated objects from last frame
         int destroyCount = 0;
         foreach (GameObject gameObject in _toDestroy)
         {
             Debug.WriteLine("Destroy: " + gameObject.Name);
 
+            // remove from scene/unregister
+            gameObject.SetParent(null);
             _gameObjects.Remove(gameObject.Name);
 
+            // remove collider
             if (gameObject.Collider != null)
             {
                 _colliders.Remove(gameObject.Name);
-                
-                foreach(ICollider collider in _colliders.Values)
+
+                foreach (ICollider collider in gameObject.Collider.GetCollisions())
                 {
                     collider.NotColliding(gameObject.Collider);
                 }
@@ -133,23 +157,6 @@ public abstract class Scene : IDisposable
             Debug.WriteLine("Destroyed: " + destroyCount);
         _toDestroy.Clear();
 
-        // setup instantiated objects from last frame
-        int instantiateCount = 0;
-        foreach (GameObject gameObject in _toInstantiate)
-        {
-            Debug.WriteLine("Instiantiate: " +  gameObject.Name);
-            instantiateCount++;
-            _gameObjects.Add(gameObject.Name, gameObject);
-
-            // register collider
-            ICollider collider = gameObject.Collider;
-            if (collider != null)
-                _colliders.Add(gameObject.Name, collider);
-        }
-        if (instantiateCount > 0)
-            Debug.WriteLine("Instiantiated: " + instantiateCount);
-        _toInstantiate.Clear();
-        
         // store previous position of rigidbody
         foreach (GameObject gameObject in _gameObjects.Values)
         {
@@ -449,12 +456,11 @@ public abstract class Scene : IDisposable
     // param: gameObject - game object to destroy
     public void Destroy(GameObject gameObject)
     {
-        gameObject.SetParent(null);
         _toDestroy.Add(gameObject);
 
-        for (int i = 0; i < gameObject.ChildCount; i++)
+        for (int i = gameObject.ChildCount - 1; i >= 0; i--)
         {
-            Destroy(gameObject.GetChild(0));
+            Destroy(gameObject.GetChild(i));
         }
     }
 

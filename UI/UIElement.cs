@@ -41,12 +41,12 @@ public abstract class UIElement
 
     // get all children
     //
-    // return: array of children
-    public BaseUI[] GetChildren()
+    // return: list of children
+    public List<BaseUI> GetChildren()
     {
         BaseUI[] output = new BaseUI[_children.Count];
         _children.CopyTo(output);
-        return output;
+        return [.. output];
     }
 
     // get a child

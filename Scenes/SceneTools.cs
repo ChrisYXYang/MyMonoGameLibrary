@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.UI;
@@ -28,6 +30,14 @@ public static class SceneTools
     public static GameObject GetGameObject(string name)
     {
         return _activeScene.GetGameObject(name);
+    }
+
+    // get all game objects
+    //
+    // return: list of all game objects in active scene
+    public static List<GameObject> GetGameObjects()
+    {
+        return _activeScene.GetGameObjects();
     }
 
     // get the canvas
