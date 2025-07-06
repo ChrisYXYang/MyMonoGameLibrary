@@ -13,7 +13,7 @@ namespace MyMonoGameLibrary.Scenes;
 public class GameObject
 {
     // variables and properties
-    public string Name { get; private set; }
+    public readonly string Name;
     public GameObject Parent { get; private set; }
     public Transform Transform { get; private set; }
     public ColliderComponent Collider { get; private set; }

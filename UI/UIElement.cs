@@ -8,7 +8,7 @@ using MyMonoGameLibrary.Scenes;
 
 namespace MyMonoGameLibrary.UI;
 
-// this class represents every UI element in the game.
+// this class represents every UI element in the game (including the canvas).
 public abstract class UIElement
 {
     // parent element
@@ -33,7 +33,7 @@ public abstract class UIElement
     // remove a child
     //
     // param: child - child to remove
-    private void RemoveChild(BaseUI child)
+    public void RemoveChild(BaseUI child)
     {
         child.Parent = null;
         _children.Remove(child);

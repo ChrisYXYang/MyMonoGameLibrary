@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,9 +25,14 @@ public abstract class Scene : IDisposable
     protected TileMap Tilemap { get; private set; }
 
     private readonly Dictionary<string, int> _names = [];
+
     private readonly Dictionary<string, GameObject> _gameObjects = [];
     private readonly List<GameObject> _toInstantiate = [];
     private readonly List<GameObject> _toDestroy = [];
+
+    private readonly Dictionary<string, BaseUI> _uiElements = [];
+    private readonly List<(string, BaseUI)> _uiInstantiate = [];
+    private readonly List<BaseUI> _uiDestroy = [];
 
     private readonly Dictionary<string, ICollider> _colliders = [];
     private readonly List<TileCollider> _tileColliders = [];
@@ -384,6 +390,29 @@ public abstract class Scene : IDisposable
         gameObject.SetParent(parent);
     }
 
+    // setup an ui element with canvas as parent
+    //
+    // param: name - name of ui element
+    // param: element - the ui element
+    public void Setup(string name, BaseUI element)
+    {
+        name = RegisterName(name);
+        Canvas.AddChild(element);
+        _uiElements.Add(name, element);
+    }
+
+    // setup an ui element with another ui element as parent
+    //
+    // param: name - name of ui element
+    // param: element - the ui element
+    // param: parent - parent element
+    public void Setup(string name, BaseUI element, BaseUI parent)
+    {
+        name = RegisterName(name);
+        parent.AddChild(element);
+        _uiElements.Add(name, element);
+    }
+
     // instantiate a gameobject using a list of components
     //
     // param: name - name of game object
@@ -451,6 +480,29 @@ public abstract class Scene : IDisposable
         return gameObject;
     }
 
+    // instantiate an ui element with canvas parent
+    //
+    // param: name - name of ui element
+    // param: element - the ui element
+    public void Instantiate(string name, BaseUI element)
+    {
+        name = RegisterName(name);
+        Canvas.AddChild(element);
+        _uiInstantiate.Add((name, element));
+    }
+
+    // instantiate an ui element with another ui element as parent
+    //
+    // param: name - name of ui element
+    // param: element - the ui element
+    // param: parent - parent element
+    public void Instantiate(string name, BaseUI element, BaseUI parent)
+    {
+        name = RegisterName(name);
+        parent.AddChild(element);
+        _uiInstantiate.Add((name, element));
+    }
+
     // destroy a game object
     //
     // param: gameObject - game object to destroy
@@ -461,6 +513,19 @@ public abstract class Scene : IDisposable
         for (int i = gameObject.ChildCount - 1; i >= 0; i--)
         {
             Destroy(gameObject.GetChild(i));
+        }
+    }
+
+    // destroy an ui element
+    //
+    // param: element - UI element to destroy
+    public void Destroy(BaseUI element)
+    {
+        _uiDestroy.Add(element);
+
+        for (int i = element.ChildCount - 1; i >= 0; i--)
+        {
+            Destroy(element.GetChild(i));
         }
     }
 

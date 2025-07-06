@@ -83,6 +83,12 @@ public abstract class BaseUI : UIElement
     // param: parent - parent ui
     public void SetParent(UIElement parent)
     {
+        if (parent == null)
+        {
+            this.Parent?.RemoveChild(this);
+            return;
+        }
+
         parent.AddChild(this);
     }
 
