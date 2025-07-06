@@ -72,35 +72,34 @@ public class DebugMode : Core
         }
     }
 
-    //// print the scene UI heriarchy
-    //public static void PrintUI()
-    //{
-    //    Canvas canvas = SceneTools.GetCanvas();
-    //    List<BaseUI> elements = canvas.GetChildren();
-    //    elements.Reverse();
+    // print the scene UI heriarchy
+    public static void PrintUI()
+    {
+        Canvas canvas = SceneTools.GetCanvas();
+        List<BaseUI> elements = canvas.GetChildren();
 
-    //    // iterate through every elements. If element's parent is canvas, then print the
-    //    // elements and its heirarchy
-    //    foreach (BaseUI element in elements)
-    //    {
-    //        if (element.Parent == canvas)
-    //        {
-    //            Stack<(string, BaseUI)> printStack = [];
-    //            printStack.Push(("- ", gameObject));
+        // iterate through every elements. If element's parent is canvas, then print the
+        // elements and its heirarchy
+        foreach (BaseUI element in elements)
+        {
+            if (element.Parent == canvas)
+            {
+                Stack<(string, BaseUI)> printStack = [];
+                printStack.Push(("- ", element));
 
-    //            while (printStack.Count > 0)
-    //            {
-    //                (string, BaseUI) currentPrint = printStack.Pop();
-    //                Debug.WriteLine(currentPrint.Item1 + currentPrint.Item2.Name);
+                while (printStack.Count > 0)
+                {
+                    (string, BaseUI) currentPrint = printStack.Pop();
+                    Debug.WriteLine(currentPrint.Item1 + currentPrint.Item2.Name);
 
-    //                for (int i = currentPrint.Item2.ChildCount - 1; i >= 0; i--)
-    //                {
-    //                    printStack.Push(("  " + currentPrint.Item1, currentPrint.Item2.GetChild(i)));
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+                    for (int i = currentPrint.Item2.ChildCount - 1; i >= 0; i--)
+                    {
+                        printStack.Push(("  " + currentPrint.Item1, currentPrint.Item2.GetChild(i)));
+                    }
+                }
+            }
+        }
+    }
 
     // draw origin point for a gameobject
     //

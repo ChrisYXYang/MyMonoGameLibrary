@@ -31,7 +31,7 @@ public abstract class Scene : IDisposable
     private readonly List<GameObject> _toDestroy = [];
 
     private readonly Dictionary<string, BaseUI> _uiElements = [];
-    private readonly List<(string, BaseUI)> _uiInstantiate = [];
+    private readonly List<BaseUI> _uiInstantiate = [];
     private readonly List<BaseUI> _uiDestroy = [];
 
     private readonly Dictionary<string, ICollider> _colliders = [];
@@ -92,7 +92,10 @@ public abstract class Scene : IDisposable
             gameObject.StartBehaviors();
         }
 
-        Canvas.Start();
+        foreach (BaseUI ui in _uiElements.Values)
+        {
+            ui.Behavior?.Start();
+        }
 
         // testing
         List<GameObject> gameObjects = [.. _gameObjects.Values];
@@ -116,12 +119,9 @@ public abstract class Scene : IDisposable
     public virtual void Update(GameTime gameTime) 
     {
         // setup instantiated objects from last frame
-        int instantiateCount = 0;
         foreach (GameObject gameObject in _toInstantiate)
         {
             // register game object
-            Debug.WriteLine("Instiantiate: " +  gameObject.Name);
-            instantiateCount++;
             _gameObjects.Add(gameObject.Name, gameObject);
 
             // register collider
@@ -132,16 +132,11 @@ public abstract class Scene : IDisposable
             // start game object
             gameObject.StartBehaviors();
         }
-        if (instantiateCount > 0)
-            Debug.WriteLine("Instiantiated: " + instantiateCount);
         _toInstantiate.Clear();
 
         // destroy instantiated objects from last frame
-        int destroyCount = 0;
         foreach (GameObject gameObject in _toDestroy)
         {
-            Debug.WriteLine("Destroy: " + gameObject.Name);
-
             // remove from scene/unregister
             gameObject.SetParent(null);
             _gameObjects.Remove(gameObject.Name);
@@ -156,12 +151,37 @@ public abstract class Scene : IDisposable
                     collider.NotColliding(gameObject.Collider);
                 }
             }
+        }
+        _toDestroy.Clear();
+
+        // setup instantiated ui elements from last frame
+        int instantiateCount = 0;
+        foreach (BaseUI element in _uiInstantiate)
+        {
+            Debug.WriteLine("Instantiate: " + element.Name);
+
+            _uiElements.Add(element.Name, element);
+            element.Start();
+        }
+        if (instantiateCount > 0)
+            Debug.WriteLine("Instiantiated: " + instantiateCount);
+        _uiInstantiate.Clear();
+
+        // destroy instantiated ui element from last frame
+        int destroyCount = 0;
+        foreach (BaseUI element in _uiDestroy)
+        {
+            Debug.WriteLine("Destroy: " + element.Name);
+
+            // remove from scene/unregister
+            element.SetParent(null);
+            _uiElements.Remove(element.Name);
 
             destroyCount++;
         }
         if (destroyCount > 0)
             Debug.WriteLine("Destroyed: " + destroyCount);
-        _toDestroy.Clear();
+        _uiDestroy.Clear();
 
         // store previous position of rigidbody
         foreach (GameObject gameObject in _gameObjects.Values)
@@ -244,7 +264,10 @@ public abstract class Scene : IDisposable
         }
 
         // update UI
-        Canvas.Update(gameTime);
+        foreach (BaseUI ui in _uiElements.Values)
+        {
+            ui.Behavior?.Update(gameTime);
+        }
 
         // update aniamtions
         foreach (GameObject gameObject in _gameObjects.Values)
@@ -324,6 +347,33 @@ public abstract class Scene : IDisposable
         return [.. _gameObjects.Values];
     }
 
+    // get ui element
+    //
+    // param: name - name of ui element
+    // return: requested ui element
+    public BaseUI GetElement(string name)
+    {
+        return _uiElements[name];
+    }
+
+    // get text ui element
+    //
+    // param: name - name of text ui element
+    // return: requested text ui element
+    public TextUI GetText(string name)
+    {
+        return (TextUI)_uiElements[name];
+    }
+
+    // get sprite ui element
+    //
+    // param: name - name of sprite ui element
+    // return: requested sprite ui element
+    public SpriteUI GetSprite(string name)
+    {
+        return (SpriteUI)_uiElements[name];
+    }
+
     // setup a gameobject using a list of components and register it
     //
     // param: name - name of game object
@@ -397,6 +447,7 @@ public abstract class Scene : IDisposable
     public void Setup(string name, BaseUI element)
     {
         name = RegisterName(name);
+        element.Name = name;
         Canvas.AddChild(element);
         _uiElements.Add(name, element);
     }
@@ -409,6 +460,7 @@ public abstract class Scene : IDisposable
     public void Setup(string name, BaseUI element, BaseUI parent)
     {
         name = RegisterName(name);
+        element.Name = name;
         parent.AddChild(element);
         _uiElements.Add(name, element);
     }
@@ -487,8 +539,9 @@ public abstract class Scene : IDisposable
     public void Instantiate(string name, BaseUI element)
     {
         name = RegisterName(name);
+        element.Name = name;
         Canvas.AddChild(element);
-        _uiInstantiate.Add((name, element));
+        _uiInstantiate.Add(element);
     }
 
     // instantiate an ui element with another ui element as parent
@@ -499,8 +552,9 @@ public abstract class Scene : IDisposable
     public void Instantiate(string name, BaseUI element, BaseUI parent)
     {
         name = RegisterName(name);
+        element.Name = name;
         parent.AddChild(element);
-        _uiInstantiate.Add((name, element));
+        _uiInstantiate.Add(element);
     }
 
     // destroy a game object

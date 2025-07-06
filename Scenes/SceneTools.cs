@@ -40,6 +40,33 @@ public static class SceneTools
         return _activeScene.GetGameObjects();
     }
 
+    // get ui element
+    //
+    // param: name - name of ui element
+    // return: requested ui element
+    public static BaseUI GetElement(string name)
+    {
+        return _activeScene.GetElement(name);
+    }
+
+    // get text ui element
+    //
+    // param: name - name of text ui element
+    // return: requested text ui element
+    public static TextUI GetText(string name)
+    {
+        return _activeScene.GetText(name);
+    }
+
+    // get sprite ui element
+    //
+    // param: name - name of sprite ui element
+    // return: requested sprite ui element
+    public static SpriteUI GetSprite(string name)
+    {
+        return _activeScene.GetSprite(name);
+    }
+
     // get the canvas
     //
     // return: the canvas of the scene
@@ -100,11 +127,38 @@ public static class SceneTools
         return _activeScene.Instantiate(prefab, position, rotation, parent);
     }
 
+    // instantiate an ui element with canvas parent
+    //
+    // param: name - name of ui element
+    // param: element - the ui element
+    public static void Instantiate(string name, BaseUI element)
+    {
+        _activeScene.Instantiate(name, element);
+    }
+
+    // instantiate an ui element with another ui element as parent
+    //
+    // param: name - name of ui element
+    // param: element - the ui element
+    // param: parent - parent element
+    public static void Instantiate(string name, BaseUI element, BaseUI parent)
+    {
+        _activeScene.Instantiate(name, element, parent);
+    }
+
     // destroy a game object
     //
     // param: gameObject - game object to destroy
     public static void Destroy(GameObject gameObject)
     {
         _activeScene.Destroy(gameObject);
+    }
+
+    // destroy an ui element
+    //
+    // param: element - UI element to destroy
+    public static void Destroy(BaseUI element)
+    {
+        _activeScene.Destroy(element);
     }
 }

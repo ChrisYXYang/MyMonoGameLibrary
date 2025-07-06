@@ -10,6 +10,9 @@ namespace MyMonoGameLibrary.UI;
 // this class represents a base UI element (sprite, text) in the game.
 public abstract class BaseUI : UIElement
 {
+    // name of UI (do not change)
+    public string Name { get; set; }
+    
     // behavior for the UI
     public UIBehavior Behavior { get; set; }
     
