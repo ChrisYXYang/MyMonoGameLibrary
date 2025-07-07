@@ -183,6 +183,17 @@ public class Rigidbody : CoreComponent
 
         // move transform to new position
         Transform.position = newPos;
+
+        foreach (ICollider other in _colliders.Values)
+        {
+            if (other is TileCollider tile)
+            {
+                if (Collisions.Intersect(Collider, tile))
+                {
+                    Transform.position = new Vector2(newPos.X, _previousPosition.Y);
+                }
+            }
+        }
     }
 
     // add a tile collider to collisions

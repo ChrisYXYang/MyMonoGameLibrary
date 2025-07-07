@@ -86,6 +86,8 @@ public abstract class Scene : IDisposable
     /// </summary>
     public virtual void LoadContent()
     {
+        Camera.position = Vector2.Zero;
+        
         // start behavior scripts
         foreach (GameObject gameObject in _gameObjects.Values)
         {
