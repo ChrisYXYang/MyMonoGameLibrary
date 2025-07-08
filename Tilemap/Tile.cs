@@ -25,7 +25,8 @@ public class Tile
     // param: layerDepth - layer
     // param: collider - whether or not collider
     // param: solid - whether or not solid collider
-    public Tile(string name, Sprite sprite, Vector2 position, int size, float layerDepth, bool collider, bool solid)
+    // param: layer - layer name
+    public Tile(string name, Sprite sprite, Vector2 position, int size, float layerDepth, bool collider, bool solid, string layer)
     {
         Name = name;
         Sprite = sprite;
@@ -34,7 +35,7 @@ public class Tile
         LayerDepth = layerDepth;
 
         if (collider)
-            Collider = new TileCollider(this, solid);
+            Collider = new TileCollider(this, solid, layer);
     }
 
     // return collider

@@ -60,6 +60,7 @@ public class TileMap
                     {
                         // get layer name
                         string layerName = layer.Attribute("name").Value;
+                        string layerLayer = layer.Attribute("layer").Value;
                         bool collide = layerName.Contains("col");
                         bool solid = layerName.Contains("sol");
 
@@ -90,7 +91,8 @@ public class TileMap
                                                             tileSize,
                                                             0 + layerDepth * 0.01f,
                                                             collide,
-                                                            solid
+                                                            solid,
+                                                            layerLayer
                                                          );
                                 }
                             }

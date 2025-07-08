@@ -23,15 +23,13 @@ public class TileCollider : IAABBCollider
     // constructor 
     // 
     // param: tile - the tile that holds the collider
-    public TileCollider(Tile parent, bool solid)
+    // param: solid - solid or not
+    // param: layer - the layer name
+    public TileCollider(Tile parent, bool solid, string layer)
     {
         Parent = parent;
         Solid = solid;
-
-        if (Solid)
-        {
-            Layer = "wall";
-        }
+        Layer = layer;
     }
 
     public void Colliding(ICollider other)
