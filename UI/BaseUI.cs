@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MyMonoGameLibrary.Scenes;
 
 namespace MyMonoGameLibrary.UI;
 

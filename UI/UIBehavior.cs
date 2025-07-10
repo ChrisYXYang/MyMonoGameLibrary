@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using MyMonoGameLibrary.UI;
 
-namespace MyMonoGameLibrary.Scenes;
+namespace MyMonoGameLibrary.UI;
 
 // base class for UI element behavior
 public abstract class UIBehavior
@@ -27,12 +26,5 @@ public abstract class UIBehavior
 
     public virtual void Update(GameTime gameTime)
     {
-        if (Parent is SpriteUI sprite)
-        {
-            if (sprite.Animator != null)
-            {
-                sprite.Animator.Update(gameTime);
-            }
-        }
     }
 }

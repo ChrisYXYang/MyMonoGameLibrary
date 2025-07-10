@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MyMonoGameLibrary.UI;
@@ -56,7 +57,7 @@ public static class UICamera
                     text.Text,
                     text.position,
                     text.Color,
-                    text.Rotation,
+                    MathHelper.ToRadians(text.Rotation),
                     text.Origin,
                     text.Scale,
                     (SpriteEffects)spriteEffect,
@@ -71,7 +72,7 @@ public static class UICamera
                     sprite.position,
                     sprite.Sprite.SourceRectangle,
                     sprite.Color,
-                    sprite.Rotation,
+                    MathHelper.ToRadians(sprite.Rotation),
                     sprite.Origin,
                     canvasScale * sprite.Scale,
                     (SpriteEffects)spriteEffect,

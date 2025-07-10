@@ -88,6 +88,7 @@ public class TileMap
                                                             Name + "_" + layerName + " tile r" + i + "col " + j,
                                                             tileSet.GetTile(int.Parse(line_tiles[j])),
                                                             new Vector2(j + 0.5f - (float)Columns / 2, i - (float)Rows / 2 + 0.5f),
+                                                            new Vector2(i,j),
                                                             tileSize,
                                                             0 + layerDepth * 0.01f,
                                                             collide,

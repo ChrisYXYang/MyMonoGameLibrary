@@ -22,7 +22,7 @@ public abstract class Scene : IDisposable
     public Library SceneLibrary { get; private set; }
 
     public Canvas Canvas { get; private set; } = new Canvas();
-    protected TileMap Tilemap { get; private set; }
+    public TileMap Tilemap { get; private set; }
 
     private readonly Dictionary<string, int> _names = [];
 
@@ -269,6 +269,14 @@ public abstract class Scene : IDisposable
         foreach (BaseUI ui in _uiElements.Values)
         {
             ui.Behavior?.Update(gameTime);
+
+            if (ui is SpriteUI sprite)
+            {
+                if (sprite.Animator != null)
+                {
+                    sprite.Animator.Update(gameTime);
+                }
+            }
         }
 
         // update aniamtions

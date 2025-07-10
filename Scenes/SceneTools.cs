@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Graphics;
+using MyMonoGameLibrary.Tilemap;
 using MyMonoGameLibrary.UI;
 
 namespace MyMonoGameLibrary.Scenes;
@@ -73,6 +74,14 @@ public static class SceneTools
     public static Canvas GetCanvas()
     {
         return _activeScene.Canvas;
+    }
+
+    // get the tilemap
+    //
+    // return: the tilemap of scene
+    public static TileMap GetTilemap()
+    {
+        return _activeScene.Tilemap;
     }
 
     // instantiate a gameobject using a list of components
