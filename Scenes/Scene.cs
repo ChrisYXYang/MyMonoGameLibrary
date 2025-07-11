@@ -417,6 +417,12 @@ public abstract class Scene : IDisposable
         return gameObject;
     }
 
+    // setup a gameobject using a list of components and register it
+    //
+    // param: name - name of game object
+    // param: components - components of game object
+    // param: parent - parent of game object
+    // return: game object that was created
     public GameObject Setup(string name, Component[] components, GameObject parent)
     {
         GameObject gameObject = Setup(name, components);
@@ -427,19 +433,22 @@ public abstract class Scene : IDisposable
     // setup a gameobject using prefab
     //
     // param: prefab - prefab
-    public void Setup((string, Component[]) prefab)
+    // return: game object that was created
+    public GameObject Setup((string, Component[]) prefab)
     {
-        Setup(prefab.Item1, prefab.Item2);
+        return Setup(prefab.Item1, prefab.Item2);
     }
 
     // setup a gameobject using prefab
     //
     // param: prefab - prefab
     // param: position - position
-    public void Setup((string, Component[]) prefab, Vector2 position)
+    // return: game object that was created
+    public GameObject Setup((string, Component[]) prefab, Vector2 position)
     {
         GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
         gameObject.Transform.position = position;
+        return gameObject;
     }
 
     // setup a gameobject using prefab
@@ -447,11 +456,13 @@ public abstract class Scene : IDisposable
     // param: prefab - prefab
     // param: position - position
     // param: rotation - rotation
-    public void Setup((string, Component[]) prefab, Vector2 position, float rotation)
+    // return: game object that was created
+    public GameObject Setup((string, Component[]) prefab, Vector2 position, float rotation)
     {
         GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
         gameObject.Transform.position = position;
         gameObject.Transform.Rotation = rotation;
+        return gameObject;
     }
 
     // setup a gameobject using prefab
@@ -460,22 +471,26 @@ public abstract class Scene : IDisposable
     // param: position - position
     // param: rotation - rotation
     // param: parent - parent game object
-    public void Setup((string, Component[]) prefab, Vector2 position, float rotation, GameObject parent)
+    // return: game object that was created
+    public GameObject Setup((string, Component[]) prefab, Vector2 position, float rotation, GameObject parent)
     {
         GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
         gameObject.Transform.position = position;
         gameObject.Transform.Rotation = rotation;
         gameObject.SetParent(parent);
+        return gameObject;
     }
 
     // setup a gameobject using prefab
     //
     // param: prefab - prefab
     // param: parent - parent game object
-    public void Setup((string, Component[]) prefab, GameObject parent)
+    // return: game object that was created
+    public GameObject Setup((string, Component[]) prefab, GameObject parent)
     {
         GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
         gameObject.SetParent(parent);
+        return gameObject;
     }
 
     // instantiate a gameobject using a list of components
@@ -556,6 +571,16 @@ public abstract class Scene : IDisposable
         GameObject gameObject = Instantiate(prefab.Item1, prefab.Item2);
         gameObject.SetParent(parent);
         return gameObject;
+    }
+
+    // change name of prefab
+    //
+    // param: name - name to change to
+    // param: prefab - prefab to change name
+    // return: new prefab
+    public (string, Component[]) Rename(string name, (string, Component[]) prefab)
+    {
+        return (name, prefab.Item2);
     }
 
     // destroy a game object

@@ -19,11 +19,15 @@ public class BoxCollider : ColliderComponent, IAABBCollider
     public float Top => Center.Y - (Height * 0.5f);
     public float Bottom => Center.Y + (Height * 0.5f);
 
+    // empty constructor
+    public BoxCollider()
+    {
+    }
+
     // constructor
     //
     // param: width - width of collider
     // param: height - height of collider
-    // param: solid - solid or not
     public BoxCollider(float width, float height)
     {
         // set the properties
@@ -38,7 +42,6 @@ public class BoxCollider : ColliderComponent, IAABBCollider
     // param: height - height of collider
     // param: xOffset - x offset of collider
     // param: yOffset - y offset of collider
-    // param: solid - solid or not
     public BoxCollider(float width, float height, float xOffset, float yOffset)
     {
         // set the properties
@@ -49,9 +52,15 @@ public class BoxCollider : ColliderComponent, IAABBCollider
 
     // constructor
     //
+    // param: layer - the layer
+    public BoxCollider(string layer) : base(layer)
+    {
+    }
+
+    // constructor
+    //
     // param: width - width of collider
     // param: height - height of collider
-    // param: solid - solid or not
     // param: layer - the layer
     public BoxCollider(float width, float height, string layer) : base(layer)
     {
@@ -67,7 +76,6 @@ public class BoxCollider : ColliderComponent, IAABBCollider
     // param: height - height of collider
     // param: xOffset - x offset of collider
     // param: yOffset - y offset of collider
-    // param: solid - solid or not
     // param: layer - the layer
     public BoxCollider(float width, float height, float xOffset, float yOffset, string layer) : base(layer)
     {
