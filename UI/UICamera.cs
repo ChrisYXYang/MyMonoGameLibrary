@@ -30,11 +30,11 @@ public static class UICamera
                 (
                     text.Font,
                     text.Text,
-                    ui.Transform.position,
+                    ui.Transform.TruePosition,
                     text.Color,
-                    MathHelper.ToRadians(ui.Transform.Rotation),
+                    MathHelper.ToRadians(ui.Transform.TrueRotation),
                     text.Origin,
-                    ui.Transform.Scale,
+                    ui.Transform.TrueScale,
                     (SpriteEffects)spriteEffect,
                     0f
                 );
@@ -44,12 +44,12 @@ public static class UICamera
             Core.SpriteBatch.Draw
                 (
                     sprite.Sprite.SpriteSheet,
-                    ui.Transform.position,
+                    ui.Transform.TruePosition,
                     sprite.Sprite.SourceRectangle,
                     sprite.Color,
-                    MathHelper.ToRadians(ui.Transform.Rotation),
+                    MathHelper.ToRadians(ui.Transform.TrueRotation),
                     sprite.Origin,
-                    Scale * ui.Transform.Scale,
+                    Scale * ui.Transform.TrueScale,
                     (SpriteEffects)spriteEffect,
                     0f
                 );

@@ -143,8 +143,16 @@ public abstract class Scene : IDisposable
             // remove from scene/unregister
             gameObject.SetParent(null);
             _gameObjects.Remove(gameObject.Name);
-            _uiDraw.Remove(gameObject.Name);
-            _gameDraw.Remove(gameObject.Name);
+
+            if (gameObject.Renderer is TextRenderer || gameObject.Renderer is SpriteRenderer)
+            {
+                _gameDraw.Remove(gameObject.Name);
+
+            }
+            else if (gameObject.Renderer is UIText || gameObject.Renderer is UISprite)
+            {
+                _uiDraw.Remove(gameObject.Name);
+            }
 
             // remove collider
             if (gameObject.Collider != null)
@@ -241,7 +249,6 @@ public abstract class Scene : IDisposable
         {
             gameObject.LateUpdateBehaviors(gameTime);
         }
-
 
         // update aniamtions
         foreach (GameObject gameObject in _gameObjects.Values)
@@ -421,6 +428,16 @@ public abstract class Scene : IDisposable
         GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
         gameObject.Transform.position = position;
         gameObject.Transform.Rotation = rotation;
+        gameObject.SetParent(parent);
+    }
+
+    // setup a gameobject using prefab
+    //
+    // param: prefab - prefab
+    // param: parent - parent game object
+    public void Setup((string, Component[]) prefab, GameObject parent)
+    {
+        GameObject gameObject = Setup(prefab.Item1, prefab.Item2);
         gameObject.SetParent(parent);
     }
 

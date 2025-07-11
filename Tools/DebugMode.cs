@@ -85,7 +85,7 @@ public class DebugMode : Core
         Camera.Draw
             (
                 _originPoint,
-                transform.position,
+                transform.TruePosition,
                 Color.White,
                 0f,
                 0.05f,

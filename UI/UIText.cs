@@ -121,9 +121,9 @@ public class UIText : RendererComponent
         
         if (parent.Collider is UIBoxCollider box)
         {
-            box.Width = _textSize.X * Transform.Scale.X;
-            box.Height = _textSize.Y * Transform.Scale.X;
-            box.Offset = new Vector2(offset.X * Transform.Scale.X, offset.Y * Transform.Scale.Y);
+            box.Width = _textSize.X * Transform.TrueScale.X;
+            box.Height = _textSize.Y * Transform.TrueScale.X;
+            box.Offset = new Vector2(offset.X * Transform.TrueScale.X, offset.Y * Transform.TrueScale.Y);
         }
     }
 }

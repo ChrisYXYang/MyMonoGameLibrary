@@ -16,7 +16,7 @@ public abstract class ColliderComponent : CoreComponent, ICollider
     protected Dictionary<string, ICollider> Colliders { get; private set; } = [];
     public Vector2 Offset { get; set; }
     // center of collider
-    public Vector2 Center => Transform.position + Offset;
+    public Vector2 Center => Transform.TruePosition + Offset;
 
     // empty constructor
     public ColliderComponent() { }
