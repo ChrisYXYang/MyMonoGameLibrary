@@ -107,7 +107,7 @@ public static class Collisions
     }
 
     // check if mouse is in ui collider
-    public static bool MouseInUICollider(UICollider collider)
+    public static bool MouseInUICollider(ICollider collider)
     {
         return PointInCollider(collider, InputManager.Mouse.Position);
     }

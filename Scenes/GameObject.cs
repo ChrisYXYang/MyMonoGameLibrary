@@ -16,9 +16,9 @@ public class GameObject
     public readonly string Name;
     public GameObject Parent { get; private set; }
     public Transform Transform { get; private set; }
-    public ColliderComponent Collider { get; private set; }
+    public ICollider Collider { get; private set; }
     public RendererComponent Renderer { get; private set; }
-    public Animator Animator { get; private set; }
+    public IAnimator Animator { get; private set; }
     public Rigidbody Rigidbody { get; private set; }
     public int ChildCount { get => _children.Count; }
 
@@ -37,6 +37,7 @@ public class GameObject
         // store every component and check for only one collider and one renderer
         bool hasRenderer = false;
         bool hasCollider = false;
+        bool hasAnimator = false;
         foreach (Component component in components)
         {
             string compName = component.GetType().Name;
@@ -45,7 +46,7 @@ public class GameObject
 
             if (component is BehaviorComponent behavior)
                 _behaviors.Add(behavior);
-            else if (component is ColliderComponent collider)
+            else if (component is ICollider collider)
             {
                 if (!hasCollider)
                 {
@@ -67,9 +68,15 @@ public class GameObject
             } else if (component is Transform transform)
             {
                 Transform = transform;
-            } else if (component is Animator animator)
+            } else if (component is IAnimator animator)
             {
-                Animator = animator;
+                if (!hasAnimator)
+                {
+                    hasAnimator = true;
+                    Animator = animator;
+                }
+                else
+                    throw new Exception("multiple animators!");
             } else if (component is Rigidbody rb)
             {
                 Rigidbody = rb;

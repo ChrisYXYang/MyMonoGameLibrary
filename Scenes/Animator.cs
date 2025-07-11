@@ -9,7 +9,7 @@ using MyMonoGameLibrary.Graphics;
 namespace MyMonoGameLibrary.Scenes;
 
 // responsible for animating game object
-public class Animator : CoreComponent
+public class Animator : CoreComponent, IAnimator
 {
     // variables and properties
     private SpriteRenderer _spriteManager;
@@ -40,6 +40,16 @@ public class Animator : CoreComponent
         _animation = animation;
     }
 
+    // initialize
+    //
+    // param: parent - parent game object
+    public override void Initialize(GameObject parent)
+    {
+        base.Initialize(parent);
+        _spriteManager = GetComponent<SpriteRenderer>();
+        _spriteManager.Sprite = _animation.Frames[0];
+    }
+
     // updates the animation
     //
     // param: gameTime - game timing values
@@ -67,15 +77,5 @@ public class Animator : CoreComponent
         {
             _spriteManager.Sprite = _spriteManager.DefaultSprite;
         }
-    }
-
-    // initialize
-    //
-    // param: parent - parent game object
-    public override void Initialize(GameObject parent)
-    {
-        base.Initialize(parent);
-        _spriteManager = GetComponent<SpriteRenderer>();
-        _spriteManager.Sprite = _animation.Frames[0];
     }
 }

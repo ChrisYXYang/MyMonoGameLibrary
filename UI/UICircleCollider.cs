@@ -9,7 +9,7 @@ using MyMonoGameLibrary.Scenes;
 namespace MyMonoGameLibrary.UI;
 
 // circle collider for UI elements
-public class UICircleCollider : UICollider, ICircleCollider
+public class UICircleCollider : ColliderComponent, ICircleCollider
 {
     // radius of collider
     public float Radius { get; set; }
@@ -18,7 +18,7 @@ public class UICircleCollider : UICollider, ICircleCollider
     // constructor
     //
     // param: diameter - diameter of collider
-    public UICircleCollider(BaseUI parent, float diameter) : base(parent)
+    public UICircleCollider(float diameter)
     {
         Diameter = diameter;
         Radius = Diameter / 2;
@@ -30,7 +30,7 @@ public class UICircleCollider : UICollider, ICircleCollider
     // param: diameter - diameter of collider
     // param: xOffset - x offset
     // param: yOffset - y offset
-    public UICircleCollider(BaseUI parent, float diameter, float xOffset, float yOffset) : base(parent)
+    public UICircleCollider(float diameter, float xOffset, float yOffset)
     {
         Diameter = diameter;
         Radius = Diameter / 2;

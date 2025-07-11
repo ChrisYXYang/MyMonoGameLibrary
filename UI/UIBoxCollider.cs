@@ -9,22 +9,24 @@ using MyMonoGameLibrary.Scenes;
 namespace MyMonoGameLibrary.UI;
 
 // box collider for UI elements
-public class UIBoxCollider : UICollider, IAABBCollider
+public class UIBoxCollider : ColliderComponent, IAABBCollider
 {
     // variables and properties
-    public float Width { get; set; }
-    public float Height { get; set; }
+    public float Width { get; set; } = 0;
+    public float Height { get; set; } = 0;
     public float Left => Center.X - (Width * 0.5f);
     public float Right => Center.X + (Width * 0.5f);
     public float Top => Center.Y - (Height * 0.5f);
     public float Bottom => Center.Y + (Height * 0.5f);
+
+    public UIBoxCollider() {}
 
     // constructor
     //
     // param: width - width of collider
     // param: height - height of collider
     // param: solid - solid or not
-    public UIBoxCollider(BaseUI parent, float width, float height) : base(parent)
+    public UIBoxCollider(float width, float height)
     {
         // set the properties
         Width = width;
@@ -39,7 +41,7 @@ public class UIBoxCollider : UICollider, IAABBCollider
     // param: xOffset - x offset of collider
     // param: yOffset - y offset of collider
     // param: solid - solid or not
-    public UIBoxCollider(BaseUI parent, float width, float height, float xOffset, float yOffset) : base(parent)
+    public UIBoxCollider(float width, float height, float xOffset, float yOffset)
     {
         // set the properties
         Width = width;

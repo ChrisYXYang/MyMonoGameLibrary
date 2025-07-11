@@ -33,6 +33,22 @@ public static class SceneTools
         return _activeScene.GetGameObject(name);
     }
 
+    // get all game draw objects
+    //
+    // return: list of all game draw objects
+    public static List<GameObject> GetGameDrawObjects()
+    {
+        return _activeScene.GetGameDrawObjects();
+    }
+
+    // get all ui draw objects
+    //
+    // return: list of all ui draw objects
+    public static List<GameObject> GetUIDrawObjects()
+    {
+        return _activeScene.GetUIDrawObjects();
+    }
+
     // get all game objects
     //
     // return: list of all game objects in active scene
@@ -41,57 +57,12 @@ public static class SceneTools
         return _activeScene.GetGameObjects();
     }
 
-    // get ui element
-    //
-    // param: name - name of ui element
-    // return: requested ui element
-    public static BaseUI GetElement(string name)
-    {
-        return _activeScene.GetElement(name);
-    }
-
-    // get text ui element
-    //
-    // param: name - name of text ui element
-    // return: requested text ui element
-    public static TextUI GetText(string name)
-    {
-        return _activeScene.GetText(name);
-    }
-
-    // get sprite ui element
-    //
-    // param: name - name of sprite ui element
-    // return: requested sprite ui element
-    public static SpriteUI GetSprite(string name)
-    {
-        return _activeScene.GetSprite(name);
-    }
-
-    // get the canvas
-    //
-    // return: the canvas of the scene
-    public static Canvas GetCanvas()
-    {
-        return _activeScene.Canvas;
-    }
-
     // get the tilemap
     //
     // return: the tilemap of scene
     public static TileMap GetTilemap()
     {
         return _activeScene.Tilemap;
-    }
-
-    // instantiate a gameobject using a list of components
-    //
-    // param: name - name of game object
-    // param: components - components of game object
-    // return: game object that was created
-    public static GameObject Instantiate(string name, Component[] components)
-    {
-        return _activeScene.Instantiate(name, components);
     }
 
     // instantiate a gameobject using prefab
@@ -136,23 +107,14 @@ public static class SceneTools
         return _activeScene.Instantiate(prefab, position, rotation, parent);
     }
 
-    // instantiate an ui element with canvas parent
+    // instantiate a gameobject using prefab
     //
-    // param: name - name of ui element
-    // param: element - the ui element
-    public static void Instantiate(string name, BaseUI element)
+    // param: prefab - prefab
+    // param: parent - parent game object
+    // return: game object that was created
+    public static GameObject Instantiate((string, Component[]) prefab, GameObject parent)
     {
-        _activeScene.Instantiate(name, element);
-    }
-
-    // instantiate an ui element with another ui element as parent
-    //
-    // param: name - name of ui element
-    // param: element - the ui element
-    // param: parent - parent element
-    public static void Instantiate(string name, BaseUI element, BaseUI parent)
-    {
-        _activeScene.Instantiate(name, element, parent);
+        return _activeScene.Instantiate(prefab, parent);
     }
 
     // destroy a game object
@@ -161,13 +123,5 @@ public static class SceneTools
     public static void Destroy(GameObject gameObject)
     {
         _activeScene.Destroy(gameObject);
-    }
-
-    // destroy an ui element
-    //
-    // param: element - UI element to destroy
-    public static void Destroy(BaseUI element)
-    {
-        _activeScene.Destroy(element);
     }
 }

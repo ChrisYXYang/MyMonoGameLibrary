@@ -72,35 +72,6 @@ public class DebugMode : Core
         }
     }
 
-    // print the scene UI heriarchy
-    public static void PrintUI()
-    {
-        Canvas canvas = SceneTools.GetCanvas();
-        List<BaseUI> elements = canvas.GetChildren();
-
-        // iterate through every elements. If element's parent is canvas, then print the
-        // elements and its heirarchy
-        foreach (BaseUI element in elements)
-        {
-            if (element.Parent == canvas)
-            {
-                Stack<(string, BaseUI)> printStack = [];
-                printStack.Push(("- ", element));
-
-                while (printStack.Count > 0)
-                {
-                    (string, BaseUI) currentPrint = printStack.Pop();
-                    Debug.WriteLine(currentPrint.Item1 + currentPrint.Item2.Name);
-
-                    for (int i = currentPrint.Item2.ChildCount - 1; i >= 0; i--)
-                    {
-                        printStack.Push(("  " + currentPrint.Item1, currentPrint.Item2.GetChild(i)));
-                    }
-                }
-            }
-        }
-    }
-
     // draw origin point for a gameobject
     //
     // param: gameObject - game object to draw origin point for
@@ -126,7 +97,7 @@ public class DebugMode : Core
     // draw collider for game object
     //
     // param: gameObject - game object to draw
-    public static void DrawGameObjectCollider(GameObject gameObject)
+    public static void DrawCollider(GameObject gameObject)
     {
         ICollider collider = gameObject.Collider;
 
@@ -136,49 +107,10 @@ public class DebugMode : Core
                 DrawBoxCollider(box);
             else if (collider is CircleCollider circle)
                 DrawCircleCollider(circle);
-        }
-    }
-
-    // draw collider for ui element
-    //
-    // param: ui - ui to draw
-    public static void DrawUICollider(BaseUI ui)
-    {
-        UICollider collider = ui.Collider;
-
-        if (collider != null)
-        {
-            if (collider is UIBoxCollider box)
-                DrawUIBoxCollider(box);
-            else if (collider is UICircleCollider circle)
-                DrawUICircleCollider(circle);
-        }
-    }
-
-    // draw colliders for canvas
-    //
-    // param: canvas - canvas to draw colliders for
-    public static void DrawCanvasColliders(Canvas canvas)
-    {
-        Queue<BaseUI> drawQueue = [];
-
-        // add canvas children to draw queue
-        for (int i = 0; i < canvas.ChildCount; i++)
-        {
-            drawQueue.Enqueue(canvas.GetChild(i));
-        }
-
-        // draw element and add its children to draw queue until all drawn
-        while (drawQueue.Count > 0)
-        {
-            BaseUI current = drawQueue.Dequeue();
-
-            for (int i = 0; i < current.ChildCount; i++)
-            {
-                drawQueue.Enqueue(current.GetChild(i));
-            }
-
-            DrawUICollider(current);
+            else if (collider is UIBoxCollider UIbox)
+                DrawUIBoxCollider(UIbox);
+            else if (collider is UICircleCollider UIcircle)
+                DrawUICircleCollider(UIcircle);
         }
     }
 

@@ -9,10 +9,10 @@ using MyMonoGameLibrary.Scenes;
 
 namespace MyMonoGameLibrary.UI;
 
-public class UIAnimator
+public class UIAnimator : CoreComponent, IAnimator
 {
     // variables and properties
-    private SpriteUI _parent;
+    private UISprite _image;
     private int _currentFrame = 0;
     private TimeSpan _elapsed;
     private Animation _animation;
@@ -25,7 +25,7 @@ public class UIAnimator
 
             if (value != null)
             {
-                _parent.Sprite = _animation.Frames[0];
+                _image.Sprite = _animation.Frames[0];
                 _currentFrame = 0;
                 _elapsed = TimeSpan.Zero;
             }
@@ -36,10 +36,19 @@ public class UIAnimator
     //
     // param: parent- the parent
     // param: animation - the animation
-    public UIAnimator(SpriteUI parent, Animation animation)
+    public UIAnimator(Animation animation)
     {
-        _parent = parent;
         _animation = animation;
+    }
+
+    // initialize
+    //
+    // param: parent - parent game object
+    public override void Initialize(GameObject parent)
+    {
+        base.Initialize(parent);
+        _image = GetComponent<UISprite>();
+        _image.Sprite = _animation.Frames[0];
     }
 
     // updates the animation
@@ -62,12 +71,12 @@ public class UIAnimator
                     _currentFrame = 0;
                 }
 
-                _parent.Sprite = _animation.Frames[_currentFrame];
+                _image.Sprite = _animation.Frames[_currentFrame];
             }
         }
         else
         {
-            _parent.Sprite = _parent.DefaultSprite;
+            _image.Sprite = _image.DefaultSprite;
         }
     }
 }

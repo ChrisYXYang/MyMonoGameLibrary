@@ -20,8 +20,6 @@ public abstract class Scene : IDisposable
 {
     // variables and properties
     public Library SceneLibrary { get; private set; }
-
-    public Canvas Canvas { get; private set; } = new Canvas();
     public TileMap Tilemap { get; private set; }
 
     private readonly Dictionary<string, int> _names = [];
@@ -30,11 +28,9 @@ public abstract class Scene : IDisposable
     private readonly List<GameObject> _toInstantiate = [];
     private readonly List<GameObject> _toDestroy = [];
 
-    private readonly Dictionary<string, BaseUI> _uiElements = [];
-    private readonly List<BaseUI> _uiInstantiate = [];
-    private readonly List<BaseUI> _uiDestroy = [];
-
     private readonly Dictionary<string, ICollider> _colliders = [];
+    private readonly Dictionary<string, GameObject> _gameDraw = [];
+    private readonly Dictionary<string, GameObject> _uiDraw = [];
     private readonly List<TileCollider> _tileColliders = [];
 
     public float Gravity { get; protected set; } = 9.8f;
@@ -94,11 +90,6 @@ public abstract class Scene : IDisposable
             gameObject.StartBehaviors();
         }
 
-        foreach (BaseUI ui in _uiElements.Values)
-        {
-            ui.Behavior?.Start();
-        }
-
         // testing
         List<GameObject> gameObjects = [.. _gameObjects.Values];
         for (int i = 0; i < gameObjects.Count; i++)
@@ -131,6 +122,16 @@ public abstract class Scene : IDisposable
             if (collider != null)
                 _colliders.Add(gameObject.Name, collider);
 
+            // register renderer
+            if (gameObject.Renderer is TextRenderer || gameObject.Renderer is SpriteRenderer)
+            {
+                _gameDraw.Add(gameObject.Name, gameObject);
+            }
+            else if (gameObject.Renderer is UIText || gameObject.Renderer is UISprite)
+            {
+                _uiDraw.Add(gameObject.Name, gameObject);
+            }
+
             // start game object
             gameObject.StartBehaviors();
         }
@@ -142,48 +143,24 @@ public abstract class Scene : IDisposable
             // remove from scene/unregister
             gameObject.SetParent(null);
             _gameObjects.Remove(gameObject.Name);
+            _uiDraw.Remove(gameObject.Name);
+            _gameDraw.Remove(gameObject.Name);
 
             // remove collider
             if (gameObject.Collider != null)
             {
-                _colliders.Remove(gameObject.Name);
-
-                foreach (ICollider collider in gameObject.Collider.GetCollisions())
+                if (gameObject.Collider is ColliderComponent gameCollider)
                 {
-                    collider.NotColliding(gameObject.Collider);
+                    _colliders.Remove(gameObject.Name);
+
+                    foreach (ICollider collider in gameCollider.GetCollisions())
+                    {
+                        collider.NotColliding(gameObject.Collider);
+                    }
                 }
             }
         }
         _toDestroy.Clear();
-
-        // setup instantiated ui elements from last frame
-        int instantiateCount = 0;
-        foreach (BaseUI element in _uiInstantiate)
-        {
-            Debug.WriteLine("Instantiate: " + element.Name);
-
-            _uiElements.Add(element.Name, element);
-            element.Start();
-        }
-        if (instantiateCount > 0)
-            Debug.WriteLine("Instiantiated: " + instantiateCount);
-        _uiInstantiate.Clear();
-
-        // destroy instantiated ui element from last frame
-        int destroyCount = 0;
-        foreach (BaseUI element in _uiDestroy)
-        {
-            Debug.WriteLine("Destroy: " + element.Name);
-
-            // remove from scene/unregister
-            element.SetParent(null);
-            _uiElements.Remove(element.Name);
-
-            destroyCount++;
-        }
-        if (destroyCount > 0)
-            Debug.WriteLine("Destroyed: " + destroyCount);
-        _uiDestroy.Clear();
 
         // store previous position of rigidbody
         foreach (GameObject gameObject in _gameObjects.Values)
@@ -265,19 +242,6 @@ public abstract class Scene : IDisposable
             gameObject.LateUpdateBehaviors(gameTime);
         }
 
-        // update UI
-        foreach (BaseUI ui in _uiElements.Values)
-        {
-            ui.Behavior?.Update(gameTime);
-
-            if (ui is SpriteUI sprite)
-            {
-                if (sprite.Animator != null)
-                {
-                    sprite.Animator.Update(gameTime);
-                }
-            }
-        }
 
         // update aniamtions
         foreach (GameObject gameObject in _gameObjects.Values)
@@ -294,17 +258,21 @@ public abstract class Scene : IDisposable
     public virtual void Draw(GameTime gameTime) 
     {
         // game rendering
-        foreach (GameObject gameObject in _gameObjects.Values)
+        foreach (GameObject gameObject in _gameDraw.Values)
         {
-            if (gameObject.Renderer != null)
-                Camera.Draw(gameObject.Renderer);
+            Camera.Draw(gameObject.Renderer);
         }
         Camera.Draw(Tilemap);
         Core.SpriteBatch.End();
 
         // UI rendering
-        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.Deferred);
-        UICamera.Draw(Canvas);
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
+        
+        foreach (GameObject gameObject in _uiDraw.Values)
+        {
+            UICamera.Draw(gameObject);
+        }
+
         Core.SpriteBatch.End();
 
     }
@@ -349,39 +317,28 @@ public abstract class Scene : IDisposable
         return _gameObjects[name];
     }
 
+    // get all game draw objects
+    //
+    // return: list of all game draw objects
+    public List<GameObject> GetGameDrawObjects()
+    {
+        return [.. _gameDraw.Values];
+    }
+
+    // get all ui draw objects
+    //
+    // return: list of all ui draw objects
+    public List<GameObject> GetUIDrawObjects()
+    {
+        return [.. _uiDraw.Values];
+    }
+
     // get all game objects
     //
     // return: list of all game objects
     public List<GameObject> GetGameObjects()
     {
         return [.. _gameObjects.Values];
-    }
-
-    // get ui element
-    //
-    // param: name - name of ui element
-    // return: requested ui element
-    public BaseUI GetElement(string name)
-    {
-        return _uiElements[name];
-    }
-
-    // get text ui element
-    //
-    // param: name - name of text ui element
-    // return: requested text ui element
-    public TextUI GetText(string name)
-    {
-        return (TextUI)_uiElements[name];
-    }
-
-    // get sprite ui element
-    //
-    // param: name - name of sprite ui element
-    // return: requested sprite ui element
-    public SpriteUI GetSprite(string name)
-    {
-        return (SpriteUI)_uiElements[name];
     }
 
     // setup a gameobject using a list of components and register it
@@ -403,6 +360,23 @@ public abstract class Scene : IDisposable
         if (collider != null)
             _colliders.Add(name, collider);
 
+        // register renderer
+        if (gameObject.Renderer is TextRenderer || gameObject.Renderer is SpriteRenderer)
+        {
+            _gameDraw.Add(name, gameObject);
+        }
+        else if (gameObject.Renderer is UIText || gameObject.Renderer is UISprite)
+        {
+            _uiDraw.Add(name, gameObject);
+        }
+
+        return gameObject;
+    }
+
+    public GameObject Setup(string name, Component[] components, GameObject parent)
+    {
+        GameObject gameObject = Setup(name, components);
+        parent.AddChild(gameObject);
         return gameObject;
     }
 
@@ -450,37 +424,12 @@ public abstract class Scene : IDisposable
         gameObject.SetParent(parent);
     }
 
-    // setup an ui element with canvas as parent
-    //
-    // param: name - name of ui element
-    // param: element - the ui element
-    public void Setup(string name, BaseUI element)
-    {
-        name = RegisterName(name);
-        element.Name = name;
-        Canvas.AddChild(element);
-        _uiElements.Add(name, element);
-    }
-
-    // setup an ui element with another ui element as parent
-    //
-    // param: name - name of ui element
-    // param: element - the ui element
-    // param: parent - parent element
-    public void Setup(string name, BaseUI element, BaseUI parent)
-    {
-        name = RegisterName(name);
-        element.Name = name;
-        parent.AddChild(element);
-        _uiElements.Add(name, element);
-    }
-
     // instantiate a gameobject using a list of components
     //
     // param: name - name of game object
     // param: components - components of game object
     // return: game object that was created
-    public GameObject Instantiate(string name, Component[] components)
+    private GameObject Instantiate(string name, Component[] components)
     {
         // check if name is unique and register it
         name = RegisterName(name);
@@ -542,29 +491,17 @@ public abstract class Scene : IDisposable
         return gameObject;
     }
 
-    // instantiate an ui element with canvas parent
+    // instantiate a gameobject using prefab
     //
-    // param: name - name of ui element
-    // param: element - the ui element
-    public void Instantiate(string name, BaseUI element)
-    {
-        name = RegisterName(name);
-        element.Name = name;
-        Canvas.AddChild(element);
-        _uiInstantiate.Add(element);
-    }
+    // param: prefab - prefab
 
-    // instantiate an ui element with another ui element as parent
-    //
-    // param: name - name of ui element
-    // param: element - the ui element
-    // param: parent - parent element
-    public void Instantiate(string name, BaseUI element, BaseUI parent)
+    // param: parent - parent game object
+    // return: game object that was created
+    public GameObject Instantiate((string, Component[]) prefab, GameObject parent)
     {
-        name = RegisterName(name);
-        element.Name = name;
-        parent.AddChild(element);
-        _uiInstantiate.Add(element);
+        GameObject gameObject = Instantiate(prefab.Item1, prefab.Item2);
+        gameObject.SetParent(parent);
+        return gameObject;
     }
 
     // destroy a game object
@@ -577,19 +514,6 @@ public abstract class Scene : IDisposable
         for (int i = gameObject.ChildCount - 1; i >= 0; i--)
         {
             Destroy(gameObject.GetChild(i));
-        }
-    }
-
-    // destroy an ui element
-    //
-    // param: element - UI element to destroy
-    public void Destroy(BaseUI element)
-    {
-        _uiDestroy.Add(element);
-
-        for (int i = element.ChildCount - 1; i >= 0; i--)
-        {
-            Destroy(element.GetChild(i));
         }
     }
 
