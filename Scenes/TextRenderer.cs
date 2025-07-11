@@ -10,13 +10,29 @@ namespace MyMonoGameLibrary.Scenes;
 // component for rendering text in the game world
 public class TextRenderer : RendererComponent
 {
+    private Vector2 _textSize;
+    private TextCollider _collider;
+
     // the font
-    public SpriteFont Font { get; set; }
+    private SpriteFont _font;
+    public SpriteFont Font
+    {
+        get
+        {
+            return _font;
+        }
+        set
+        {
+            _font = value;
+            _textSize = value.MeasureString(Text);
+            Origin = AnchorCalc.GetOrigin(Anchor, _textSize);
+            _collider?.Update(Anchor, (_textSize / (Camera.SpritePixelsPerUnit * Camera.PixelScale)));
+        }
+    }
 
     // the text to render
     // text
-    private string _text;
-    private Vector2 _textSize;
+    private string _text = "";
     public string Text
     {
         get => _text;
@@ -25,6 +41,7 @@ public class TextRenderer : RendererComponent
             _text = value;
             _textSize = Font.MeasureString(value);
             Origin = AnchorCalc.GetOrigin(Anchor, _textSize);
+            _collider?.Update(Anchor, (_textSize / (Camera.SpritePixelsPerUnit * Camera.PixelScale)));
         }
     }
 
@@ -37,7 +54,7 @@ public class TextRenderer : RendererComponent
         {
             _anchor = value;
             Origin = AnchorCalc.GetOrigin(value, _textSize);
-
+            _collider?.Update(value, (_textSize / (Camera.SpritePixelsPerUnit * Camera.PixelScale)));
         }
     }
 
@@ -112,5 +129,11 @@ public class TextRenderer : RendererComponent
         Font = font;
         Text = text;
         Anchor = anchor;
+    }
+
+    public override void Initialize(GameObject parent)
+    {
+        base.Initialize(parent);
+        _collider = GetComponent<TextCollider>();
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.Input;
 using MyMonoGameLibrary.Tilemap;
+using MyMonoGameLibrary.Tools;
 using MyMonoGameLibrary.UI;
 
 namespace MyMonoGameLibrary.Scenes;
@@ -111,65 +112,6 @@ public abstract class Scene : IDisposable
     /// <param name="gameTime">A snapshot of the timing values for the current frame.</param>
     public virtual void Update(GameTime gameTime) 
     {
-        // setup instantiated objects from last frame
-        foreach (GameObject gameObject in _toInstantiate)
-        {
-            // register game object
-            _gameObjects.Add(gameObject.Name, gameObject);
-
-            // register collider
-            ICollider collider = gameObject.Collider;
-            if (collider != null)
-                _colliders.Add(gameObject.Name, collider);
-
-            // register renderer
-            if (gameObject.Renderer is TextRenderer || gameObject.Renderer is SpriteRenderer)
-            {
-                _gameDraw.Add(gameObject.Name, gameObject);
-            }
-            else if (gameObject.Renderer is UIText || gameObject.Renderer is UISprite)
-            {
-                _uiDraw.Add(gameObject.Name, gameObject);
-            }
-
-            // start game object
-            gameObject.StartBehaviors();
-        }
-        _toInstantiate.Clear();
-
-        // destroy instantiated objects from last frame
-        foreach (GameObject gameObject in _toDestroy)
-        {
-            // remove from scene/unregister
-            gameObject.SetParent(null);
-            _gameObjects.Remove(gameObject.Name);
-
-            if (gameObject.Renderer is TextRenderer || gameObject.Renderer is SpriteRenderer)
-            {
-                _gameDraw.Remove(gameObject.Name);
-
-            }
-            else if (gameObject.Renderer is UIText || gameObject.Renderer is UISprite)
-            {
-                _uiDraw.Remove(gameObject.Name);
-            }
-
-            // remove collider
-            if (gameObject.Collider != null)
-            {
-                if (gameObject.Collider is ColliderComponent gameCollider)
-                {
-                    _colliders.Remove(gameObject.Name);
-
-                    foreach (ICollider collider in gameCollider.GetCollisions())
-                    {
-                        collider.NotColliding(gameObject.Collider);
-                    }
-                }
-            }
-        }
-        _toDestroy.Clear();
-
         // store previous position of rigidbody
         foreach (GameObject gameObject in _gameObjects.Values)
         {
@@ -182,6 +124,7 @@ public abstract class Scene : IDisposable
         {
             gameObject.UpdateBehaviors(gameTime);
         }
+        UpdateDestroyInstantiate();
 
         // update rigidbodies
         foreach (GameObject gameObject in _gameObjects.Values)
@@ -243,12 +186,15 @@ public abstract class Scene : IDisposable
                 }
             }
         }
+        UpdateDestroyInstantiate();
 
         // behavior late update
         foreach (GameObject gameObject in _gameObjects.Values)
         {
             gameObject.LateUpdateBehaviors(gameTime);
         }
+        UpdateDestroyInstantiate();
+
 
         // update aniamtions
         foreach (GameObject gameObject in _gameObjects.Values)
@@ -256,6 +202,91 @@ public abstract class Scene : IDisposable
             if (gameObject.Animator != null)
                 gameObject.Animator.Update(gameTime);
         }
+
+        // debugging purposes
+        if (InputManager.Keyboard.WasKeyJustPressed(Keys.NumPad0))
+        {
+            DebugMode.PrintScene();
+        }
+
+        if (InputManager.Keyboard.WasKeyJustPressed(Keys.NumPad1))
+        {
+            foreach(ICollider collider in _colliders.Values)
+            {
+                if (collider is ColliderComponent comp)
+                {
+                    Debug.WriteLine(comp.GetName());
+                }
+            }
+
+            Debug.WriteLine("");
+        }
+    }
+
+    // updates destroy and instantiated bojects
+    private void UpdateDestroyInstantiate()
+    {
+        // setup instantiated objects from last frame
+        foreach (GameObject gameObject in _toInstantiate)
+        {
+            // register game object
+            _gameObjects.Add(gameObject.Name, gameObject);
+
+            // register renderer
+            if (gameObject.Renderer is UIText || gameObject.Renderer is UISprite)
+            {
+                _uiDraw.Add(gameObject.Name, gameObject);
+            }
+            else
+            {
+                if (gameObject.Renderer is TextRenderer || gameObject.Renderer is SpriteRenderer)
+                    _gameDraw.Add(gameObject.Name, gameObject);
+
+                // register collider
+                ICollider collider = gameObject.Collider;
+                if (collider != null)
+                {
+                    _colliders.Add(gameObject.Name, collider);
+                }
+            }
+
+            // start game object
+            gameObject.StartBehaviors();
+        }
+        _toInstantiate.Clear();
+
+        // destroy instantiated objects from last frame
+        foreach (GameObject gameObject in _toDestroy)
+        {
+            // remove from scene/unregister
+            gameObject.SetParent(null);
+            _gameObjects.Remove(gameObject.Name);
+
+            if (gameObject.Renderer is UIText || gameObject.Renderer is UISprite)
+            {
+                _uiDraw.Remove(gameObject.Name);
+            }
+            else
+            {
+                if (gameObject.Renderer is TextRenderer || gameObject.Renderer is SpriteRenderer)
+                    _gameDraw.Remove(gameObject.Name);
+
+                // remove collider
+                if (gameObject.Collider != null)
+                {
+                    if (gameObject.Collider.Layer != "ui")
+                    {
+                        _colliders.Remove(gameObject.Name);
+
+                        foreach (ICollider collider in gameObject.Collider.GetCollisions())
+                        {
+                            collider.NotColliding(gameObject.Collider);
+                        }
+                    }
+                }
+            }
+        }
+        _toDestroy.Clear();
     }
 
     /// <summary>
@@ -362,19 +393,25 @@ public abstract class Scene : IDisposable
         GameObject gameObject = new(name, components);
         _gameObjects.Add(name, gameObject);
 
-        // register collider
-        ICollider collider = gameObject.Collider;
-        if (collider != null)
-            _colliders.Add(name, collider);
-
         // register renderer
-        if (gameObject.Renderer is TextRenderer || gameObject.Renderer is SpriteRenderer)
-        {
-            _gameDraw.Add(name, gameObject);
-        }
-        else if (gameObject.Renderer is UIText || gameObject.Renderer is UISprite)
+        if (gameObject.Renderer is UIText || gameObject.Renderer is UISprite)
         {
             _uiDraw.Add(name, gameObject);
+        }
+        else 
+        {
+            if (gameObject.Renderer is TextRenderer || gameObject.Renderer is SpriteRenderer)
+                _gameDraw.Add(name, gameObject);
+
+            // register collider
+            ICollider collider = gameObject.Collider;
+            if (collider != null)
+            {
+                if (collider.Layer != "ui")
+                {
+                    _colliders.Add(gameObject.Name, collider);
+                }
+            }
         }
 
         return gameObject;

@@ -12,8 +12,8 @@ namespace MyMonoGameLibrary.Scenes;
 public class BoxCollider : ColliderComponent, IAABBCollider
 {
     // variables and properties
-    public float Width { get; set; }
-    public float Height { get; set; }
+    public float Width { get; set; } = 0;
+    public float Height { get; set; } = 0;
     public float Left => Center.X - (Width * 0.5f);
     public float Right => Center.X + (Width * 0.5f);
     public float Top => Center.Y - (Height * 0.5f);
@@ -24,12 +24,40 @@ public class BoxCollider : ColliderComponent, IAABBCollider
     // param: width - width of collider
     // param: height - height of collider
     // param: solid - solid or not
-    // param: layer - the layer
-    public BoxCollider(int width, int height, string layer) : base(layer)
+    public BoxCollider(float width, float height)
     {
         // set the properties
-        Width = (float)width / Camera.SpritePixelsPerUnit;
-        Height = (float)height / Camera.SpritePixelsPerUnit;
+        Width = width;
+        Height = height;
+        Offset = Vector2.Zero;
+    }
+
+    // constructor
+    //
+    // param: width - width of collider
+    // param: height - height of collider
+    // param: xOffset - x offset of collider
+    // param: yOffset - y offset of collider
+    // param: solid - solid or not
+    public BoxCollider(float width, float height, float xOffset, float yOffset)
+    {
+        // set the properties
+        Width = width;
+        Height = height;
+        Offset = new Vector2(xOffset, yOffset);
+    }
+
+    // constructor
+    //
+    // param: width - width of collider
+    // param: height - height of collider
+    // param: solid - solid or not
+    // param: layer - the layer
+    public BoxCollider(float width, float height, string layer) : base(layer)
+    {
+        // set the properties
+        Width = width;
+        Height = height;
         Offset = Vector2.Zero;
     }
 
@@ -41,11 +69,13 @@ public class BoxCollider : ColliderComponent, IAABBCollider
     // param: yOffset - y offset of collider
     // param: solid - solid or not
     // param: layer - the layer
-    public BoxCollider(int width, int height, float xOffset, float yOffset, string layer) : base(layer)
+    public BoxCollider(float width, float height, float xOffset, float yOffset, string layer) : base(layer)
     {
         // set the properties
-        Width = (float)width / Camera.SpritePixelsPerUnit;
-        Height = (float)height / Camera.SpritePixelsPerUnit;
-        Offset = new Vector2(xOffset, yOffset) / Camera.SpritePixelsPerUnit;
+        Width = width;
+        Height = height;
+        Offset = new Vector2(xOffset, yOffset);
     }
+
+
 }

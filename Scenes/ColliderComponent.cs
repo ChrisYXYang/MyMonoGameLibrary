@@ -11,7 +11,7 @@ namespace MyMonoGameLibrary.Scenes;
 // base class for a collider component. Contains implementations of ICollider for game objects
 public abstract class ColliderComponent : CoreComponent, ICollider
 {
-    public string Layer { get; set; }
+    public string Layer { get; set; } = "default";
     // set of names of objects colliding with this collider
     protected Dictionary<string, ICollider> Colliders { get; private set; } = [];
     public Vector2 Offset { get; set; }
@@ -19,7 +19,9 @@ public abstract class ColliderComponent : CoreComponent, ICollider
     public Vector2 Center => Transform.TruePosition + Offset;
 
     // empty constructor
-    public ColliderComponent() { }
+    public ColliderComponent() 
+    {
+    }
 
     // constructor
     //

@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using MyMonoGameLibrary.Scenes;
 
 namespace MyMonoGameLibrary.Tools;
 
@@ -14,5 +15,14 @@ public static class Converter
     {
         string[] individual = input.Split(",");
         return new Vector2(float.Parse(individual[0].Trim()), float.Parse(individual[1].Trim()));
+    }
+
+    // converts sprite pixels to game units
+    //
+    // param: pixels - number of sprite pixels
+    // return: game units
+    public static float PixelToUnit(int pixels)
+    {
+        return (float)pixels / Camera.SpritePixelsPerUnit;
     }
 }

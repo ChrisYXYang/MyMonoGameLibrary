@@ -9,13 +9,29 @@ namespace MyMonoGameLibrary.UI;
 
 public class UIText : RendererComponent
 {
+    private Vector2 _textSize;
+    private TextCollider _collider;
+
     // the font
-    public SpriteFont Font { get; set; }
+    private SpriteFont _font;
+    public SpriteFont Font
+    {
+        get
+        {
+            return _font;
+        }
+        set
+        {
+            _font = value;
+            _textSize = value.MeasureString(Text);
+            Origin = AnchorCalc.GetOrigin(Anchor, _textSize);
+            _collider?.Update(Anchor, _textSize);
+        }
+    }
 
     // the text to render
     // text
-    private string _text;
-    private Vector2 _textSize;
+    private string _text = "";
     public string Text
     {
         get => _text;
@@ -24,6 +40,7 @@ public class UIText : RendererComponent
             _text = value;
             _textSize = Font.MeasureString(value);
             Origin = AnchorCalc.GetOrigin(Anchor, _textSize);
+            _collider?.Update(Anchor, _textSize);
         }
     }
 
@@ -36,7 +53,7 @@ public class UIText : RendererComponent
         {
             _anchor = value;
             Origin = AnchorCalc.GetOrigin(value, _textSize);
-
+            _collider?.Update(value, _textSize);
         }
     }
 
@@ -116,14 +133,6 @@ public class UIText : RendererComponent
     public override void Initialize(GameObject parent)
     {
         base.Initialize(parent);
-
-        Vector2 offset = AnchorCalc.GetOffset(Anchor, _textSize);
-        
-        if (parent.Collider is UIBoxCollider box)
-        {
-            box.Width = _textSize.X * Transform.TrueScale.X;
-            box.Height = _textSize.Y * Transform.TrueScale.X;
-            box.Offset = new Vector2(offset.X * Transform.TrueScale.X, offset.Y * Transform.TrueScale.Y);
-        }
+        _collider = GetComponent<TextCollider>();
     }
 }

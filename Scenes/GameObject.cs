@@ -16,7 +16,7 @@ public class GameObject
     public readonly string Name;
     public GameObject Parent { get; private set; }
     public Transform Transform { get; private set; }
-    public ICollider Collider { get; private set; }
+    public ColliderComponent Collider { get; private set; }
     public RendererComponent Renderer { get; private set; }
     public IAnimator Animator { get; private set; }
     public Rigidbody Rigidbody { get; private set; }
@@ -46,7 +46,7 @@ public class GameObject
 
             if (component is BehaviorComponent behavior)
                 _behaviors.Add(behavior);
-            else if (component is ICollider collider)
+            else if (component is ColliderComponent collider)
             {
                 if (!hasCollider)
                 {

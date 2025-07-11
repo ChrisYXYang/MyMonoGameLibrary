@@ -107,10 +107,22 @@ public class DebugMode : Core
                 DrawBoxCollider(box);
             else if (collider is CircleCollider circle)
                 DrawCircleCollider(circle);
-            else if (collider is UIBoxCollider UIbox)
-                DrawUIBoxCollider(UIbox);
-            else if (collider is UICircleCollider UIcircle)
-                DrawUICircleCollider(UIcircle);
+        }
+    }
+
+    // draw collider for ui
+    //
+    // param: gameObject - game object to draw
+    public static void DrawUICollider(GameObject gameObject)
+    {
+        ICollider collider = gameObject.Collider;
+
+        if (collider != null)
+        {
+            if (collider is BoxCollider box)
+                DrawUIBoxCollider(box);
+            else if (collider is CircleCollider circle)
+                DrawUICircleCollider(circle);
         }
     }
 
@@ -200,7 +212,7 @@ public class DebugMode : Core
     // helper method to draw ui box collider
     //
     // param: collider - box collider to draw
-    private static void DrawUIBoxCollider(UIBoxCollider collider)
+    private static void DrawUIBoxCollider(BoxCollider collider)
     {
         Core.SpriteBatch.Draw
             (
@@ -219,7 +231,7 @@ public class DebugMode : Core
     // helper method to draw ui circle collider 
     //
     // param: collider - circle collider to draw
-    private static void DrawUICircleCollider(UICircleCollider collider)
+    private static void DrawUICircleCollider(CircleCollider collider)
     {
         Core.SpriteBatch.Draw
             (
