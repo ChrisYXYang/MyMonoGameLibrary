@@ -74,6 +74,7 @@ public abstract class Scene : IDisposable
     public virtual void Initialize()
     {
         SceneLibrary = new Library(Content);
+        Camera.position = Vector2.Zero;
         LoadContent();
     }
 
@@ -82,8 +83,6 @@ public abstract class Scene : IDisposable
     /// </summary>
     public virtual void LoadContent()
     {
-        Camera.position = Vector2.Zero;
-        
         // start behavior scripts
         foreach (GameObject gameObject in _gameObjects.Values)
         {

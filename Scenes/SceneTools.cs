@@ -14,6 +14,7 @@ public static class SceneTools
 
     // get sprite library
     public static Library SceneLibrary { get => _activeScene.SceneLibrary; }
+    public static TileMap Tilemap { get => _activeScene.Tilemap; }
 
     // change the active scene
     //
@@ -62,14 +63,6 @@ public static class SceneTools
     public static List<ICollider> GetColliders()
     {
         return _activeScene.GetColliders();
-    }
-
-    // get the tilemap
-    //
-    // return: the tilemap of scene
-    public static TileMap GetTilemap()
-    {
-        return _activeScene.Tilemap;
     }
 
     // instantiate a gameobject using prefab
