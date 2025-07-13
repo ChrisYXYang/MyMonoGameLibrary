@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.Input;
 using MyMonoGameLibrary.Tilemap;
 using MyMonoGameLibrary.Tools;
@@ -89,19 +88,6 @@ public abstract class Scene : IDisposable
         foreach (GameObject gameObject in _gameObjects.Values)
         {
             gameObject.StartBehaviors();
-        }
-
-        // testing
-        List<GameObject> gameObjects = [.. _gameObjects.Values];
-        for (int i = 0; i < gameObjects.Count; i++)
-        {
-            for (int k = i + 1; k < gameObjects.Count; k++)
-            {
-                if (gameObjects[i].Name.Equals(gameObjects[k].Name))
-                {
-                    throw new Exception("same name");
-                }
-            }
         }
     }
 
@@ -201,25 +187,6 @@ public abstract class Scene : IDisposable
         {
             if (gameObject.Animator != null)
                 gameObject.Animator.Update(gameTime);
-        }
-
-        // debugging purposes
-        if (InputManager.Keyboard.WasKeyJustPressed(Keys.NumPad0))
-        {
-            DebugMode.PrintScene();
-        }
-
-        if (InputManager.Keyboard.WasKeyJustPressed(Keys.NumPad1))
-        {
-            foreach(ICollider collider in _colliders.Values)
-            {
-                if (collider is ColliderComponent comp)
-                {
-                    Debug.WriteLine(comp.GetName());
-                }
-            }
-
-            Debug.WriteLine("");
         }
     }
 
@@ -325,6 +292,14 @@ public abstract class Scene : IDisposable
     }
 
     /// <summary>
+    /// Unloads scene-specific content.
+    /// </summary>
+    public virtual void UnloadContent()
+    {
+        Content.Unload();
+    }
+
+    /// <summary>
     /// Disposes of this scene.
     /// </summary>
     /// <param name="disposing">'
@@ -340,6 +315,7 @@ public abstract class Scene : IDisposable
 
         if (disposing)
         {
+            UnloadContent();
             Content.Dispose();
         }
 
@@ -377,6 +353,14 @@ public abstract class Scene : IDisposable
     public List<GameObject> GetGameObjects()
     {
         return [.. _gameObjects.Values];
+    }
+
+    // get colliders
+    //
+    // return: list of all colliders
+    public List<ICollider> GetColliders()
+    {
+        return [.. _colliders.Values];
     }
 
     // setup a gameobject using a list of components and register it

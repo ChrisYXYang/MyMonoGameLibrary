@@ -70,6 +70,7 @@ public class DebugMode : Core
                 }
             }
         }
+        Debug.WriteLine("");
     }
 
     // draw origin point for a gameobject

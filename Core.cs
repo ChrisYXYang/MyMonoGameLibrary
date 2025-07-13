@@ -7,7 +7,7 @@ using MyMonoGameLibrary.Tilemap;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
 using MyMonoGameLibrary.Input;
-using MyMonoGameLibrary.Graphics;
+using MyMonoGameLibrary.Audio;
 
 namespace MyMonoGameLibrary;
 
@@ -26,8 +26,8 @@ public class Core : Game
     public static SpriteBatch SpriteBatch { get; private set; }
     public static new GraphicsDevice GraphicsDevice { get; private set; }
     public static new ContentManager Content { get; private set; }
-
     public static Library GlobalLibrary { get; private set; }
+    public static AudioController Audio { get; private set; }
 
     // constructor
     //
@@ -79,17 +79,23 @@ public class Core : Game
         // create sprite batch instance
         SpriteBatch = new SpriteBatch(GraphicsDevice);
 
+        // create audio controller
+        Audio = new AudioController();
+
         base.Initialize();
+    }
+
+    protected override void UnloadContent()
+    {
+        Audio.Dispose();
+        
+        base.UnloadContent();
     }
 
     protected override void Update(GameTime gameTime)
     {
         InputManager.Update();
-
-        if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-        {
-            Exit();
-        }
+        Audio.Update();
 
         // if there is next scene waiting to switch to, transition to that scene
         if (s_nextScene != null)

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.Xna.Framework;
-using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.Tilemap;
 using MyMonoGameLibrary.UI;
 
@@ -55,6 +54,14 @@ public static class SceneTools
     public static List<GameObject> GetGameObjects()
     {
         return _activeScene.GetGameObjects();
+    }
+
+    // get colliders
+    //
+    // return: list of all colliders
+    public static List<ICollider> GetColliders()
+    {
+        return _activeScene.GetColliders();
     }
 
     // get the tilemap

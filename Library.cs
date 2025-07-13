@@ -4,11 +4,14 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
+using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.Tilemap;
 
-namespace MyMonoGameLibrary.Graphics;
+namespace MyMonoGameLibrary;
 
 // This class stores assets needed for the game such as spritesheets, fonts, and tilesets.
 public class Library
@@ -17,6 +20,8 @@ public class Library
     private Dictionary<string, SpriteSheet> _spriteSheets = [];
     private Dictionary<string, Tileset> _tileSets = [];
     private Dictionary<string, SpriteFont> _fonts = [];
+    private Dictionary<string, SoundEffect> _soundEffects = [];
+    private Dictionary<string, Song> _songs = [];
     private ContentManager _content;
     public Library(ContentManager content)
     {
@@ -93,5 +98,39 @@ public class Library
     public SpriteFont GetFont(string fontName)
     {
         return _fonts[fontName];
+    }
+
+    // add sound effect to library
+    //
+    // param: soundEffectName - sound effect to add
+    public void AddSoundEffect(string soundEffectName)
+    {
+        _soundEffects.Add(soundEffectName, _content.Load<SoundEffect>("audio/" + soundEffectName));
+    }
+
+    // get sound effect
+    //
+    // param: soundEffectName - name of font
+    // return: sound effect requested
+    public SoundEffect GetSoundEffect(string soundEffectName)
+    {
+        return _soundEffects[soundEffectName];
+    }
+
+    // add song to library
+    //
+    // param: songName - song to add
+    public void AddSong(string songName)
+    {
+        _songs.Add(songName, _content.Load<Song>("audio/" + songName));
+    }
+
+    // get song
+    //
+    // param: songName - name of font
+    // return: song requested
+    public Song GetSong(string songName)
+    {
+        return _songs[songName];
     }
 }
