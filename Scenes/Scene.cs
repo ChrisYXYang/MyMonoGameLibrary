@@ -153,7 +153,7 @@ public abstract class Scene : IDisposable
 
         }
 
-        // update collisions
+        // update collisions between game objects
         List<ICollider> colliderList = [.. _colliders.Values];
         for (int i = 0; i < colliderList.Count; i++)
         {
@@ -171,6 +171,23 @@ public abstract class Scene : IDisposable
                 }
             }
         }
+
+        // udpate collisions betweeen game objects and tile colliders
+        foreach (ColliderComponent col in colliderList)
+        {
+            foreach (TileCollider tile in _tileColliders)
+            {
+                if (Collisions.Intersect(col, tile))
+                {
+                    col.Colliding(tile);
+                }
+                else
+                {
+                    col.NotColliding(tile);
+                }
+            }
+        }
+
         UpdateDestroyInstantiate();
 
         // behavior late update
@@ -609,7 +626,6 @@ public abstract class Scene : IDisposable
                     if (tile.Collider == null)
                         continue;
 
-                    _colliders.Add(tile.Name, tile.GetCollider());
                     _tileColliders.Add(tile.GetCollider());
 
                     if (_names.ContainsKey(tile.Name))

@@ -19,17 +19,19 @@ public class TileCollider : IAABBCollider
     public float Height => 1;
     public Vector2 Center => Parent.Position; 
     public bool Solid { get; set; }
+    public bool Platform { get; set; }
 
     // constructor 
     // 
     // param: tile - the tile that holds the collider
     // param: solid - solid or not
     // param: layer - the layer name
-    public TileCollider(Tile parent, bool solid, string layer)
+    public TileCollider(Tile parent, bool solid, bool platform, string layer)
     {
         Parent = parent;
         Solid = solid;
         Layer = layer;
+        Platform = platform;
     }
 
     public void Colliding(ICollider other)

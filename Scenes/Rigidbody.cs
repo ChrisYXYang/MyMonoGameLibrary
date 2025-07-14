@@ -30,10 +30,16 @@ public class Rigidbody : CoreComponent
 
     // position before updating the position
     private Vector2 _previousPosition;
+    private float _previousLeft;
+    private float _previousRight;
+    private float _previousTop;
+    private float _previousBottom;
 
     // how much rigidbody should move in one update
     private Vector2 _movePosition;
 
+    // can go down platform or not
+    private bool _descendPlatform = false;
 
     // constructor
     //
@@ -86,7 +92,18 @@ public class Rigidbody : CoreComponent
     public void UpdatePrevPos()
     {
         if (Solid)
+        {
             _previousPosition = Transform.position;
+            _previousLeft = Collider.Left;
+            _previousRight = Collider.Right;
+            _previousTop = Collider.Top;
+            _previousBottom = Collider.Bottom;
+        }
+    }
+
+    public void DescendPlatform()
+    {
+        _descendPlatform = true;
     }
 
     // correct the position of collider of within a solid tile collider
@@ -109,10 +126,13 @@ public class Rigidbody : CoreComponent
             {
                 if (other is TileCollider tile)
                 {
-                    if (Collisions.Intersect(Collider, tile))
+                    if (!tile.Platform)
                     {
-                        Transform.position.X = tile.Right + (Collider.Width * 0.5f);
-                        this.XVelocity = 0;
+                        if (Collisions.Intersect(Collider, tile))
+                        {
+                            Transform.position.X = tile.Right + (Collider.Width * 0.5f);
+                            this.XVelocity = 0;
+                        }
                     }
                 }
             }
@@ -128,10 +148,13 @@ public class Rigidbody : CoreComponent
             {
                 if (other is TileCollider tile)
                 {
-                    if (Collisions.Intersect(Collider, tile))
+                    if (!tile.Platform)
                     {
-                        Transform.position.X = tile.Left - (Collider.Width * 0.5f);
-                        this.XVelocity = 0;
+                        if (Collisions.Intersect(Collider, tile))
+                        {
+                            Transform.position.X = tile.Left - (Collider.Width * 0.5f);
+                            this.XVelocity = 0;
+                        }
                     }
                 }
             }
@@ -149,10 +172,13 @@ public class Rigidbody : CoreComponent
             {
                 if (other is TileCollider tile)
                 {
-                    if (Collisions.Intersect(Collider, tile))
+                    if (!tile.Platform)
                     {
-                        Transform.position.Y = tile.Bottom + (Collider.Height * 0.5f);
-                        this.YVelocity = 0;
+                        if (Collisions.Intersect(Collider, tile))
+                        {
+                            Transform.position.Y = tile.Bottom + (Collider.Height * 0.5f);
+                            this.YVelocity = 0;
+                        }
                     }
                 }
             }
@@ -171,6 +197,13 @@ public class Rigidbody : CoreComponent
                 {
                     if (Collisions.Intersect(Collider, tile))
                     {
+                        if (tile.Platform)
+                        {
+                            if ((_previousLeft <= tile.Left && _previousBottom > tile.Top) ||
+                                (_previousRight >= tile.Right && _previousBottom > tile.Top))
+                                continue;
+                        }
+                        
                         Transform.position.Y = tile.Top - (Collider.Height * 0.5f);
                         this.YVelocity = 0;
                         TouchingBottom = true;
@@ -188,9 +221,12 @@ public class Rigidbody : CoreComponent
         {
             if (other is TileCollider tile)
             {
-                if (Collisions.Intersect(Collider, tile))
+                if (!tile.Platform)
                 {
-                    Transform.position = new Vector2(newPos.X, _previousPosition.Y);
+                    if (Collisions.Intersect(Collider, tile))
+                    {
+                        Transform.position = new Vector2(newPos.X, _previousPosition.Y);
+                    }
                 }
             }
         }

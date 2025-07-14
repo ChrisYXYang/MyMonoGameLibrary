@@ -60,9 +60,21 @@ public class TileMap
                     {
                         // get layer name
                         string layerName = layer.Attribute("name").Value;
-                        string layerLayer = layer.Attribute("layer").Value;
                         bool collide = layerName.Contains("col");
-                        bool solid = layerName.Contains("sol");
+                        bool platform = layerName.Contains("plat");
+                        
+                        bool solid;
+                        string layerLayer;
+                        if (layerName.Contains("sol"))
+                        {
+                            solid = true;
+                            layerLayer = layer.Attribute("layer")?.Value ?? "wall";
+                        }
+                        else
+                        {
+                            solid = false;
+                            layerLayer = layer.Attribute("layer")?.Value ?? "default";
+                        }
 
                         // create the tile grid from data csv
                         var data = layer.Element("data");
@@ -93,6 +105,7 @@ public class TileMap
                                                             0 + layerDepth * 0.01f,
                                                             collide,
                                                             solid,
+                                                            platform,
                                                             layerLayer
                                                          );
                                 }
