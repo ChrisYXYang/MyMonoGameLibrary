@@ -16,6 +16,9 @@ public class Rigidbody : CoreComponent
     // can collide with walls or not
     public bool Solid { get; set; }
 
+    // can go down platform or not
+    public bool DescendPlatform { get; set; } = false;
+
     // affected by gravity or not
     public bool UseGravity { get; set; }
 
@@ -38,8 +41,6 @@ public class Rigidbody : CoreComponent
     // how much rigidbody should move in one update
     private Vector2 _movePosition;
 
-    // can go down platform or not
-    private bool _descendPlatform = false;
 
     // constructor
     //
@@ -99,11 +100,6 @@ public class Rigidbody : CoreComponent
             _previousTop = Collider.Top;
             _previousBottom = Collider.Bottom;
         }
-    }
-
-    public void DescendPlatform()
-    {
-        _descendPlatform = true;
     }
 
     // correct the position of collider of within a solid tile collider
@@ -199,6 +195,9 @@ public class Rigidbody : CoreComponent
                     {
                         if (tile.Platform)
                         {
+                            if (DescendPlatform)
+                                continue;
+                            
                             if ((_previousLeft <= tile.Left && _previousBottom > tile.Top) ||
                                 (_previousRight >= tile.Right && _previousBottom > tile.Top))
                                 continue;

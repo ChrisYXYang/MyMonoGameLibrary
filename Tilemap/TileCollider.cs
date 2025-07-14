@@ -13,11 +13,40 @@ public class TileCollider : IAABBCollider
     public Tile Parent { get; private set; }
     public float Left => Center.X - 0.5f;
     public float Right => Center.X + 0.5f;
-    public float Top => Center.Y - 0.5f;
-    public float Bottom => Center.Y + 0.5f;
-    public float Width => 1;
-    public float Height => 1;
-    public Vector2 Center => Parent.Position; 
+
+    public float Top
+    {
+        get
+        {
+            if (!Platform)
+                return Center.Y - 0.5f;
+            else
+                return Center.Y - 0.125f;
+        }
+    }
+    public float Bottom
+    {
+        get
+        {
+            if (!Platform)
+                return Center.Y + 0.5f;
+            else
+                return Center.Y + 0.125f;
+        }
+    }
+
+    public float Width => Right - Left;
+    public float Height => Bottom - Top;
+    public Vector2 Center
+    {
+        get
+        {
+            if (!Platform)
+                return Parent.Position;
+            else
+                return new Vector2(Parent.Position.X, Parent.Position.Y - 0.375f);
+        }
+    }
     public bool Solid { get; set; }
     public bool Platform { get; set; }
 
