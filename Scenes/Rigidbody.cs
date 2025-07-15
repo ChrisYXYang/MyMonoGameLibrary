@@ -198,8 +198,7 @@ public class Rigidbody : CoreComponent
                             if (DescendPlatform)
                                 continue;
                             
-                            if ((_previousLeft <= tile.Left && _previousBottom > tile.Top) ||
-                                (_previousRight >= tile.Right && _previousBottom > tile.Top))
+                            if (_previousBottom > tile.Top)
                                 continue;
                         }
                         
