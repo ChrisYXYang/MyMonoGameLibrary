@@ -15,6 +15,7 @@ public static class SceneTools
     // get sprite library
     public static Library SceneLibrary { get => _activeScene.SceneLibrary; }
     public static TileMap Tilemap { get => _activeScene.Tilemap; }
+    public static float Gravity { get => _activeScene.Gravity; }
 
     // change the active scene
     //
