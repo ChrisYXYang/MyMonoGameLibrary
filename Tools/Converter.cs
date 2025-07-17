@@ -21,8 +21,8 @@ public static class Converter
     //
     // param: pixels - number of sprite pixels
     // return: game units
-    public static float PixelToUnit(int pixels)
+    public static float PixelToUnit(float pixels)
     {
-        return (float)pixels / Camera.SpritePixelsPerUnit;
+        return pixels / Camera.SpritePixelsPerUnit;
     }
 }

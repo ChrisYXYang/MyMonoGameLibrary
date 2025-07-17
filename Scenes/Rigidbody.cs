@@ -126,7 +126,7 @@ public class Rigidbody : CoreComponent
                     {
                         if (Collisions.Intersect(Collider, tile))
                         {
-                            Transform.position.X = tile.Right + (Collider.Width * 0.5f);
+                            Transform.position.X = tile.Right + (Collider.Width * 0.5f) - Collider.Offset.X;
                             this.XVelocity = 0;
                         }
                     }
@@ -148,7 +148,7 @@ public class Rigidbody : CoreComponent
                     {
                         if (Collisions.Intersect(Collider, tile))
                         {
-                            Transform.position.X = tile.Left - (Collider.Width * 0.5f);
+                            Transform.position.X = tile.Left - (Collider.Width * 0.5f) - Collider.Offset.X;
                             this.XVelocity = 0;
                         }
                     }
@@ -172,7 +172,7 @@ public class Rigidbody : CoreComponent
                     {
                         if (Collisions.Intersect(Collider, tile))
                         {
-                            Transform.position.Y = tile.Bottom + (Collider.Height * 0.5f);
+                            Transform.position.Y = tile.Bottom + (Collider.Height * 0.5f) - Collider.Offset.Y;
                             this.YVelocity = 0;
                         }
                     }
@@ -202,7 +202,7 @@ public class Rigidbody : CoreComponent
                                 continue;
                         }
                         
-                        Transform.position.Y = tile.Top - (Collider.Height * 0.5f);
+                        Transform.position.Y = tile.Top - (Collider.Height * 0.5f) - Collider.Offset.Y;
                         this.YVelocity = 0;
                         TouchingBottom = true;
                     }
