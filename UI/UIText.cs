@@ -37,6 +37,9 @@ public class UIText : RendererComponent
         get => _text;
         set
         {
+            if (_text == value)
+                return;
+            
             _text = value;
             _textSize = Font.MeasureString(value);
             Origin = AnchorCalc.GetOrigin(Anchor, _textSize);

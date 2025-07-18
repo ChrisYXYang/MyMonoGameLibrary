@@ -28,6 +28,7 @@ public class Core : Game
     public static new ContentManager Content { get; private set; }
     public static Library GlobalLibrary { get; private set; }
     public static AudioController Audio { get; private set; }
+    public static Random Random { get; private set; } = new Random();
 
     // constructor
     //
