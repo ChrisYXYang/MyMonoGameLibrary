@@ -435,11 +435,11 @@ public abstract class Scene : IDisposable
     //
     // param: prefab - prefab
     // return: game object that was created
-    public GameObject Setup(Prefab prefab)
+    public GameObject Setup(PrefabInstance prefab)
     {
         GameObject parent = Setup(prefab.Name, prefab.components);
 
-        foreach (Prefab child in prefab.children)
+        foreach (PrefabInstance child in prefab.children)
         {
             parent.AddChild(Setup(child));
         }
@@ -452,7 +452,7 @@ public abstract class Scene : IDisposable
     // param: prefab - prefab
     // param: position - position
     // return: game object that was created
-    public GameObject Setup(Prefab prefab, Vector2 position)
+    public GameObject Setup(PrefabInstance prefab, Vector2 position)
     {
         GameObject gameObject = Setup(prefab);
         gameObject.Transform.position = position;
@@ -465,7 +465,7 @@ public abstract class Scene : IDisposable
     // param: position - position
     // param: rotation - rotation
     // return: game object that was created
-    public GameObject Setup(Prefab prefab, Vector2 position, float rotation)
+    public GameObject Setup(PrefabInstance prefab, Vector2 position, float rotation)
     {
         GameObject gameObject = Setup(prefab);
         gameObject.Transform.position = position;
@@ -480,7 +480,7 @@ public abstract class Scene : IDisposable
     // param: rotation - rotation
     // param: parent - parent game object
     // return: game object that was created
-    public GameObject Setup(Prefab prefab, Vector2 position, float rotation, GameObject parent)
+    public GameObject Setup(PrefabInstance prefab, Vector2 position, float rotation, GameObject parent)
     {
         GameObject gameObject = Setup(prefab);
         gameObject.Transform.position = position;
@@ -494,7 +494,7 @@ public abstract class Scene : IDisposable
     // param: prefab - prefab
     // param: parent - parent game object
     // return: game object that was created
-    public GameObject Setup(Prefab prefab, GameObject parent)
+    public GameObject Setup(PrefabInstance prefab, GameObject parent)
     {
         GameObject gameObject = Setup(prefab);
         gameObject.SetParent(parent);
@@ -521,11 +521,11 @@ public abstract class Scene : IDisposable
     //
     // param: prefab - prefab
     // return: game object that was created
-    public GameObject Instantiate(Prefab prefab)
+    public GameObject Instantiate(PrefabInstance prefab)
     {
         GameObject parent = Instantiate(prefab.Name, prefab.components);
 
-        foreach (Prefab child in prefab.children)
+        foreach (PrefabInstance child in prefab.children)
         {
             parent.AddChild(Instantiate(child));
         }
@@ -538,7 +538,7 @@ public abstract class Scene : IDisposable
     // param: prefab - prefab
     // param: position - position
     // return: game object that was created
-    public GameObject Instantiate(Prefab prefab, Vector2 position)
+    public GameObject Instantiate(PrefabInstance prefab, Vector2 position)
     {
         GameObject gameObject = Instantiate(prefab);
         gameObject.Transform.position = position;
@@ -551,7 +551,7 @@ public abstract class Scene : IDisposable
     // param: position - position
     // param: rotation - rotation
     // return: game object that was created
-    public GameObject Instantiate(Prefab prefab, Vector2 position, float rotation)
+    public GameObject Instantiate(PrefabInstance prefab, Vector2 position, float rotation)
     {
         GameObject gameObject = Instantiate(prefab);
         gameObject.Transform.position = position;
@@ -566,7 +566,7 @@ public abstract class Scene : IDisposable
     // param: rotation - rotation
     // param: parent - parent game object
     // return: game object that was created
-    public GameObject Instantiate(Prefab prefab, Vector2 position, float rotation, GameObject parent)
+    public GameObject Instantiate(PrefabInstance prefab, Vector2 position, float rotation, GameObject parent)
     {
         GameObject gameObject = Instantiate(prefab);
         gameObject.Transform.position = position;
@@ -581,7 +581,7 @@ public abstract class Scene : IDisposable
 
     // param: parent - parent game object
     // return: game object that was created
-    public GameObject Instantiate(Prefab prefab, GameObject parent)
+    public GameObject Instantiate(PrefabInstance prefab, GameObject parent)
     {
         GameObject gameObject = Instantiate(prefab);
         gameObject.SetParent(parent);
@@ -593,7 +593,7 @@ public abstract class Scene : IDisposable
     // param: name - name to change to
     // param: prefab - prefab to change name
     // return: new prefab
-    public Prefab Rename(string name, Prefab prefab)
+    public PrefabInstance Rename(string name, PrefabInstance prefab)
     {
         prefab.Name = name;
         return prefab;

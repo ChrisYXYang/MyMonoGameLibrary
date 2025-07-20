@@ -70,7 +70,7 @@ public static class SceneTools
     //
     // param: prefab - prefab
     // return: game object that was created
-    public static GameObject Instantiate(Prefab prefab)
+    public static GameObject Instantiate(PrefabInstance prefab)
     {
         return _activeScene.Instantiate(prefab);
     }
@@ -80,7 +80,7 @@ public static class SceneTools
     // param: prefab - prefab
     // param: position - position
     // return: game object that was created
-    public static GameObject Instantiate(Prefab prefab, Vector2 position)
+    public static GameObject Instantiate(PrefabInstance prefab, Vector2 position)
     {
         return _activeScene.Instantiate(prefab, position);
     }
@@ -91,7 +91,7 @@ public static class SceneTools
     // param: position - position
     // param: rotation - rotation
     // return: game object that was created
-    public static GameObject Instantiate(Prefab prefab, Vector2 position, float rotation)
+    public static GameObject Instantiate(PrefabInstance prefab, Vector2 position, float rotation)
     {
         return _activeScene.Instantiate(prefab, position, rotation);
     }
@@ -103,7 +103,7 @@ public static class SceneTools
     // param: rotation - rotation
     // param: parent - parent game object
     // return: game object that was created
-    public static GameObject Instantiate(Prefab prefab, Vector2 position, float rotation, GameObject parent)
+    public static GameObject Instantiate(PrefabInstance prefab, Vector2 position, float rotation, GameObject parent)
     {
         return _activeScene.Instantiate(prefab, position, rotation, parent);
     }
@@ -113,7 +113,7 @@ public static class SceneTools
     // param: prefab - prefab
     // param: parent - parent game object
     // return: game object that was created
-    public static GameObject Instantiate(Prefab prefab, GameObject parent)
+    public static GameObject Instantiate(PrefabInstance prefab, GameObject parent)
     {
         return _activeScene.Instantiate(prefab, parent);
     }
