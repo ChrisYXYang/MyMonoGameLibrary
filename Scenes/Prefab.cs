@@ -17,6 +17,17 @@ public class Prefab
     //
     // param: name - name
     // param: components - components
+    public Prefab(string name, Component[] components)
+    {
+        Name = name;
+        this.components = components;
+        this.children = [];
+    }
+
+    // constructor
+    //
+    // param: name - name
+    // param: components - components
     // param: children - children prefabs
     public Prefab(string name, Component[] components, Prefab[] children)
     {

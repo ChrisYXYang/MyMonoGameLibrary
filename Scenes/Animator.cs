@@ -21,6 +21,9 @@ public class Animator : CoreComponent, IAnimator
         get => _animation;
         set
         {
+            if (_animation == value)
+                return;
+            
             _animation = value;
 
             if (value != null)
@@ -30,6 +33,12 @@ public class Animator : CoreComponent, IAnimator
                 _elapsed = TimeSpan.Zero;
             }
         }
+    }
+
+    // empty constructor
+    public Animator()
+    {
+        _animation = null;
     }
 
     // constructor
@@ -47,7 +56,9 @@ public class Animator : CoreComponent, IAnimator
     {
         base.Initialize(parent);
         _spriteManager = GetComponent<SpriteRenderer>();
-        _spriteManager.Sprite = _animation.Frames[0];
+
+        if (_animation != null)
+            _spriteManager.Sprite = _animation.Frames[0];
     }
 
     // updates the animation

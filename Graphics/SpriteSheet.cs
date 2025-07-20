@@ -98,7 +98,7 @@ public class SpriteSheet
 
                         // get all frames from <Frame> elements
                         List<Sprite> allFrames = new List<Sprite>();
-                        var frames = animation.Elements("Frame");
+                        var frames = animation.Elements("Sprite");
 
                         if (frames != null)
                         {
