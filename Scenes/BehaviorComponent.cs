@@ -10,6 +10,10 @@ namespace MyMonoGameLibrary.Scenes;
 // this is the base class for behavior components, and contains all the methods needed.
 public abstract class BehaviorComponent : Component
 {
+    public virtual void Awake()
+    {
+    }
+
     public virtual void Start()
     {
     }

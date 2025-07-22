@@ -183,6 +183,15 @@ public class GameObject
         }
     }
 
+    // awake all behaviors
+    public void AwakeBehaviors()
+    {
+        foreach (BehaviorComponent behavior in _behaviors)
+        {
+            behavior.Awake();
+        }
+    }
+
     // start all behaviors
     public void StartBehaviors()
     {

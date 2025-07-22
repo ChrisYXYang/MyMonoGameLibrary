@@ -15,6 +15,17 @@ public class SpriteRenderer : RendererComponent
     // sprite to default on if no animations
     public Sprite DefaultSprite { get; set; }
 
+    // empty constructor
+    public SpriteRenderer()
+    {
+    }
+
+    // constructor
+    //
+    // param: layerDepth - layer depth
+    public SpriteRenderer(float layerDepth) : base(layerDepth)
+    {
+    }
 
     // constructor
     //

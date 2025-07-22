@@ -83,6 +83,12 @@ public abstract class Scene : IDisposable
     /// </summary>
     public virtual void LoadContent()
     {
+        // awake behavior scripts
+        foreach (GameObject gameObject in _gameObjects.Values)
+        {
+            gameObject.AwakeBehaviors();
+        }
+
         // start behavior scripts
         foreach (GameObject gameObject in _gameObjects.Values)
         {
@@ -233,9 +239,6 @@ public abstract class Scene : IDisposable
                     _colliders.Add(gameObject.Name, collider);
                 }
             }
-
-            // start game object
-            gameObject.StartBehaviors();
         }
         _toInstantiate.Clear();
 
@@ -512,6 +515,8 @@ public abstract class Scene : IDisposable
         name = RegisterName(name);
 
         GameObject gameObject = new(name, components);
+        gameObject.AwakeBehaviors();
+        gameObject.StartBehaviors();
         _toInstantiate.Add(gameObject);
         
         return gameObject;

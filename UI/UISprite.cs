@@ -10,7 +10,6 @@ public class UISprite : RendererComponent
 {
     // sprite to render
     public Sprite Sprite { get; set; }
-    
     // default sprite to render
     public Sprite DefaultSprite { get; set; }
 
@@ -33,6 +32,18 @@ public class UISprite : RendererComponent
 
     // will this UI have custom origin point
     public bool OverrideOrigin { get; set; } = false;
+
+    // empty constructor
+    public UISprite()
+    {
+    }
+
+    // constructor
+    //
+    // param: layerDepth - layer depth
+    public UISprite(float layerDepth) : base(layerDepth)
+    {
+    }
 
     // constructor
     //
