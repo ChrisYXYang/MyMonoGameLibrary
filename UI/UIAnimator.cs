@@ -12,10 +12,6 @@ namespace MyMonoGameLibrary.UI;
 public class UIAnimator : CoreComponent, IAnimator
 {
     // variables and properties
-    private UISprite _image;
-    private int _currentFrame = 0;
-    private TimeSpan _elapsed;
-    private Animation _animation;
     public Animation Animation
     {
         get => _animation;
@@ -31,6 +27,13 @@ public class UIAnimator : CoreComponent, IAnimator
             }
         }
     }
+
+    public float Speed { get; set; }
+
+    private UISprite _image;
+    private int _currentFrame = 0;
+    private TimeSpan _elapsed;
+    private Animation _animation;
 
     // constructor
     //
@@ -58,7 +61,7 @@ public class UIAnimator : CoreComponent, IAnimator
     {
         if (Animation != null)
         {
-            _elapsed += gameTime.ElapsedGameTime;
+            _elapsed += gameTime.ElapsedGameTime * Speed;
 
             // change to next frame until frame is up to date
             while (_elapsed >= _animation.Delay)

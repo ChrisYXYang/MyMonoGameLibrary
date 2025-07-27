@@ -12,10 +12,6 @@ namespace MyMonoGameLibrary.Scenes;
 public class Animator : CoreComponent, IAnimator
 {
     // variables and properties
-    private SpriteRenderer _spriteManager;
-    private int _currentFrame = 0;
-    private TimeSpan _elapsed;
-    private Animation _animation;
     public Animation Animation
     {
         get => _animation;
@@ -34,6 +30,13 @@ public class Animator : CoreComponent, IAnimator
             }
         }
     }
+
+    public float Speed { get; set; } = 1;
+
+    private SpriteRenderer _spriteManager;
+    private int _currentFrame = 0;
+    private TimeSpan _elapsed;
+    private Animation _animation;
 
     // empty constructor
     public Animator()
@@ -68,7 +71,7 @@ public class Animator : CoreComponent, IAnimator
     {
         if (Animation != null)
         {
-            _elapsed += gameTime.ElapsedGameTime;
+            _elapsed += gameTime.ElapsedGameTime * Speed;
 
             // change to next frame until frame is up to date
             while (_elapsed >= _animation.Delay)
