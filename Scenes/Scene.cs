@@ -504,38 +504,27 @@ public abstract class Scene : IDisposable
         return gameObject;
     }
 
-    // instantiate a gameobject using a list of components
-    //
-    // param: name - name of game object
-    // param: components - components of game object
-    // return: game object that was created
-    private GameObject Instantiate(string name, Component[] components)
-    {
-        // check if name is unique and register it
-        name = RegisterName(name);
-
-        GameObject gameObject = new(name, components);
-        gameObject.AwakeBehaviors();
-        gameObject.StartBehaviors();
-        _toInstantiate.Add(gameObject);
-        
-        return gameObject;
-    }
-
     // instantiate a gameobject using prefab
     //
     // param: prefab - prefab
     // return: game object that was created
     public GameObject Instantiate(PrefabInstance prefab)
     {
-        GameObject parent = Instantiate(prefab.Name, prefab.components);
+        // check if name is unique and register it
+        string name = RegisterName(prefab.Name);
+
+        GameObject gameObject = new(name, prefab.components);
 
         foreach (PrefabInstance child in prefab.children)
         {
-            parent.AddChild(Instantiate(child));
+            gameObject.AddChild(Instantiate(child));
         }
 
-        return parent;
+        gameObject.AwakeBehaviors();
+        gameObject.StartBehaviors();
+        _toInstantiate.Add(gameObject);
+
+        return gameObject;
     }
 
     // instantiate a gameobject using prefab
