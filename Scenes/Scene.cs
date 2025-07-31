@@ -33,7 +33,10 @@ public abstract class Scene : IDisposable
     private readonly Dictionary<string, GameObject> _uiDraw = [];
     private readonly List<TileCollider> _tileColliders = [];
 
-    public float Gravity { get; protected set; } = 9.8f;
+    public bool Paused { get; set; } = false;
+    public float Gravity { get; set; } = 9.8f;
+    public float Time { get; private set; }
+    public float DeltaTime { get; private set; }
 
     /// <summary>
     /// Gets the ContentManager used for loading scene-specific assets.
@@ -104,15 +107,33 @@ public abstract class Scene : IDisposable
     /// <param name="gameTime">A snapshot of the timing values for the current frame.</param>
     public virtual void Update(GameTime gameTime) 
     {
+        Time = (float)gameTime.TotalGameTime.TotalSeconds;
+        DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        UpdateCycle(gameTime, Paused);
+    }
+
+    // the update cycle for the game
+    //
+    // param: gameTime - game timing values
+    // param: paused - game paused or not
+    private void UpdateCycle(GameTime gameTime, bool paused)
+    {
         // store previous position of rigidbody
         foreach (GameObject gameObject in _gameObjects.Values)
         {
+            if (paused && !gameObject.IgnorePause)
+                continue;
+
             gameObject.Rigidbody?.UpdatePrevPos();
         }
 
         // behavior update
         foreach (GameObject gameObject in _gameObjects.Values)
         {
+            if (paused && !gameObject.IgnorePause)
+                continue;
+
             gameObject.UpdateBehaviors(gameTime);
         }
         UpdateDestroyInstantiate();
@@ -120,6 +141,9 @@ public abstract class Scene : IDisposable
         // update rigidbodies
         foreach (GameObject gameObject in _gameObjects.Values)
         {
+            if (paused && !gameObject.IgnorePause)
+                continue;
+
             Rigidbody rigidbody = gameObject.Rigidbody;
 
             if (rigidbody == null)
@@ -142,7 +166,7 @@ public abstract class Scene : IDisposable
                 {
                     if (!tileCol.Solid)
                         continue;
-                    
+
                     if (Collisions.Intersect(rigidbody.Collider, tileCol))
                     {
                         rigidbody.AddCollision(tileCol);
@@ -163,8 +187,14 @@ public abstract class Scene : IDisposable
         List<ColliderComponent> colliderList = [.. _colliders.Values];
         for (int i = 0; i < colliderList.Count; i++)
         {
+            if (paused && !colliderList[i].Parent.IgnorePause)
+                continue;
+
             for (int k = i + 1; k < colliderList.Count; k++)
             {
+                if (paused && !colliderList[k].Parent.IgnorePause)
+                    continue;
+
                 if (Collisions.Intersect(colliderList[i], colliderList[k]))
                 {
                     colliderList[i].Colliding(colliderList[k]);
@@ -181,6 +211,9 @@ public abstract class Scene : IDisposable
         // udpate collisions betweeen game objects and tile colliders
         foreach (ColliderComponent col in colliderList)
         {
+            if (paused && !col.Parent.IgnorePause)
+                continue;
+
             foreach (TileCollider tile in _tileColliders)
             {
                 if (Collisions.Intersect(col, tile))
@@ -199,6 +232,9 @@ public abstract class Scene : IDisposable
         // behavior late update
         foreach (GameObject gameObject in _gameObjects.Values)
         {
+            if (paused && !gameObject.IgnorePause)
+                continue;
+
             gameObject.LateUpdateBehaviors(gameTime);
         }
         UpdateDestroyInstantiate();
@@ -207,6 +243,9 @@ public abstract class Scene : IDisposable
         // update aniamtions
         foreach (GameObject gameObject in _gameObjects.Values)
         {
+            if (paused && !gameObject.IgnorePause)
+                continue;
+
             if (gameObject.Animator != null)
                 gameObject.Animator.Update(gameTime);
         }

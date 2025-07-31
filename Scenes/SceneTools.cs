@@ -16,6 +16,14 @@ public static class SceneTools
     public static Library SceneLibrary { get => _activeScene.SceneLibrary; }
     public static TileMap Tilemap { get => _activeScene.Tilemap; }
     public static float Gravity { get => _activeScene.Gravity; }
+    public static bool Paused 
+    { 
+        get => _activeScene.Paused;
+        set => _activeScene.Paused = value;
+    }
+
+    public static float Time { get => _activeScene.Time; }
+    public static float DeltaTime { get => _activeScene.DeltaTime; }
 
     // change the active scene
     //

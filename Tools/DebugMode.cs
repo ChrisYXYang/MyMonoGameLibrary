@@ -20,6 +20,7 @@ public class DebugMode : Core
     private static Sprite _originPoint;
     private static Sprite _boxCollider;
     private static Sprite _circleCollider;
+    private static Color _colliderColor = Color.White * 0.8f;
 
     // constructor
     //
@@ -163,7 +164,7 @@ public class DebugMode : Core
             (
                 _boxCollider, 
                 new Vector2(collider.Left, collider.Top),
-                Color.White,
+                _colliderColor,
                 0f,
                 new Vector2(collider.Right - collider.Left, collider.Bottom - collider.Top) * 0.5f,
                 SpriteEffects.None,
@@ -191,7 +192,7 @@ public class DebugMode : Core
             (
                 _circleCollider,
                 collider.Center,
-                Color.White,
+                _colliderColor,
                 0f,
                 collider.Radius,
                 SpriteEffects.None,
@@ -220,7 +221,7 @@ public class DebugMode : Core
                 _boxCollider.SpriteSheet,
                 new Vector2(collider.Left, collider.Top),
                 _boxCollider.SourceRectangle,
-                Color.White,
+                _colliderColor,
                 0f,
                 _boxCollider.OriginPoint,
                  new Vector2(collider.Right - collider.Left, collider.Bottom - collider.Top) / 16f,
@@ -239,7 +240,7 @@ public class DebugMode : Core
                 _circleCollider.SpriteSheet,
                 collider.Center,
                 _circleCollider.SourceRectangle,
-                Color.White,
+                _colliderColor,
                 0f,
                 _circleCollider.OriginPoint,
                 collider.Diameter / 16f,

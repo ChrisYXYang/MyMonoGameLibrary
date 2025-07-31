@@ -22,6 +22,21 @@ public class GameObject
     public Rigidbody Rigidbody { get; private set; }
     public int ChildCount { get => _children.Count; }
 
+    private bool _ignorePause = false;
+    public bool IgnorePause
+    {
+        get => _ignorePause;
+        set
+        {
+            _ignorePause = value;
+
+            foreach(GameObject child in _children)
+            {
+                child.IgnorePause = value;
+            }
+        }
+    }
+
     private readonly Dictionary<string, Component> _components = [];
     private readonly List<BehaviorComponent> _behaviors = [];
     private readonly List<GameObject> _children = [];
