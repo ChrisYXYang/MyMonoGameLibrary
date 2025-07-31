@@ -26,6 +26,9 @@ public static class UICamera
 
         if (ui.Renderer is UIText text)
         {
+            if (!text.IsVisible)
+                return;
+            
             Core.SpriteBatch.DrawString
                 (
                     text.Font,
@@ -41,6 +44,9 @@ public static class UICamera
         }
         else if (ui.Renderer is UISprite sprite)
         {
+            if (!sprite.IsVisible)
+                return;
+
             Core.SpriteBatch.Draw
                 (
                     sprite.Sprite.SpriteSheet,
