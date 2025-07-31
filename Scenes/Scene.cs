@@ -28,7 +28,7 @@ public abstract class Scene : IDisposable
     private readonly List<GameObject> _toInstantiate = [];
     private readonly List<GameObject> _toDestroy = [];
 
-    private readonly Dictionary<string, ICollider> _colliders = [];
+    private readonly Dictionary<string, ColliderComponent> _colliders = [];
     private readonly Dictionary<string, GameObject> _gameDraw = [];
     private readonly Dictionary<string, GameObject> _uiDraw = [];
     private readonly List<TileCollider> _tileColliders = [];
@@ -107,8 +107,7 @@ public abstract class Scene : IDisposable
         // store previous position of rigidbody
         foreach (GameObject gameObject in _gameObjects.Values)
         {
-            if (gameObject.Rigidbody != null)
-                gameObject.Rigidbody.UpdatePrevPos();
+            gameObject.Rigidbody?.UpdatePrevPos();
         }
 
         // behavior update
@@ -161,7 +160,7 @@ public abstract class Scene : IDisposable
         }
 
         // update collisions between game objects
-        List<ICollider> colliderList = [.. _colliders.Values];
+        List<ColliderComponent> colliderList = [.. _colliders.Values];
         for (int i = 0; i < colliderList.Count; i++)
         {
             for (int k = i + 1; k < colliderList.Count; k++)
@@ -233,7 +232,7 @@ public abstract class Scene : IDisposable
                     _gameDraw.Add(gameObject.Name, gameObject);
 
                 // register collider
-                ICollider collider = gameObject.Collider;
+                ColliderComponent collider = gameObject.Collider;
                 if (collider != null)
                 {
                     _colliders.Add(gameObject.Name, collider);
@@ -408,7 +407,7 @@ public abstract class Scene : IDisposable
                 _gameDraw.Add(name, gameObject);
 
             // register collider
-            ICollider collider = gameObject.Collider;
+            ColliderComponent collider = gameObject.Collider;
             if (collider != null)
             {
                 if (collider.Layer != "ui")
@@ -587,7 +586,7 @@ public abstract class Scene : IDisposable
     // param: name - name to change to
     // param: prefab - prefab to change name
     // return: new prefab
-    public PrefabInstance Rename(string name, PrefabInstance prefab)
+    public static PrefabInstance Rename(string name, PrefabInstance prefab)
     {
         prefab.Name = name;
         return prefab;

@@ -19,9 +19,9 @@ public class TileMap
     // variables and properties
     public int Rows { get; private set; }
     public int Columns { get; private set; }
-    public List<string> Layers => _tilemap.Keys.ToList<string>();
+    public List<string> Layers => [.. _tilemap.Keys];
 
-    private Dictionary<string, Tile[,]> _tilemap = new Dictionary<string, Tile[,]>();
+    private readonly Dictionary<string, Tile[,]> _tilemap = [];
     public string Name {  get; private set; }
 
     // constructor. Creates a tile map from xml file
@@ -55,14 +55,14 @@ public class TileMap
 
                 if (layers != null)
                 {
-                    int layerDepth = 0;
+                    int layerNum = 0;
                     foreach (var layer in layers)
                     {
-                        // get layer name
+                        // get layer info
                         string layerName = layer.Attribute("name").Value;
                         bool collide = layerName.Contains("col");
                         bool platform = layerName.Contains("plat");
-                        
+
                         bool solid;
                         string layerLayer;
                         if (layerName.Contains("sol"))
@@ -76,6 +76,8 @@ public class TileMap
                             layerLayer = layer.Attribute("layer")?.Value ?? "default";
                         }
 
+                        float layerDepth = float.Parse(layer.Attribute("depth")?.Value ?? "0");
+
                         // create the tile grid from data csv
                         var data = layer.Element("data");
                         string[] grid_lines = data.Value.Trim().Split("\n");
@@ -86,7 +88,7 @@ public class TileMap
                             grid_lines[i] = grid_lines[i].Trim();
                             
                             if (i < grid_lines.Length - 1)
-                                grid_lines[i] = grid_lines[i].Substring(0, grid_lines[i].Length - 1);
+                                grid_lines[i] = grid_lines[i][..^1];
 
                             string[] line_tiles = grid_lines[i].Split(",");
 
@@ -102,7 +104,7 @@ public class TileMap
                                                             new Vector2(j + 0.5f - (float)Columns / 2, i - (float)Rows / 2 + 0.5f),
                                                             new Vector2(i,j),
                                                             tileSize,
-                                                            0 + layerDepth * 0.01f,
+                                                            layerDepth,
                                                             collide,
                                                             solid,
                                                             platform,
@@ -114,7 +116,7 @@ public class TileMap
 
                         // add the new layer to tile map dictionary
                         _tilemap.Add(layerName, tileGrid);
-                        layerDepth++;
+                        layerNum++;
                     }
                 }
             }
