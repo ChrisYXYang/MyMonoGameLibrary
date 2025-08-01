@@ -122,16 +122,20 @@ public abstract class Scene : IDisposable
         // store previous position of rigidbody
         foreach (GameObject gameObject in _gameObjects.Values)
         {
-            if (paused && !gameObject.IgnorePause)
+            if ((paused && !gameObject.IgnorePause) || !gameObject.Enabled)
                 continue;
 
-            gameObject.Rigidbody?.UpdatePrevPos();
+            if (gameObject.Rigidbody != null)
+            {
+                if (gameObject.Rigidbody.Enabled)
+                    gameObject.Rigidbody.UpdatePrevPos();
+            }
         }
 
         // behavior update
         foreach (GameObject gameObject in _gameObjects.Values)
         {
-            if (paused && !gameObject.IgnorePause)
+            if ((paused && !gameObject.IgnorePause) || !gameObject.Enabled)
                 continue;
 
             gameObject.UpdateBehaviors(gameTime);
@@ -141,12 +145,15 @@ public abstract class Scene : IDisposable
         // update rigidbodies
         foreach (GameObject gameObject in _gameObjects.Values)
         {
-            if (paused && !gameObject.IgnorePause)
+            if ((paused && !gameObject.IgnorePause) || !gameObject.Enabled)
                 continue;
 
             Rigidbody rigidbody = gameObject.Rigidbody;
 
             if (rigidbody == null)
+                continue;
+
+            if (!rigidbody.Enabled)
                 continue;
 
             // afflict gravity
@@ -187,12 +194,12 @@ public abstract class Scene : IDisposable
         List<ColliderComponent> colliderList = [.. _colliders.Values];
         for (int i = 0; i < colliderList.Count; i++)
         {
-            if (paused && !colliderList[i].Parent.IgnorePause)
+            if ((paused && !colliderList[i].Parent.IgnorePause) || !colliderList[i].Parent.Enabled || !colliderList[i].Enabled)
                 continue;
 
             for (int k = i + 1; k < colliderList.Count; k++)
             {
-                if (paused && !colliderList[k].Parent.IgnorePause)
+                if ((paused && !colliderList[k].Parent.IgnorePause) || !colliderList[k].Parent.Enabled || !colliderList[k].Enabled)
                     continue;
 
                 if (Collisions.Intersect(colliderList[i], colliderList[k]))
@@ -211,7 +218,7 @@ public abstract class Scene : IDisposable
         // udpate collisions betweeen game objects and tile colliders
         foreach (ColliderComponent col in colliderList)
         {
-            if (paused && !col.Parent.IgnorePause)
+            if ((paused && !col.Parent.IgnorePause) || !col.Parent.Enabled || !col.Enabled)
                 continue;
 
             foreach (TileCollider tile in _tileColliders)
@@ -232,7 +239,7 @@ public abstract class Scene : IDisposable
         // behavior late update
         foreach (GameObject gameObject in _gameObjects.Values)
         {
-            if (paused && !gameObject.IgnorePause)
+            if ((paused && !gameObject.IgnorePause) || !gameObject.Enabled)
                 continue;
 
             gameObject.LateUpdateBehaviors(gameTime);
@@ -243,11 +250,25 @@ public abstract class Scene : IDisposable
         // update aniamtions
         foreach (GameObject gameObject in _gameObjects.Values)
         {
-            if (paused && !gameObject.IgnorePause)
+            if ((paused && !gameObject.IgnorePause) || !gameObject.Enabled)
                 continue;
 
             if (gameObject.Animator != null)
+            {
+                if (gameObject.Animator is UIAnimator ui)
+                {
+                    if (!ui.Enabled)
+                        continue;
+                }
+
+                if (gameObject.Animator is Animator anim)
+                {
+                    if (!anim.Enabled)
+                        continue;
+                }
+
                 gameObject.Animator.Update(gameTime);
+            }
         }
     }
 
@@ -323,7 +344,8 @@ public abstract class Scene : IDisposable
         // game rendering
         foreach (GameObject gameObject in _gameDraw.Values)
         {
-            Camera.Draw(gameObject.Renderer);
+            if (gameObject.Enabled)
+                Camera.Draw(gameObject.Renderer);
         }
         Camera.Draw(Tilemap);
         Core.SpriteBatch.End();
@@ -333,7 +355,8 @@ public abstract class Scene : IDisposable
         
         foreach (GameObject gameObject in _uiDraw.Values)
         {
-            UICamera.Draw(gameObject);
+            if (gameObject.Enabled)
+                UICamera.Draw(gameObject);
         }
 
         Core.SpriteBatch.End();

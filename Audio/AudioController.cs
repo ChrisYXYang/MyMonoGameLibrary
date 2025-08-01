@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,16 +14,38 @@ public class AudioController : IDisposable
     // Tracks sound effect instances created so they can be paused, unpaused, and/or disposed.
     private readonly List<SoundEffectInstance> _activeSoundEffectInstances;
 
-    // Tracks the volume for song playback when muting and unmuting.
-    private float _previousSongVolume;
-
-    // Tracks the volume for sound effect playback when muting and unmuting.
-    private float _previousSoundEffectVolume;
+    private float _previousMasterVol;
 
     /// <summary>
     /// Gets a value that indicates if audio is muted.
     /// </summary>
     public bool IsMuted { get; private set; }
+
+    // gets or sets global volume of all sound
+    private float _masterVolume = 1f;
+    public float MasterVolume
+    {
+        get
+        {
+            if (IsMuted)
+            {
+                return 0f;
+            }
+
+            return _masterVolume;
+        }
+        set
+        {
+            if (IsMuted)
+            {
+                return;
+            }
+
+            _masterVolume = Math.Clamp(value, 0f, 1f);
+            MediaPlayer.Volume = SongVolume * MasterVolume;
+            SoundEffect.MasterVolume = SoundEffectVolume * MasterVolume;
+        }
+    }
 
     /// <summary>
     /// Gets or Sets the global volume of songs.
@@ -31,6 +54,7 @@ public class AudioController : IDisposable
     /// If IsMuted is true, the getter will always return back 0.0f and the
     /// setter will ignore setting the volume.
     /// </remarks>
+    private float _songVolume = 1;
     public float SongVolume
     {
         get
@@ -40,7 +64,7 @@ public class AudioController : IDisposable
                 return 0.0f;
             }
 
-            return MediaPlayer.Volume;
+            return _songVolume;
         }
         set
         {
@@ -49,7 +73,8 @@ public class AudioController : IDisposable
                 return;
             }
 
-            MediaPlayer.Volume = Math.Clamp(value, 0.0f, 1.0f);
+            _songVolume = Math.Clamp(value, 0f, 1f);
+            MediaPlayer.Volume = _songVolume * MasterVolume;
         }
     }
 
@@ -60,6 +85,7 @@ public class AudioController : IDisposable
     /// If IsMuted is true, the getter will always return back 0.0f and the
     /// setter will ignore setting the volume.
     /// </remarks>
+    private float _sfxVolume = 1;
     public float SoundEffectVolume
     {
         get
@@ -69,7 +95,7 @@ public class AudioController : IDisposable
                 return 0.0f;
             }
 
-            return SoundEffect.MasterVolume;
+            return _sfxVolume;
         }
         set
         {
@@ -78,7 +104,8 @@ public class AudioController : IDisposable
                 return;
             }
 
-            SoundEffect.MasterVolume = Math.Clamp(value, 0.0f, 1.0f);
+            _sfxVolume = Math.Clamp(value, 0f, 1f);
+            SoundEffect.MasterVolume = _sfxVolume * MasterVolume;
         }
     }
 
@@ -93,6 +120,7 @@ public class AudioController : IDisposable
     public AudioController()
     {
         _activeSoundEffectInstances = new List<SoundEffectInstance>();
+
     }
 
     // Finalizer called when object is collected by the garbage collector.
@@ -211,14 +239,8 @@ public class AudioController : IDisposable
     /// </summary>
     public void MuteAudio()
     {
-        // Store the volume so they can be restored during ResumeAudio
-        _previousSongVolume = MediaPlayer.Volume;
-        _previousSoundEffectVolume = SoundEffect.MasterVolume;
-
-        // Set all volumes to 0
-        MediaPlayer.Volume = 0.0f;
-        SoundEffect.MasterVolume = 0.0f;
-
+        _previousMasterVol = MasterVolume;
+        MasterVolume = 0;
         IsMuted = true;
     }
 
@@ -227,10 +249,7 @@ public class AudioController : IDisposable
     /// </summary>
     public void UnmuteAudio()
     {
-        // Restore the previous volume values.
-        MediaPlayer.Volume = _previousSongVolume;
-        SoundEffect.MasterVolume = _previousSoundEffectVolume;
-
+        MasterVolume = _previousMasterVol;
         IsMuted = false;
     }
 

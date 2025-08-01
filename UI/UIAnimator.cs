@@ -17,6 +17,9 @@ public class UIAnimator : CoreComponent, IAnimator
         get => _animation;
         set
         {
+            if (_animation == value)
+                return;
+
             _animation = value;
 
             if (value != null)

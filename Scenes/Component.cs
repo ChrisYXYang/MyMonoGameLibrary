@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Graphics;
+using System.Diagnostics;
 
 namespace MyMonoGameLibrary.Scenes;
 
@@ -16,6 +17,24 @@ public abstract class Component
     public GameObject Parent { get; private set; }
     public Transform Transform { get; private set; }
 
+    private bool _enabled = true;
+    public bool Enabled
+    {
+        get => _enabled;
+        set
+        {
+            if (_enabled && value == false)
+            {
+                OnDisable();
+            }
+            else if (!_enabled && value == true)
+            {
+                OnEnable();
+            }
+
+            _enabled = value;
+        }
+    }
     // initialization for the component
     //
     // param: parent - parent game object
@@ -31,6 +50,17 @@ public abstract class Component
     public T GetComponent<T>() where T : Component
     {
         return Parent.GetComponent<T>();
+    }
+
+    // executes when component is enabled
+    protected virtual void OnEnable()
+    {
+    }
+
+    // executes when component is disabled
+    protected virtual void OnDisable()
+    {
+
     }
 }
 

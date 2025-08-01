@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using MyMonoGameLibrary.Tilemap;
 
@@ -246,5 +247,11 @@ public class Rigidbody : CoreComponent
     {
         if (_colliders.ContainsKey(other.GetName()))
             _colliders.Remove(other.GetName());
+    }
+
+    // on enable
+    protected override void OnEnable()
+    {
+        UpdatePrevPos();
     }
 }

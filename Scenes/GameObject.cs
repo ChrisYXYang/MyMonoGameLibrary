@@ -37,6 +37,26 @@ public class GameObject
         }
     }
 
+    private bool _enabled = true;
+    public bool Enabled
+    {
+        get => _enabled;
+        set
+        {
+            _enabled = value;
+
+            foreach(Component component in _components.Values)
+            {
+                component.Enabled = value;
+            }
+
+            foreach(GameObject child in _children)
+            {
+                child.Enabled = value;
+            }
+        }
+    }
+
     private readonly Dictionary<string, Component> _components = [];
     private readonly List<BehaviorComponent> _behaviors = [];
     private readonly List<GameObject> _children = [];
@@ -223,7 +243,8 @@ public class GameObject
     {
         foreach (BehaviorComponent behavior in _behaviors)
         {
-            behavior.Update(gameTime);
+            if (behavior.Enabled)
+                behavior.Update(gameTime);
         }
     }
 
@@ -234,7 +255,8 @@ public class GameObject
     {
         foreach (BehaviorComponent behavior in _behaviors)
         {
-            behavior.LateUpdate(gameTime);
+            if (behavior.Enabled)
+                behavior.LateUpdate(gameTime);
         }
     }
 }
