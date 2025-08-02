@@ -4,8 +4,8 @@ using MyMonoGameLibrary.Scenes;
 
 namespace MyMonoGameLibrary.Tools;
 
-// converts variables to other variables
-public static class Converter
+// some useful tools
+public static class Tools
 {
     // converts string to vector2
     //
@@ -24,5 +24,13 @@ public static class Converter
     public static float PixelToUnit(float pixels)
     {
         return pixels / Camera.SpritePixelsPerUnit;
+    }
+    
+    // 1/2 chance
+    //
+    // return: half chance true/false
+    public static bool HalfChance()
+    {
+        return Core.Random.Next(100) < 50; 
     }
 }

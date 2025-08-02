@@ -23,8 +23,11 @@ public class Rigidbody : CoreComponent
     // affected by gravity or not
     public bool UseGravity { get; set; }
 
-    // is bottom of rigidbody touching tile collider
+    // is side of collider going against tile?
     public bool TouchingBottom { get; private set; }
+    public bool TouchingTop { get; private set; }
+    public bool TouchingLeft { get; private set; }
+    public bool TouchingRight { get; private set; }
 
     // collider rigidbody will use
     public BoxCollider Collider { get; private set; }
@@ -116,6 +119,7 @@ public class Rigidbody : CoreComponent
         float xDelta = _previousPosition.X - currentPos.X;
 
         // correct left movement
+        TouchingLeft = false;
         if (xDelta > 0)
         {
             Transform.position = new Vector2(currentPos.X, _previousPosition.Y);
@@ -129,6 +133,7 @@ public class Rigidbody : CoreComponent
                         {
                             Transform.position.X = tile.Right + (Collider.Width * 0.5f) - Collider.Offset.X;
                             this.XVelocity = 0;
+                            TouchingLeft = true;
                         }
                     }
                 }
@@ -138,6 +143,7 @@ public class Rigidbody : CoreComponent
         }
 
         // correct right movement
+        TouchingRight = false;
         if (xDelta < 0)
         {
             Transform.position = new Vector2(currentPos.X, _previousPosition.Y);
@@ -151,6 +157,7 @@ public class Rigidbody : CoreComponent
                         {
                             Transform.position.X = tile.Left - (Collider.Width * 0.5f) - Collider.Offset.X;
                             this.XVelocity = 0;
+                            TouchingRight = true;
                         }
                     }
                 }
@@ -162,6 +169,7 @@ public class Rigidbody : CoreComponent
         float yDelta = _previousPosition.Y - currentPos.Y;
 
         // correct up movement
+        TouchingTop = false;
         if (yDelta > 0)
         {
             Transform.position = new Vector2(_previousPosition.X, currentPos.Y);
@@ -175,6 +183,7 @@ public class Rigidbody : CoreComponent
                         {
                             Transform.position.Y = tile.Bottom + (Collider.Height * 0.5f) - Collider.Offset.Y;
                             this.YVelocity = 0;
+                            TouchingTop = true;
                         }
                     }
                 }
