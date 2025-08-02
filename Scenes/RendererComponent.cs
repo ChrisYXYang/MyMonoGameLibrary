@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 namespace MyMonoGameLibrary.Scenes;
 
 // component for rendering
-public class RendererComponent : CoreComponent
+public abstract class RendererComponent : CoreComponent
 {
     // variables and properties
     public Color Color { get; set; } = Color.White;

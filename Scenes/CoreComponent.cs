@@ -8,7 +8,7 @@ namespace MyMonoGameLibrary.Scenes;
 
 // for core components like sprite renderer, colliders, etc. (not behavior scripts). Gives the 
 // functionality of initialization.
-public class CoreComponent : Component
+public abstract class CoreComponent : Component
 {
     // intitialize the component
     //
