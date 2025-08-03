@@ -57,6 +57,9 @@ public class GameObject
         }
     }
 
+    // whether or not the gameobject will persist across scenes
+    public bool Persist { get; set; }
+
     private readonly Dictionary<string, Component> _components = [];
     private readonly List<BehaviorComponent> _behaviors = [];
     private readonly List<GameObject> _children = [];

@@ -137,8 +137,10 @@ public class Core : Game
     private static void TransitionScene()
     {
         // If there is an active scene, dispose of it
+        List<GameObject> persist = [];
         if (s_activeScene != null)
         {
+            persist = s_activeScene.GetPersisting();
             s_activeScene.Dispose();
         }
 
@@ -157,6 +159,7 @@ public class Core : Game
         // Scene.LoadContent
         if (s_activeScene != null)
         {
+            s_activeScene.Persisting = persist;
             s_activeScene.Initialize();
         }
     }

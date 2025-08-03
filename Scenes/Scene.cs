@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -32,6 +33,8 @@ public abstract class Scene : IDisposable
     private readonly Dictionary<string, GameObject> _gameDraw = [];
     private readonly Dictionary<string, GameObject> _uiDraw = [];
     private readonly List<TileCollider> _tileColliders = [];
+
+    public List<GameObject> Persisting { private get; set; }
 
     public bool Paused { get; set; } = false;
     public float Gravity { get; set; } = 9.8f;
@@ -76,8 +79,59 @@ public abstract class Scene : IDisposable
     /// </remarks>
     public virtual void Initialize()
     {
+        
         SceneLibrary = new Library(Content);
         Camera.position = Vector2.Zero;
+
+        // register all persisting gameobjects from last scene
+        foreach (GameObject gameObject in Persisting)
+        {
+            // register name
+            string[] nameSplit =  gameObject.Name.Split('_');
+            string name = nameSplit[0];
+
+            int number = 0;
+            if (nameSplit.Length > 1)
+            {
+                number = int.Parse(nameSplit[1]);
+            }
+
+
+            if (_names.ContainsKey(name))
+            {
+                _names[name] += 1;
+                name = name + "_" + _names[name];
+            }
+            else
+                _names.Add(name, number);
+
+
+            // register game object
+            _gameObjects.Add(gameObject.Name, gameObject);
+
+            // register renderer
+            if (gameObject.Renderer is UIText || gameObject.Renderer is UISprite)
+            {
+                _uiDraw.Add(gameObject.Name, gameObject);
+            }
+            else
+            {
+                if (gameObject.Renderer is TextRenderer || gameObject.Renderer is SpriteRenderer)
+                    _gameDraw.Add(gameObject.Name, gameObject);
+
+                // register collider
+                ColliderComponent collider = gameObject.Collider;
+                if (collider != null)
+                {
+                    if (collider.Layer != "ui")
+                    {
+                        _colliders.Add(gameObject.Name, collider);
+                    }
+                }
+            }
+        }
+
+
         LoadContent();
     }
 
@@ -89,12 +143,19 @@ public abstract class Scene : IDisposable
         // awake behavior scripts
         foreach (GameObject gameObject in _gameObjects.Values)
         {
+            if (Persisting.Contains(gameObject))
+                continue;
+
             gameObject.AwakeBehaviors();
         }
+        UpdateDestroyInstantiate();
 
         // start behavior scripts
         foreach (GameObject gameObject in _gameObjects.Values)
         {
+            if (Persisting.Contains(gameObject))
+                continue;
+
             gameObject.StartBehaviors();
         }
         UpdateDestroyInstantiate();
@@ -442,6 +503,38 @@ public abstract class Scene : IDisposable
     public List<ICollider> GetColliders()
     {
         return [.. _colliders.Values];
+    }
+
+    // get persisting game objects
+    //
+    // return: list of all persisting game objects
+    public List<GameObject> GetPersisting()
+    {
+        List<GameObject> list = [];
+
+        // add gameobject and its children if the gameobject has no parent and persists
+        foreach (GameObject gameObject in _gameObjects.Values)
+        {
+            if (gameObject.Parent == null && gameObject.Persist)
+            {
+                Queue<GameObject> queue = [];
+                queue.Enqueue(gameObject);
+
+                while (queue.Count > 0)
+                {
+                    GameObject current = queue.Dequeue();
+
+                    for (int i = 0; i < current.ChildCount; i++)
+                    {
+                        queue.Enqueue(current.GetChild(i));
+                    }
+
+                    list.Add(current);
+                }
+            }
+        }
+
+        return list;
     }
 
     // setup a gameobject using a list of components and register it
