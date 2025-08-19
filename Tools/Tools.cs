@@ -33,4 +33,12 @@ public static class Tools
     {
         return Core.Random.Next(100) < 50; 
     }
+
+    // 1/3 chance
+    //
+    // return: 1,2 or 3
+    public static int ThirdChance()
+    {
+        return Core.Random.Next(1, 4);
+    }
 }
