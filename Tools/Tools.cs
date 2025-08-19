@@ -34,11 +34,14 @@ public static class Tools
         return Core.Random.Next(100) < 50; 
     }
 
-    // 1/3 chance
+    // random float
     //
-    // return: 1,2 or 3
-    public static int ThirdChance()
+    // param: min (inclusive)
+    // param: max (exclusive)
+    // return: random float between them
+    public static float RandomFloat(float min, float max)
     {
-        return Core.Random.Next(1, 4);
+        return ((float)Core.Random.NextDouble() * (max - min)) + min;
+
     }
 }

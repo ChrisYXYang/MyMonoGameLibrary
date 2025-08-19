@@ -29,7 +29,6 @@ public class ParticleSystem : BehaviorComponent
     public bool FlipX { get; set; }
     public bool FlipY { get; set; }
 
-
     private float _playTimer = 0;
     
     // standard constructor
@@ -102,6 +101,7 @@ public class ParticleSystem : BehaviorComponent
 
     public override void Update(GameTime gameTime)
     {
+        // automatically play particles
         if (!Manual) 
         {
             _playTimer -= SceneTools.DeltaTime;
@@ -110,7 +110,7 @@ public class ParticleSystem : BehaviorComponent
             {
                 PlayParticles();
 
-                // destroy game object if necessary
+                // destroy game object if needed
                 if (!Infinite)
                 {
                     Reps--;
@@ -149,14 +149,17 @@ public class ParticleSystem : BehaviorComponent
         if (FlipY)
         {
             y = -YOffset;
+            rot = -Rotation;
         }
 
         // play particles
         for (int i = 0; i < Particles; i++)
         {
+            // calcualte direction of particle
             float rotation = MathHelper.ToRadians(rot + (((float)Core.Random.NextDouble() - 0.5f) * Spread));
             Vector2 direction = new((float)MathF.Cos(rotation), (float)MathF.Sin(rotation));
 
+            // particle settings
             Particle particle = SceneTools.Instantiate(BaseParticle(),
                 new Vector2(Transform.position.X + x, Transform.position.Y + y), (float)Core.Random.NextDouble() * 360).GetComponent<Particle>();
 
