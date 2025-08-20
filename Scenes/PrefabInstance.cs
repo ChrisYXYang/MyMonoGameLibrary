@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace MyMonoGameLibrary.Scenes;
 
@@ -12,7 +9,7 @@ public class PrefabInstance
 {
     public string Name { get; set; }
     public readonly Component[] components;
-    public readonly PrefabInstance[] children;
+    public readonly (PrefabInstance, Vector2)[] children;
 
     // constructor
     //
@@ -30,7 +27,7 @@ public class PrefabInstance
     // param: name - name
     // param: components - components
     // param: children - children prefabs
-    public PrefabInstance(string name, Component[] components, PrefabInstance[] children)
+    public PrefabInstance(string name, Component[] components, (PrefabInstance, Vector2)[] children)
     {
         Name = name;
         this.components = components;

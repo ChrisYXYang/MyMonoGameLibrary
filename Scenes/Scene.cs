@@ -596,9 +596,9 @@ public abstract class Scene : IDisposable
     {
         GameObject parent = Setup(prefab.Name, prefab.components);
 
-        foreach (PrefabInstance child in prefab.children)
+        foreach ((PrefabInstance, Vector2) child in prefab.children)
         {
-            parent.AddChild(Setup(child));
+            parent.AddChild(Setup(child.Item1, child.Item2));
         }
 
         return parent;
@@ -669,9 +669,9 @@ public abstract class Scene : IDisposable
 
         GameObject gameObject = new(name, prefab.components);
 
-        foreach (PrefabInstance child in prefab.children)
+        foreach ((PrefabInstance, Vector2) child in prefab.children)
         {
-            gameObject.AddChild(Instantiate(child));
+            gameObject.AddChild(Instantiate(child.Item1, child.Item2));
         }
 
         gameObject.AwakeBehaviors();
