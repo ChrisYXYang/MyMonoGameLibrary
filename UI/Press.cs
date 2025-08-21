@@ -38,7 +38,7 @@ public abstract class Press : BehaviorComponent
         {
             _sr.Sprite = Hover;
 
-            if (!InputManager.Mouse.IsButtonDown(MouseButton.Left))
+            if (InputManager.Mouse.WasButtonJustPressed(MouseButton.Left))
             {
                 Clicked();
             }

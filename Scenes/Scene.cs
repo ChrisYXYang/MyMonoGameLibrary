@@ -664,19 +664,68 @@ public abstract class Scene : IDisposable
     // return: game object that was created
     public GameObject Instantiate(PrefabInstance prefab)
     {
-        // check if name is unique and register it
+        // register
         string name = RegisterName(prefab.Name);
-
         GameObject gameObject = new(name, prefab.components);
+        _toInstantiate.Add(gameObject);
 
+        // register children (but don't call awake or start yet)
         foreach ((PrefabInstance, Vector2) child in prefab.children)
         {
-            gameObject.AddChild(Instantiate(child.Item1, child.Item2));
+            gameObject.AddChild(RegisterChild(child));
         }
 
-        gameObject.AwakeBehaviors();
-        gameObject.StartBehaviors();
+        // call awake on all
+        Queue<GameObject> objQueue = [];
+        objQueue.Enqueue(gameObject);
+
+        while (objQueue.Count > 0)
+        {
+            GameObject current = objQueue.Dequeue();
+            current.AwakeBehaviors();
+            
+            for (int i = 0; i < current.ChildCount; i++)
+            {
+                objQueue.Enqueue(current.GetChild(i));
+            }
+        }
+
+        // call start on all
+        objQueue.Clear();
+        objQueue.Enqueue(gameObject);
+
+        while (objQueue.Count > 0)
+        {
+            GameObject current = objQueue.Dequeue();
+            current.StartBehaviors();
+
+            for (int i = 0; i < current.ChildCount; i++)
+            {
+                objQueue.Enqueue(current.GetChild(i));
+            }
+        }
+
+
+        return gameObject;
+    }
+
+    // register a child prefab. Use is for registering all children recursively
+    //
+    // param: prefab - child prefab to register
+    // return: registered game object
+    private GameObject RegisterChild((PrefabInstance, Vector2) prefab)
+    {
+        // register
+        string name = RegisterName(prefab.Item1.Name);
+        GameObject gameObject = new(name, prefab.Item1.components);
+        gameObject.Transform.position = prefab.Item2;
         _toInstantiate.Add(gameObject);
+
+        // register children
+        foreach ((PrefabInstance, Vector2) child in prefab.Item1.children)
+        {
+            gameObject.AddChild(RegisterChild(child));
+        }
 
         return gameObject;
     }

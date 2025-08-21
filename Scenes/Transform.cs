@@ -18,15 +18,18 @@ public class Transform : CoreComponent
     {
         get
         {
-            if (Parent.Parent != null)
+            Vector2 truePos = position;
+            GameObject parent = Parent.Parent;
+            while (parent != null)
             {
-                if (Parent.Parent.Transform != null)
+                if (parent.Transform != null)
                 {
-                    return position + Parent.Parent.Transform.position;
+                    truePos += parent.Transform.position;
                 }
+                parent = parent.Parent;
             }
 
-            return position;
+            return truePos;
         }
     }
 
@@ -34,15 +37,18 @@ public class Transform : CoreComponent
     {
         get
         {
-            if (Parent.Parent != null)
+            Vector2 trueScale = Scale;
+            GameObject parent = Parent.Parent;
+            while (parent != null)
             {
-                if (Parent.Parent.Transform != null)
+                if (parent.Transform != null)
                 {
-                    return Scale * Parent.Parent.Transform.Scale;
+                    trueScale *= Parent.Parent.Transform.Scale;
                 }
+                parent = parent.Parent;
             }
 
-            return Scale;
+            return trueScale;
         }
     }
 
@@ -50,15 +56,18 @@ public class Transform : CoreComponent
     {
         get
         {
-            if (Parent.Parent != null)
+            float trueRot = Rotation;
+            GameObject parent = Parent.Parent;
+            while (parent != null)
             {
-                if (Parent.Parent.Transform != null)
+                if (parent.Transform != null)
                 {
-                    return Rotation + Parent.Parent.Transform.Rotation;
+                    trueRot += parent.Transform.Rotation;
                 }
+                parent = parent.Parent;
             }
 
-            return Rotation;
+            return trueRot;
         }
     }
 

@@ -139,6 +139,7 @@ public class GameObject
         _children.Add(child);
         child.Parent?.RemoveChild(child);
         child.Parent = this;
+        child.IgnorePause = IgnorePause;
     }
 
     // set parent
