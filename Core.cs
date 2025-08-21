@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MyMonoGameLibrary.Audio;
+using MyMonoGameLibrary.Graphics;
 using MyMonoGameLibrary.Input;
 using MyMonoGameLibrary.Scenes;
 using MyMonoGameLibrary.Tilemap;
@@ -31,13 +32,19 @@ public class Core : Game
     public static Library GlobalLibrary { get; private set; }
     public static AudioController Audio { get; private set; }
     public static Random Random { get; private set; } = new Random();
-    public static int Width { get; private set; }
-    public static int Height { get; private set; }
 
-    public static List<GameObject> OriginGameObject { get; set; } = [];
-    public static List<GameObject> OriginUI { get; set; } = [];
-    public static List<GameObject> ColliderGameObject { get; set; } = [];
-    public static List<GameObject> ColliderUI { get; set; } = [];
+
+    // for debugging
+    private static SpriteSheet _sprites;
+    private static Sprite _originPoint;
+    private static Sprite _boxCollider;
+    private static Sprite _circleCollider;
+    private static Color _colliderColor = Color.White * 0.8f;
+
+    private static List<GameObject> _originGameObject = [];
+    private static List<GameObject> _originUI = [];
+    private static List<GameObject> _colliderGameObject = [];
+    private static List<GameObject> _colliderUI = [];
     public static bool DrawTilemap { get; set; }
 
     // constructor
@@ -46,7 +53,7 @@ public class Core : Game
     // param: width - width of screen
     // param: height - height of screen
     // param: fullScreen - full screen or not
-    public Core(string title, int width, int height, bool fullScreen)
+    public Core(string title, int width, int height)
     {
         // ensure only one core
         if (s_instance != null)
@@ -63,9 +70,6 @@ public class Core : Game
         // set grpahics defaults
         Graphics.PreferredBackBufferWidth = width;
         Graphics.PreferredBackBufferHeight = height;
-        Width = width;
-        Height = height;
-        Graphics.IsFullScreen = fullScreen;
         Graphics.ApplyChanges();
 
         // mouse visible by default
@@ -95,10 +99,18 @@ public class Core : Game
         // create audio controller
         Audio = new AudioController();
 
-        // load content for debugging
-        Debugging.LoadContent();
-
         base.Initialize();
+    }
+
+    protected override void LoadContent()
+    {
+        // load content for debugging
+        _sprites = new SpriteSheet(Core.Content, "debug");
+        _originPoint = _sprites.GetSprite("origin_point");
+        _boxCollider = _sprites.GetSprite("box_collider");
+        _circleCollider = _sprites.GetSprite("circle_collider");
+
+        base.LoadContent();
     }
 
     protected override void UnloadContent()
@@ -140,30 +152,108 @@ public class Core : Game
 
             if (SceneTools.ActiveScene)
             {
+                // draw tilemap
                 if (DrawTilemap)
-                    Debugging.DrawTilemapCollider(SceneTools.Tilemap);
-
-                foreach (GameObject gameObject in ColliderGameObject)
                 {
-                    Debugging.DrawCollider(gameObject);
+                    TileMap tilemap = SceneTools.Tilemap;
+
+                    List<string> layerNames = tilemap.Layers;
+
+                    foreach (string layerName in layerNames)
+                    {
+                        for (int i = 0; i < tilemap.Rows; i++)
+                        {
+                            for (int j = 0; j < tilemap.Columns; j++)
+                            {
+                                Tile tile = tilemap.GetTile(layerName, i, j);
+
+                                if (tile == null)
+                                    continue;
+
+                                if (tile.Collider == null)
+                                    continue;
+
+                                DrawBoxCollider(tile.Collider);
+                            }
+                        }
+                    }
                 }
 
-                foreach (GameObject gameObject in OriginGameObject)
+                // draw collider
+                foreach (GameObject gameObject in _colliderGameObject)
                 {
-                    Debugging.DrawOrigin(gameObject);
+                    ICollider collider = gameObject.Collider;
+
+                    if (collider != null)
+                    {
+                        if (collider is BoxCollider box)
+                            DrawBoxCollider(box);
+                        else if (collider is CircleCollider circle)
+                            DrawCircleCollider(circle);
+                    }
                 }
 
-                foreach (GameObject gameObject in ColliderUI)
+                // draw origin
+                foreach (GameObject gameObject in _originGameObject)
                 {
-                    Debugging.DrawUICollider(gameObject);
+                    Transform transform = gameObject.Transform;
+
+                    if (transform == null)
+                        return;
+
+                    Camera.Draw
+                        (
+                            _originPoint,
+                            transform.TruePosition,
+                            Color.White,
+                            0f,
+                            0.05f,
+                            SpriteEffects.None,
+                            1f
+                        );
                 }
 
-                foreach (GameObject gameObject in OriginUI)
+                // draw ui collider
+                foreach (GameObject gameObject in _colliderUI)
                 {
-                    Debugging.DrawUIOrigin(gameObject);
+                    ICollider collider = gameObject.Collider;
+
+                    if (collider != null)
+                    {
+                        if (collider is BoxCollider box)
+                            DrawUIBoxCollider(box);
+                        else if (collider is CircleCollider circle)
+                            DrawUICircleCollider(circle);
+                    }
+                }
+
+                // draw ui origin
+                foreach (GameObject gameObject in _originUI)
+                {
+                    Transform transform = gameObject.Transform;
+
+                    if (transform == null)
+                        return;
+
+                    Core.SpriteBatch.Draw
+                        (
+                            _originPoint.SpriteSheet,
+                            transform.TruePosition,
+                            _originPoint.SourceRectangle,
+                            Color.White,
+                            0f,
+                            _originPoint.OriginPoint,
+                            Vector2.One,
+                            SpriteEffects.None,
+                            1f
+                        );
                 }
             }
 
+            _colliderGameObject.Clear();
+            _originGameObject.Clear();
+            _colliderUI.Clear();
+            _originUI.Clear();
             SpriteBatch.End();
         }
 
@@ -208,5 +298,110 @@ public class Core : Game
             s_activeScene.Persisting = persist;
             s_activeScene.Initialize();
         }
+    }
+
+    // draw origin point for a gameobject
+    //
+    // param: gameObject - game object to draw origin point for
+    public static void DrawOrigin(GameObject gameObject)
+    {
+        _originGameObject.Add(gameObject);
+    }
+
+    // draw collider for game object
+    //
+    // param: gameObject - game object to draw
+    public static void DrawCollider(GameObject gameObject)
+    {
+        _colliderGameObject.Add(gameObject);
+    }
+
+    // draw origin point for ui
+    //
+    // param: gameObject - ui to draw origin point for
+    public static void DrawUIOrigin(GameObject gameObject)
+    {
+        _originUI.Add(gameObject);
+    }
+
+
+    // draw collider for ui
+    //
+    // param: gameObject - game object to draw
+    public static void DrawUICollider(GameObject gameObject)
+    {
+        _colliderUI.Add(gameObject);
+    }
+
+    // helper method to draw box collider
+    //
+    // param: collider - box collider to draw
+    private static void DrawBoxCollider(IAABBCollider collider)
+    {
+        Camera.Draw
+            (
+                _boxCollider,
+                new Vector2(collider.Left, collider.Top),
+                _colliderColor,
+                0f,
+                new Vector2(collider.Right - collider.Left, collider.Bottom - collider.Top) * 0.5f,
+                SpriteEffects.None,
+                0.9f
+            );
+    }
+
+    // helper method to draw circle collider 
+    //
+    // param: collider - circle collider to draw
+    private static void DrawCircleCollider(ICircleCollider collider)
+    {
+        Camera.Draw
+            (
+                _circleCollider,
+                collider.Center,
+                _colliderColor,
+                0f,
+                collider.Radius,
+                SpriteEffects.None,
+                0.9f
+            );
+    }
+
+    // helper method to draw ui box collider
+    //
+    // param: collider - box collider to draw
+    private static void DrawUIBoxCollider(BoxCollider collider)
+    {
+        Core.SpriteBatch.Draw
+            (
+                _boxCollider.SpriteSheet,
+                new Vector2(collider.Left, collider.Top),
+                _boxCollider.SourceRectangle,
+                _colliderColor,
+                0f,
+                _boxCollider.OriginPoint,
+                 new Vector2(collider.Right - collider.Left, collider.Bottom - collider.Top) / 16f,
+                SpriteEffects.None,
+                0.9f
+            );
+    }
+
+    // helper method to draw ui circle collider 
+    //
+    // param: collider - circle collider to draw
+    private static void DrawUICircleCollider(CircleCollider collider)
+    {
+        Core.SpriteBatch.Draw
+            (
+                _circleCollider.SpriteSheet,
+                collider.Center,
+                _circleCollider.SourceRectangle,
+                _colliderColor,
+                0f,
+                _circleCollider.OriginPoint,
+                collider.Diameter / 16f,
+                SpriteEffects.None,
+                0.9f
+            );
     }
 }

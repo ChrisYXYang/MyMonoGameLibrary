@@ -23,7 +23,7 @@ public abstract class Scene : IDisposable
     public Library SceneLibrary { get; private set; }
     public TileMap Tilemap { get; private set; }
 
-    private readonly Dictionary<string, int> _names = [];
+    private readonly Dictionary<string, long> _names = [];
 
     private readonly Dictionary<string, GameObject> _gameObjects = [];
     private readonly List<GameObject> _toInstantiate = [];
@@ -90,10 +90,10 @@ public abstract class Scene : IDisposable
             string[] nameSplit =  gameObject.Name.Split('_');
             string name = nameSplit[0];
 
-            int number = 0;
+            long number = 0;
             if (nameSplit.Length > 1)
             {
-                number = int.Parse(nameSplit[1]);
+                number = long.Parse(nameSplit[1]);
             }
 
 
