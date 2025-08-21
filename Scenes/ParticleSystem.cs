@@ -102,25 +102,28 @@ public class ParticleSystem : BehaviorComponent
     public override void Update(GameTime gameTime)
     {
         // automatically play particles
-        if (!Manual) 
+        if (Core.Particles)
         {
-            _playTimer -= SceneTools.DeltaTime;
-            
-            if (_playTimer <= 0)
+            if (!Manual)
             {
-                PlayParticles();
+                _playTimer -= SceneTools.DeltaTime;
 
-                // destroy game object if needed
-                if (!Infinite)
+                if (_playTimer <= 0)
                 {
-                    Reps--;
-                    if (Reps <= 0)
-                    {
-                        SceneTools.Destroy(Parent);
-                    }
-                }
+                    PlayParticles();
 
-                _playTimer = Rate;
+                    // destroy game object if needed
+                    if (!Infinite)
+                    {
+                        Reps--;
+                        if (Reps <= 0)
+                        {
+                            SceneTools.Destroy(Parent);
+                        }
+                    }
+
+                    _playTimer = Rate;
+                }
             }
         }
     }
@@ -128,7 +131,7 @@ public class ParticleSystem : BehaviorComponent
     // manually play particles
     public void Play()
     {
-        if (Manual)
+        if (Manual && Core.Particles)
             PlayParticles();
     }
 

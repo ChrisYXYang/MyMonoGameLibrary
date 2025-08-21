@@ -47,6 +47,9 @@ public class Core : Game
     private static List<GameObject> _colliderUI = [];
     public static bool DrawTilemap { get; set; }
 
+    // game settings
+    public static bool Particles { get; set; } = true;
+
     // constructor
     //
     // param: title - title of window
