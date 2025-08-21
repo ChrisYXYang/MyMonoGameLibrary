@@ -14,14 +14,20 @@ namespace MyMonoGameLibrary.UI;
 // this class contains base funcionalities for a button (might be useless we'll see)
 public abstract class Button : BehaviorComponent
 {
+    // properties and variables
     private UISprite _sr;
-    public Sprite Normal;
-    public Sprite Hover;
-    public Sprite Press;
+    public Sprite Normal { get; set; }
+    public Sprite Hover { get; set; }
+    public Sprite Press { get; set; }
 
     private bool _pressed = false;
     private bool _hover = false;
 
+    // constructor
+    //
+    // param: normal - default sprite
+    // param: hover - sprite when hovered
+    // para: press - sprite when pressing
     public Button(Sprite normal, Sprite hover, Sprite press)
     {
         Normal = normal;
@@ -29,6 +35,10 @@ public abstract class Button : BehaviorComponent
         Press = press;
     }
 
+    // constructor
+    //
+    // param: normal - default sprite
+    // param: hover - sprite when hovered
     public Button(Sprite normal, Sprite hover)
     {
         Normal = normal;
@@ -86,5 +96,6 @@ public abstract class Button : BehaviorComponent
         }
     }
 
+    // when clicked
     public abstract void Clicked();
 }
