@@ -10,7 +10,11 @@ namespace MyMonoGameLibrary.Scenes;
 // tools for use in a scene
 public static class SceneTools
 {
+    // variables and properites
     private static Scene _activeScene;
+
+    // is there an active scene?
+    public static bool ActiveScene { get => _activeScene != null; }
 
     // get sprite library
     public static Library SceneLibrary { get => _activeScene.SceneLibrary; }

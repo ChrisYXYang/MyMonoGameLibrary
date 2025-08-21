@@ -39,7 +39,7 @@ public static class UICamera
                     text.Origin,
                     ui.Transform.TrueScale,
                     (SpriteEffects)spriteEffect,
-                    0f
+                    text.LayerDepth
                 );
         }
         else if (ui.Renderer is UISprite sprite)
@@ -57,7 +57,7 @@ public static class UICamera
                     sprite.Origin,
                     Scale * ui.Transform.TrueScale,
                     (SpriteEffects)spriteEffect,
-                    0f
+                    sprite.LayerDepth
                 );
         }
     }

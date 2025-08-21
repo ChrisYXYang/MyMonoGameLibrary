@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using MyMonoGameLibrary.Audio;
+using MyMonoGameLibrary.Input;
 using MyMonoGameLibrary.Scenes;
 using MyMonoGameLibrary.Tilemap;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework.Input;
-using MyMonoGameLibrary.Input;
-using MyMonoGameLibrary.Audio;
+using MyMonoGameLibrary.Tools;
 
 namespace MyMonoGameLibrary;
 
@@ -29,6 +31,14 @@ public class Core : Game
     public static Library GlobalLibrary { get; private set; }
     public static AudioController Audio { get; private set; }
     public static Random Random { get; private set; } = new Random();
+    public static int Width { get; private set; }
+    public static int Height { get; private set; }
+
+    public static List<GameObject> OriginGameObject { get; set; } = [];
+    public static List<GameObject> OriginUI { get; set; } = [];
+    public static List<GameObject> ColliderGameObject { get; set; } = [];
+    public static List<GameObject> ColliderUI { get; set; } = [];
+    public static bool DrawTilemap { get; set; }
 
     // constructor
     //
@@ -53,6 +63,8 @@ public class Core : Game
         // set grpahics defaults
         Graphics.PreferredBackBufferWidth = width;
         Graphics.PreferredBackBufferHeight = height;
+        Width = width;
+        Height = height;
         Graphics.IsFullScreen = fullScreen;
         Graphics.ApplyChanges();
 
@@ -82,6 +94,9 @@ public class Core : Game
 
         // create audio controller
         Audio = new AudioController();
+
+        // load content for debugging
+        Debugging.LoadContent();
 
         base.Initialize();
     }
@@ -119,6 +134,37 @@ public class Core : Game
         if (s_activeScene != null)
         {
             s_activeScene.Draw(gameTime);
+
+            // draw debugging visualizations
+            SpriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
+
+            if (SceneTools.ActiveScene)
+            {
+                if (DrawTilemap)
+                    Debugging.DrawTilemapCollider(SceneTools.Tilemap);
+
+                foreach (GameObject gameObject in ColliderGameObject)
+                {
+                    Debugging.DrawCollider(gameObject);
+                }
+
+                foreach (GameObject gameObject in OriginGameObject)
+                {
+                    Debugging.DrawOrigin(gameObject);
+                }
+
+                foreach (GameObject gameObject in ColliderUI)
+                {
+                    Debugging.DrawUICollider(gameObject);
+                }
+
+                foreach (GameObject gameObject in OriginUI)
+                {
+                    Debugging.DrawUIOrigin(gameObject);
+                }
+            }
+
+            SpriteBatch.End();
         }
 
         base.Draw(gameTime);

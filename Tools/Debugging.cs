@@ -12,8 +12,8 @@ using MyMonoGameLibrary.UI;
 
 namespace MyMonoGameLibrary.Tools;
 
-// Extension of the Core class that gives debugging tools such as seeing origin point
-public class DebugMode : Core
+// Extension of the Core class that gives debugging tools such as visualizing origin and colliders
+public class Debugging
 {
     // variables and properties
     private static SpriteSheet _sprites;
@@ -22,27 +22,13 @@ public class DebugMode : Core
     private static Sprite _circleCollider;
     private static Color _colliderColor = Color.White * 0.8f;
 
-    // constructor
-    //
-    // param: title - title of window
-    // param: width - width of screen
-    // param: height - height of screen
-    // param: fullScreen - full screen or not
-    public DebugMode(string title, int width, int height, bool fullScreen) : base(title, width, height, fullScreen)
-    {
-
-    }
-
     // load content
-    protected override void LoadContent()
+    public static void LoadContent()
     {
         _sprites = new SpriteSheet(Core.Content, "debug");
         _originPoint = _sprites.GetSprite("origin_point");
         _boxCollider = _sprites.GetSprite("box_collider");
         _circleCollider = _sprites.GetSprite("circle_collider");
-
-
-        base.LoadContent();
     }
 
     // print the scene game object heirarchy
@@ -91,6 +77,30 @@ public class DebugMode : Core
                 Color.White,
                 0f,
                 0.05f,
+                SpriteEffects.None,
+                1f
+            );
+    }
+
+    // draw origin point for ui
+    //
+    // param: gameObject - ui to draw origin point for
+    public static void DrawUIOrigin(GameObject gameObject)
+    {
+        Transform transform = gameObject.Transform;
+
+        if (transform == null)
+            return;
+
+        Core.SpriteBatch.Draw
+            (
+                _originPoint.SpriteSheet,
+                transform.TruePosition,
+                _originPoint.SourceRectangle,
+                Color.White,
+                0f,
+                _originPoint.OriginPoint,
+                Vector2.One,
                 SpriteEffects.None,
                 1f
             );
@@ -170,17 +180,6 @@ public class DebugMode : Core
                 SpriteEffects.None,
                 0.9f
             );
-
-        Camera.Draw
-            (
-                _originPoint,
-                collider.Center,
-                Color.White,
-                0f,
-                0.05f,
-                SpriteEffects.None,
-                1f
-            );
     }
 
     // helper method to draw circle collider 
@@ -198,17 +197,6 @@ public class DebugMode : Core
                 SpriteEffects.None,
                 0.9f
             );
-
-        Camera.Draw
-        (
-            _originPoint,
-            collider.Center,
-            Color.White,
-            0f,
-            0.05f,
-            SpriteEffects.None,
-            1f
-        );
     }
 
     // helper method to draw ui box collider
