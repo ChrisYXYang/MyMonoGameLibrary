@@ -158,25 +158,28 @@ public class Core : Game
                 // draw tilemap
                 if (DrawTilemap)
                 {
-                    TileMap tilemap = SceneTools.Tilemap;
-
-                    List<string> layerNames = tilemap.Layers;
-
-                    foreach (string layerName in layerNames)
+                    if (SceneTools.Tilemap != null)
                     {
-                        for (int i = 0; i < tilemap.Rows; i++)
+                        TileMap tilemap = SceneTools.Tilemap;
+
+                        List<string> layerNames = tilemap.Layers;
+
+                        foreach (string layerName in layerNames)
                         {
-                            for (int j = 0; j < tilemap.Columns; j++)
+                            for (int i = 0; i < tilemap.Rows; i++)
                             {
-                                Tile tile = tilemap.GetTile(layerName, i, j);
+                                for (int j = 0; j < tilemap.Columns; j++)
+                                {
+                                    Tile tile = tilemap.GetTile(layerName, i, j);
 
-                                if (tile == null)
-                                    continue;
+                                    if (tile == null)
+                                        continue;
 
-                                if (tile.Collider == null)
-                                    continue;
+                                    if (tile.Collider == null)
+                                        continue;
 
-                                DrawBoxCollider(tile.Collider);
+                                    DrawBoxCollider(tile.Collider);
+                                }
                             }
                         }
                     }

@@ -10,9 +10,10 @@ using MyMonoGameLibrary.Scenes;
 
 namespace MyMonoGameLibrary.UI;
 
-public abstract class Press : BehaviorComponent
+public  class Press : BehaviorComponent
 {
     // variables and properties
+    private Action _click;
     private UISprite _sr;
     public Sprite Normal { get; set; }
     public Sprite Hover { get; set; }
@@ -25,6 +26,18 @@ public abstract class Press : BehaviorComponent
     {
         Normal = normal;
         Hover = hover;
+    }
+
+    // constructor
+    //
+    // param: normal - default sprite
+    // param: hover - sprite when hovered
+    // param: click - method to do when clicked
+    public Press(Sprite normal, Sprite hover, Action click)
+    {
+        Normal = normal;
+        Hover = hover;
+        _click = click;
     }
 
     public override void Start()
@@ -40,7 +53,14 @@ public abstract class Press : BehaviorComponent
 
             if (InputManager.Mouse.WasButtonJustPressed(MouseButton.Left))
             {
-                Clicked();
+                if (_click != null)
+                {
+                    _click.Invoke();
+                }
+                else
+                {
+                    Clicked();
+                }
             }
         }
         else
@@ -50,5 +70,5 @@ public abstract class Press : BehaviorComponent
         }
     }
 
-    public abstract void Clicked();
+    public virtual void Clicked() { }
 }

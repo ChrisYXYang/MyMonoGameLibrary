@@ -408,7 +408,10 @@ public abstract class Scene : IDisposable
             if (gameObject.Enabled)
                 Camera.Draw(gameObject.Renderer);
         }
-        Camera.Draw(Tilemap);
+        
+        if (Tilemap != null)
+            Camera.Draw(Tilemap);
+
         Core.SpriteBatch.End();
 
         // UI rendering

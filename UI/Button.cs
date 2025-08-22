@@ -12,9 +12,11 @@ using MyMonoGameLibrary.Scenes;
 namespace MyMonoGameLibrary.UI;
 
 // this class contains base funcionalities for a button (might be useless we'll see)
-public abstract class Button : BehaviorComponent
+public class Button : BehaviorComponent
 {
     // properties and variables
+    private Action _click;
+
     private UISprite _sr;
     public Sprite Normal { get; set; }
     public Sprite Hover { get; set; }
@@ -46,6 +48,33 @@ public abstract class Button : BehaviorComponent
         Press = normal;
     }
 
+    // constructor
+    //
+    // param: normal - default sprite
+    // param: hover - sprite when hovered
+    // para: press - sprite when pressing
+    // param: click - method to do when clicked
+    public Button(Sprite normal, Sprite hover, Sprite press, Action click)
+    {
+        Normal = normal;
+        Hover = hover;
+        Press = press;
+        _click = click;
+    }
+
+    // constructor
+    //
+    // param: normal - default sprite
+    // param: hover - sprite when hovered
+    // param: click - method to do when clicked
+    public Button(Sprite normal, Sprite hover, Action click)
+    {
+        Normal = normal;
+        Hover = hover;
+        Press = normal;
+        _click = click;
+    }
+
     public override void Start()
     {
         _sr = GetComponent<UISprite>();
@@ -71,7 +100,15 @@ public abstract class Button : BehaviorComponent
 
             if (InputManager.Mouse.WasButtonJustReleased(MouseButton.Left) && _pressed)
             {
-                Clicked();
+                if (_click != null)
+                {
+                    _click.Invoke();
+                }
+                else
+                {
+                    Clicked();
+                }
+
                 _hover = false;
                 _pressed = false;
                 _sr.Sprite = Normal;
@@ -97,5 +134,5 @@ public abstract class Button : BehaviorComponent
     }
 
     // when clicked
-    public abstract void Clicked();
+    public virtual void Clicked() { }
 }
