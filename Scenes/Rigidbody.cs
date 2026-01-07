@@ -15,7 +15,18 @@ public class Rigidbody : CoreComponent
     public float YVelocity { get; set; } = 0;
 
     // can collide with walls or not
-    public bool Solid { get; set; }
+    private bool _solid = true;
+    public bool Solid
+    {
+        get
+        {
+            if (Collider == null)
+                return false;
+            else
+                return _solid;
+        }
+        set => _solid = value;
+    }
 
     // can go down platform or not
     public bool DescendPlatform { get; set; } = false;
@@ -63,9 +74,6 @@ public class Rigidbody : CoreComponent
     {
         base.Initialize(parent);
         Collider = parent.GetComponent<BoxCollider>();
-
-        if (Collider == null)
-            Solid = false;
     }
 
     // update move position

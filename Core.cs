@@ -73,6 +73,7 @@ public class Core : Game
         // set grpahics defaults
         Graphics.PreferredBackBufferWidth = width;
         Graphics.PreferredBackBufferHeight = height;
+        //Graphics.IsFullScreen = true;
         Graphics.ApplyChanges();
 
         // mouse visible by default
