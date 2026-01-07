@@ -3,7 +3,9 @@ using System.Collections.Generic;
 
 namespace MyMonoGameLibrary.UI;
 
-// where to anchor the text UI
+// Two purposes:
+// 1: Where to anchor UI on the screen
+// 2: Anchoring point of text UI
 public enum AnchorMode
 {
     TopLeft,

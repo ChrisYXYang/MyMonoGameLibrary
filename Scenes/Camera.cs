@@ -17,10 +17,10 @@ public static class Camera
     public static Vector2 position = Vector2.Zero;    
 
     // number of pixels per sprite image pixel
-    public static int PixelScale { get; set; } = 10;
+    public static int PixelScale { get; set;}
     
     // number of sprite image pixels in a game unit.
-    public static int SpritePixelsPerUnit { get; private set; } = 8;
+    public static int SpritePixelsPerUnit { get; set; }
 
     // number of pixels per game unit
     public static int UnitPixels => SpritePixelsPerUnit * PixelScale;

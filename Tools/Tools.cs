@@ -31,7 +31,7 @@ public static class Tools
     // return: half chance true/false
     public static bool HalfChance()
     {
-        return Core.Random.Next(100) < 50; 
+        return Core.Random.Next(2) == 1; 
     }
 
     // random float
